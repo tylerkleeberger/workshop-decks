@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What Would Jesus Do (With AI)? — Part 1</title>
+<style>
+  :root {
+    --bg: #0f0a08;
+    --bg-2: #1a1410;
+    --ink: #f5ead2;
+    --ink-dim: #c8b890;
+    --accent: #d4a960;
+    --accent-2: #a8803e;
+    --rule: #3d2a10;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    height: 100%;
+    overflow: hidden;
+  }
+  body { display: flex; flex-direction: column; }
+
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 28px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px; color: var(--ink-dim); letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .header .title { font-style: italic; }
+  .header .controls { display: flex; gap: 18px; align-items: center; }
+  .header button {
+    background: transparent; border: 1px solid var(--rule);
+    color: var(--ink-dim); padding: 6px 12px;
+    font-family: inherit; font-size: 12px; cursor: pointer;
+    border-radius: 3px; letter-spacing: 0.5px;
+  }
+  .header button:hover { border-color: var(--accent-2); color: var(--ink); }
+  .counter { font-variant-numeric: tabular-nums; min-width: 56px; text-align: right; }
+
+  .stage { flex: 1; display: flex; overflow: hidden; position: relative; }
+  .slide-pane {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 60px 80px; overflow-y: auto;
+  }
+  .slide { max-width: 950px; width: 100%; display: none; }
+  .slide.active { display: block; }
+
+  .slide .kicker {
+    color: var(--accent); font-style: italic; font-size: 18px;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .slide h1 { font-size: 64px; line-height: 1.08; margin: 0 0 20px; letter-spacing: -0.5px; font-weight: bold; }
+  .slide h2 { font-size: 44px; line-height: 1.18; margin: 0 0 24px; letter-spacing: -0.3px; font-weight: bold; }
+  .slide h3 { font-size: 28px; color: var(--accent); margin: 0 0 18px; font-style: italic; font-weight: normal; }
+  .slide p, .slide li { font-size: 24px; line-height: 1.45; margin: 0 0 16px; }
+  .slide ul, .slide ol { padding-left: 28px; margin: 0 0 16px; }
+  .slide li { margin-bottom: 10px; }
+  .slide blockquote {
+    font-size: 28px; line-height: 1.4; font-style: italic;
+    color: var(--ink-dim); border-left: 3px solid var(--accent-2);
+    margin: 0 0 20px; padding: 4px 0 4px 28px;
+  }
+
+  /* Scripture with substantially larger text */
+  .slide .scripture {
+    font-size: 28px; line-height: 1.5;
+    background: rgba(212, 169, 96, 0.06);
+    border-left: 4px solid var(--accent);
+    padding: 28px 36px; margin: 0;
+  }
+  .slide .scripture .ref {
+    color: var(--accent); font-style: italic; font-size: 18px;
+    margin-bottom: 14px; letter-spacing: 1px; font-weight: bold;
+  }
+  .slide .scripture p { font-size: 28px; line-height: 1.5; margin: 0 0 14px; }
+  .slide .scripture p:last-child { margin-bottom: 0; }
+
+  /* Big-question slides with optional revealed bullets */
+  .slide .big-question {
+    font-size: 56px; line-height: 1.1; font-weight: bold;
+    text-align: center; margin: 0 0 40px;
+  }
+  .slide .question-bullets {
+    border-top: 1px solid var(--rule); padding-top: 24px;
+    font-size: 22px; color: var(--ink-dim); line-height: 1.5;
+  }
+  .slide .question-bullets li { font-size: 22px; }
+
+  .slide .accent { color: var(--accent); }
+  .slide .dim { color: var(--ink-dim); }
+  .slide .small { font-size: 18px; line-height: 1.5; }
+  .rule { width: 80px; height: 2px; background: var(--accent-2); margin: 24px 0; }
+
+  /* Title slide */
+  .slide.title-slide { text-align: center; }
+  .slide.title-slide .eyebrow {
+    color: var(--accent-2); font-style: italic; font-size: 18px;
+    letter-spacing: 4px; margin-bottom: 20px; text-transform: uppercase;
+  }
+  .slide.title-slide h1 { font-size: 78px; margin-bottom: 12px; }
+  .slide.title-slide .accent-block { color: var(--accent); }
+  .slide.title-slide .subtitle {
+    font-size: 26px; font-style: italic; color: var(--ink-dim); margin-top: 8px;
+  }
+  .slide.title-slide .meta {
+    margin-top: 60px; font-size: 18px; color: var(--ink-dim); letter-spacing: 1px;
+  }
+
+  /* Section divider */
+  .slide.section-slide { text-align: center; }
+  .slide.section-slide .num {
+    font-size: 22px; color: var(--accent); letter-spacing: 6px; margin-bottom: 20px;
+  }
+  .slide.section-slide h1 { font-size: 72px; }
+  .slide.section-slide .lede {
+    font-size: 24px; font-style: italic; color: var(--ink-dim);
+    margin-top: 24px; max-width: 700px; margin-left: auto; margin-right: auto;
+    line-height: 1.5;
+  }
+
+  .nav-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; color: var(--ink-dim);
+    font-size: 32px; cursor: pointer; padding: 20px;
+    opacity: 0.4; transition: opacity 0.2s; font-family: inherit;
+  }
+  .nav-arrow:hover { opacity: 1; color: var(--accent); }
+  .nav-arrow.prev { left: 8px; }
+  .nav-arrow.next { right: 8px; }
+
+  .notes {
+    border-top: 1px solid var(--rule); background: var(--bg-2);
+    padding: 18px 32px; max-height: 25vh; overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px; line-height: 1.55; color: var(--ink-dim);
+    flex-shrink: 0;
+  }
+  .notes.hidden { display: none; }
+  .notes h4 {
+    color: var(--accent); font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; margin: 0 0 10px; font-weight: normal;
+  }
+  .notes-content { display: none; }
+  .notes-content.active { display: block; }
+  .notes p { margin: 0; }
+
+  .progress { height: 2px; background: rgba(212, 169, 96, 0.15); flex-shrink: 0; }
+  .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+  .keyboard-hint {
+    position: fixed; bottom: 12px; right: 16px;
+    font-size: 11px; color: var(--ink-dim); opacity: 0.5;
+    letter-spacing: 1px; pointer-events: none;
+  }
+
+  @media (max-width: 900px) {
+    .slide-pane { padding: 30px 24px; }
+    .slide h1 { font-size: 42px; }
+    .slide h2 { font-size: 30px; }
+    .slide p, .slide li { font-size: 19px; }
+    .slide blockquote { font-size: 21px; }
+    .slide .scripture { font-size: 19px; padding: 18px 22px; }
+    .slide .scripture p { font-size: 19px; }
+    .slide .big-question { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title">Part 1 · What Would Jesus Do (With AI)? · May 10</div>
+  <div class="controls">
+    <button id="toggle-notes">Notes: ON</button>
+    <span class="counter" id="counter">1 / 1</span>
+  </div>
+</div>
+
+<div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="stage">
+  <button class="nav-arrow prev" id="prev" aria-label="Previous">‹</button>
+  <div class="slide-pane">
+
+    <!-- S1. TITLE -->
+    <section class="slide title-slide" data-notes="title">
+      <div class="eyebrow">Part One · May 10</div>
+      <h1>What Would<br>Jesus Do (With <span class="accent-block">AI</span>)?</h1>
+      <div class="subtitle">A discipleship conversation on technology,<br>empire, and the image we reflect.</div>
+      <div class="meta">SUNDAY · MAY 10, 2026 · 8:30 – 10:00 AM</div>
+    </section>
+
+    <!-- S2. OPENING -->
+    <section class="slide" data-notes="opening">
+      <div class="kicker">Where we begin</div>
+      <h2>"Is AI good or bad?"<br>might be the <span class="accent">wrong question.</span></h2>
+      <div class="rule"></div>
+      <p>The better question:</p>
+      <blockquote>How does Jesus help us think about a powerful, paradigm-shifting technology produced by some of the most powerful entities in modern society?</blockquote>
+    </section>
+
+    <!-- S3. CHRISTIANS AND TECH HISTORY (NEW) -->
+    <section class="slide" data-notes="christians-tech-history">
+      <h2>How have Christians dialogued and decided on approaches and ethics to technology throughout history?</h2>
+      <div class="rule"></div>
+      <p class="dim small">Printing presses. Railroads. Automobiles. Television. The internet.</p>
+      <p class="dim small">Each one reshaped daily life. Each one provoked the church to ask: <em>what now?</em></p>
+    </section>
+
+    <!-- S4. JESUS AND IMPERIAL TECH -->
+    <section class="slide" data-notes="imperial-tech">
+      <h2>Jesus didn't see the printing press, electricity, or the internet.</h2>
+      <div class="rule"></div>
+      <p>But he <em>did</em> live inside an imperial economy whose technologies reshaped daily life — often violently.</p>
+      <ul>
+        <li>Roads</li>
+        <li>Coinage</li>
+        <li>Census</li>
+        <li>Taxation</li>
+        <li>Military supply chains</li>
+      </ul>
+    </section>
+
+    <!-- S5. SECTION: MARK 12 -->
+    <section class="slide section-slide" data-notes="mark12-intro">
+      <div class="num">PART ONE</div>
+      <h1>Mark 12</h1>
+      <div class="lede">Jesus has just entered Jerusalem, cleansed the Temple, and openly confronted Israel's leadership. They send a coalition to trap him.</div>
+    </section>
+
+    <!-- S6. THE COALITION -->
+    <section class="slide" data-notes="coalition">
+      <h2>The trap</h2>
+      <p>Pharisees + Herodians.</p>
+      <p class="dim">Two ends of the spectrum. They don't get along. Whatever he answers, one of them gets him.</p>
+    </section>
+
+    <!-- S7. SCRIPTURE A -->
+    <section class="slide" data-notes="scripture-a">
+      <div class="scripture">
+        <div class="ref">MARK 12:12–15</div>
+        <p>Then the chief priests, the teachers of the law and the elders looked for a way to arrest him because they knew he had spoken the parable against them. But they were afraid of the crowd; so they left him and went away.</p>
+        <p>Later they sent some of the Pharisees and Herodians to Jesus to catch him in his words. They came to him and said, "Teacher, we know that you are a man of integrity. You aren't swayed by others, because you pay no attention to who they are; but you teach the way of God in accordance with the truth. Is it right to pay the imperial tax to Caesar or not? Should we pay or shouldn't we?"</p>
+      </div>
+    </section>
+
+    <!-- S8. THE DENARIUS -->
+    <section class="slide" data-notes="denarius">
+      <h2>The denarius is not just money.</h2>
+      <p>It bears the image of <span class="accent">Tiberius Caesar</span> with the inscription:</p>
+      <blockquote>"Tiberius Caesar, son of the Divine Augustus"<br>and on the reverse: "Pontifex Maximus" — high priest.</blockquote>
+      <p>To a Jew, this coin is a <span class="accent">portable idol.</span></p>
+      <p class="small dim">A violation of the first and second commandments every time it changes hands.</p>
+    </section>
+
+    <!-- S9. THE TRAP -->
+    <section class="slide" data-notes="the-trap">
+      <h2>Either answer kills him.</h2>
+      <ol>
+        <li><span class="accent">Pay the tax.</span> Affirm Roman occupation. Endorse imperial cult. Lose moral authority with the people.</li>
+        <li><span class="accent">Don't pay the tax.</span> Tax revolt. Sedition. Hand him to Rome.</li>
+      </ol>
+      <p class="dim">There is no good answer.</p>
+    </section>
+
+    <!-- S10. SCRIPTURE B -->
+    <section class="slide" data-notes="scripture-b">
+      <div class="scripture">
+        <div class="ref">MARK 12:16–17</div>
+        <p>But Jesus knew their hypocrisy. "Why are you trying to trap me?" he asked. "Bring me a denarius and let me look at it." They brought the coin, and he asked them, "Whose image is this? And whose inscription?"</p>
+        <p>"Caesar's," they replied.</p>
+        <p>Then Jesus said to them, "Give back to Caesar what is Caesar's and to God what is God's."</p>
+      </div>
+    </section>
+
+    <!-- S11. WHY ASK — QUESTION ONLY -->
+    <section class="slide" data-notes="why-ask-q">
+      <div class="big-question">Why does Jesus ask them<br>to show him a coin?</div>
+    </section>
+
+    <!-- S12. WHY ASK — REVEAL -->
+    <section class="slide" data-notes="why-ask-reveal">
+      <div class="big-question">Why does Jesus ask them<br>to show him a coin?</div>
+      <ul class="question-bullets">
+        <li>They have one. He doesn't.</li>
+        <li>They've already accommodated themselves to the imperial economy in a way he hasn't.</li>
+        <li>They are exposed before he answers.</li>
+      </ul>
+    </section>
+
+    <!-- S13. WHAT IS JESUS' CLAIM — QUESTION ONLY (NEW) -->
+    <section class="slide" data-notes="claim-q">
+      <div class="big-question">What is Jesus' claim?</div>
+    </section>
+
+    <!-- S14. CLAIM — SURFACE -->
+    <section class="slide" data-notes="claim-surface">
+      <div class="kicker">Layer 1 — the surface</div>
+      <h2>"Whose image is this?"<br>"Caesar's."<br>"Then give it back to him."</h2>
+      <p class="dim">Pay the tax. Caesar's coin can go back to Caesar. Done.</p>
+      <p>But this is a setup.</p>
+    </section>
+
+    <!-- S15. CLAIM — UNSPOKEN (without "That's you.") -->
+    <section class="slide" data-notes="claim-unspoken">
+      <div class="kicker">Layer 2 — the unspoken</div>
+      <h2>The Greek word for "image" is <span class="accent">εἰκών (eikōn).</span></h2>
+      <p>Anyone listening hears the echo.</p>
+      <blockquote>"…and give back to God what bears God's image."</blockquote>
+    </section>
+
+    <!-- S16. CLAIM — APATHY -->
+    <section class="slide" data-notes="claim-apathy">
+      <div class="kicker">Layer 3 — the apathy beat</div>
+      <h2>What belongs to Caesar is <span class="accent">small.</span></h2>
+      <p>A coin. <em>Fine. Let him have it.</em></p>
+      <div class="rule"></div>
+      <p>What belongs to God is <span class="accent">everything else.</span></p>
+      <p class="dim">Caesar gets a coin. God gets the world and everyone in it.</p>
+    </section>
+
+    <!-- S17. AMAZED -->
+    <section class="slide" data-notes="amazed">
+      <h2>This is why they walked away amazed.</h2>
+      <p>He didn't escape the trap.</p>
+      <p>He <span class="accent">dissolved</span> it.</p>
+      <div class="rule"></div>
+      <p class="dim small">Jesus diminishes the tax question and elevates the human one.</p>
+    </section>
+
+    <!-- S18. SECTION: APPLYING THE TOOL — with new subtitle -->
+    <section class="slide section-slide" data-notes="travels-intro">
+      <div class="num">PART TWO</div>
+      <h1>The Question Travels</h1>
+      <div class="lede">How do we use Jesus' approach for thinking and navigating our current landscape?</div>
+    </section>
+
+    <!-- S19. DENARIUS PARALLEL -->
+    <section class="slide" data-notes="denarius-parallel">
+      <h2>The denarius traveled into every Galilean home, carrying with it a religious claim.</h2>
+      <p class="dim small">"Tiberius Caesar, son of the divine Augustus, high priest."</p>
+      <p>You couldn't buy bread without participating in that claim.</p>
+    </section>
+
+    <!-- S20. AI PARALLEL — REWRITTEN with ownership/subservience/access/dependency framing -->
+    <section class="slide" data-notes="ai-parallel">
+      <h2>The smartphone, the chatbot, the AI assistant carry a related but sharper claim.</h2>
+      <div class="rule"></div>
+      <p>What is being asked of us:</p>
+      <ul>
+        <li><span class="accent">Ownership</span> — give us your data, your work, your attention</li>
+        <li><span class="accent">Subservience</span> — accept the terms; there is no negotiation</li>
+        <li><span class="accent">Access</span> — let us mediate what you read, who you talk to, what you know</li>
+        <li><span class="accent">Dependency</span> — let us become the thing you can't think without</li>
+      </ul>
+      <p class="small dim">Language that used to belong to God: salvation, intelligence, transcendence, abundance, the future of the species.</p>
+    </section>
+
+    <!-- S21. THE TEST — without examples -->
+    <section class="slide" data-notes="the-test">
+      <h2>The test:<br><span class="accent">Whose image are you carrying back at the end?</span></h2>
+      <div class="rule"></div>
+      <p>Tool vs. dependency.</p>
+      <p>Tool vs. exploitation.</p>
+      <p>Which dream is being prioritized?</p>
+    </section>
+
+    <!-- S22. THE LINE -->
+    <section class="slide" data-notes="the-line">
+      <h2>The line is the moment a tool stops being a tool.</h2>
+      <div class="rule"></div>
+      <p>Something elevated to the place that belongs to God.</p>
+      <p>Caesar reaching past the coin to claim the image.</p>
+    </section>
+
+    <!-- S23. SECTION: THE PRACTICE -->
+    <section class="slide section-slide" data-notes="practice-intro">
+      <div class="num">PART THREE</div>
+      <h1>The Practice</h1>
+      <div class="lede">Three habits for approaching AI like Jesus.</div>
+    </section>
+
+    <!-- S24. HABIT 1 -->
+    <section class="slide" data-notes="habit-1">
+      <div class="kicker">Habit 1</div>
+      <h2>The question on the way in.</h2>
+      <p>Before you pick up a new tool — before you let one into your house, your work, your kid's life — ask:</p>
+      <blockquote>Whose image is on this?<br>Whose benefit?<br>Whose cost?</blockquote>
+      <p class="dim small">Not paranoia. Discernment.</p>
+    </section>
+
+    <!-- S25. HABIT 2 — REWRITTEN to ground extension/replacement in image-of-God -->
+    <section class="slide" data-notes="habit-2">
+      <div class="kicker">Habit 2</div>
+      <h2>The audit on the way through.</h2>
+      <p>Tools made by humans, used by humans, can extend the work of image-bearers.</p>
+      <p>The trouble starts when the tool starts <span class="accent">producing what only image-bearers were made to produce</span> — judgment, witness, presence, love.</p>
+      <div class="rule"></div>
+      <p><span class="accent">Extension:</span> the human stays the source. The tool amplifies.</p>
+      <p><span class="accent">Replacement:</span> the human is bypassed. Something not made in God's image takes the human's place.</p>
+      <p class="dim small">Tool stays a tool when human stays human.</p>
+    </section>
+
+    <!-- S26. HABIT 3 — REWRITTEN with kingdom direction instead of off-limits checklist -->
+    <section class="slide" data-notes="habit-3">
+      <div class="kicker">Habit 3</div>
+      <h2>The line you don't cross.</h2>
+      <p>The line is <em>directional,</em> not a checklist.</p>
+      <div class="rule"></div>
+      <p>Two kingdoms are being served:</p>
+      <ul>
+        <li><span class="accent">God's kingdom</span> — extension toward neighbor, dignity, image, presence</li>
+        <li><span class="accent">Caesar's kingdom</span> — extraction, replacement, dependency, the diminishment of the human</li>
+      </ul>
+      <p>The line is anything that crosses from the first into the second.</p>
+    </section>
+
+    <!-- S27. SECTION: SO HOW DO WE LIVE WITH IT (NEW) -->
+    <section class="slide section-slide" data-notes="practical-intro">
+      <div class="num">PART FOUR</div>
+      <h1>So — do I use AI<br>or not?</h1>
+      <div class="lede">A direct answer.</div>
+    </section>
+
+    <!-- S28. THE ANSWER -->
+    <section class="slide" data-notes="practical-answer">
+      <h2>Yes &mdash; often. With these specific habits.</h2>
+      <div class="rule"></div>
+      <ul>
+        <li><span class="accent">Use what extends.</span></li>
+        <li><span class="accent">Refuse what replaces.</span></li>
+        <li><span class="accent">Push for what serves.</span></li>
+      </ul>
+    </section>
+
+    <!-- S29. THE PRACTICE QUESTION — REPLACES the "disciples walked out" -->
+    <section class="slide" data-notes="practice-question">
+      <h2>The question to take with you:</h2>
+      <blockquote>What world is being created<br>by the things I carry?<br><br>How do the tools I use participate<br>in the world &mdash; <br>and whose world is it claiming?</blockquote>
+    </section>
+
+    <!-- S30. CLOSING REFLECTION -->
+    <section class="slide" data-notes="closing-reflection">
+      <h2>For us, then:</h2>
+      <ul>
+        <li>Whose image is on you?</li>
+        <li>Who do you serve?</li>
+        <li>What kingdom are you participating in — and how do you know?</li>
+      </ul>
+      <div class="rule"></div>
+      <ul>
+        <li>What do you hold that <em>cannot</em> be rendered unto Caesar?</li>
+        <li>What can be a tool that genuinely enhances God's dream for the world?</li>
+      </ul>
+    </section>
+
+    <!-- S31. WHAT'S NEXT — emphasize Roman/Caesar continuity -->
+    <section class="slide" data-notes="whats-next">
+      <div class="kicker">Coming up</div>
+      <h2><span class="accent">AI, Rockets, &amp; Bicycles</span></h2>
+      <p>Sunday, May 24 · 11:00 AM</p>
+      <div class="rule"></div>
+      <p>Today we examined the coin in our hand.</p>
+      <p>Next: <span class="accent">the empire that minted it.</span></p>
+    </section>
+
+    <!-- S32. CLOSING BENEDICTION — "and you" removed; ends on whose-image -->
+    <section class="slide" data-notes="benediction">
+      <h2>Render unto Caesar what is Caesar's.</h2>
+      <h2 class="accent">Render unto God what is God's.</h2>
+      <div class="rule"></div>
+      <p>Caesar gets the coin.</p>
+      <p>God gets the world.</p>
+      <p style="margin-top: 32px;"><span class="accent">Whose image is on you?</span></p>
+    </section>
+
+  </div>
+  <button class="nav-arrow next" id="next" aria-label="Next">›</button>
+</div>
+
+<aside class="notes" id="notes">
+  <h4>Presenter notes</h4>
+  <div id="notes-container">
+    <div class="notes-content" data-notes="title"><p><strong>S1.</strong> Mother's Day acknowledgment. Conversation, not lecture.</p></div>
+    <div class="notes-content" data-notes="opening"><p><strong>S2.</strong> Optional: ask the room what they feel when they hear "AI." A few voices.</p></div>
+    <div class="notes-content" data-notes="christians-tech-history"><p><strong>S3.</strong> Discussion. Throw it open. Examples: printing press &amp; literacy, Industrial Revolution &amp; labor, TV &amp; family life, internet &amp; church. We've done this work before.</p></div>
+    <div class="notes-content" data-notes="imperial-tech"><p><strong>S4.</strong> Brief. We have a precedent.</p></div>
+    <div class="notes-content" data-notes="mark12-intro"><p><strong>S5.</strong> Slow down. This is the heart.</p></div>
+    <div class="notes-content" data-notes="coalition"><p><strong>S6.</strong> Pharisees hated taxes. Herodians collaborated. Two enemies briefly aligned.</p></div>
+    <div class="notes-content" data-notes="scripture-a"><p><strong>S7.</strong> Have someone in the room read aloud.</p></div>
+    <div class="notes-content" data-notes="denarius"><p><strong>S8.</strong> The coin carries a religious claim. Make sure the room hears this.</p></div>
+    <div class="notes-content" data-notes="the-trap"><p><strong>S9.</strong> Name both horns. The trap is brilliant.</p></div>
+    <div class="notes-content" data-notes="scripture-b"><p><strong>S10.</strong> Different reader.</p></div>
+    <div class="notes-content" data-notes="why-ask-q"><p><strong>S11.</strong> Throw to the room. Take voices. <em>Don't advance to S12 until discussion settles.</em></p></div>
+    <div class="notes-content" data-notes="why-ask-reveal"><p><strong>S12.</strong> The bullets appear after discussion. Land: <em>they have one, he doesn't.</em></p></div>
+    <div class="notes-content" data-notes="claim-q"><p><strong>S13.</strong> Optional discussion before revealing layers. The claim has more in it than people see at first.</p></div>
+    <div class="notes-content" data-notes="claim-surface"><p><strong>S14.</strong> The surface answer. Almost everyone gets this far.</p></div>
+    <div class="notes-content" data-notes="claim-unspoken"><p><strong>S15.</strong> The talk turns. Slow down. Flesh out "that's you" in your own words.</p></div>
+    <div class="notes-content" data-notes="claim-apathy"><p><strong>S16.</strong> Caesar's domain is <em>small.</em> Almost dismissive.</p></div>
+    <div class="notes-content" data-notes="amazed"><p><strong>S17.</strong> He dissolved the trap. Pause.</p></div>
+    <div class="notes-content" data-notes="travels-intro"><p><strong>S18.</strong> Now we apply the tool. Subtitle is the operative question.</p></div>
+    <div class="notes-content" data-notes="denarius-parallel"><p><strong>S19.</strong> The denarius wasn't optional.</p></div>
+    <div class="notes-content" data-notes="ai-parallel"><p><strong>S20.</strong> Ownership / subservience / access / dependency. Name them precisely. This is the structural problem, not just a vibe.</p></div>
+    <div class="notes-content" data-notes="the-test"><p><strong>S21.</strong> Examples are in your head, not on the slide. Reference them only if useful.</p></div>
+    <div class="notes-content" data-notes="the-line"><p><strong>S22.</strong> The line is dependency. Pause after.</p></div>
+    <div class="notes-content" data-notes="practice-intro"><p><strong>S23.</strong> Three habits — the practice.</p></div>
+    <div class="notes-content" data-notes="habit-1"><p><strong>S24.</strong> Ask before adopting.</p></div>
+    <div class="notes-content" data-notes="habit-2"><p><strong>S25.</strong> The dignity move. Tool stays tool when human stays human. Image-bearers do what only image-bearers can do — judgment, witness, presence, love.</p></div>
+    <div class="notes-content" data-notes="habit-3"><p><strong>S26.</strong> Two kingdoms. The line is directional, not a checklist.</p></div>
+    <div class="notes-content" data-notes="practical-intro"><p><strong>S27.</strong> Anticipate the question people are sitting with.</p></div>
+    <div class="notes-content" data-notes="practical-answer"><p><strong>S28.</strong> Direct answer. Three concrete moves: extend, refuse, push.</p></div>
+    <div class="notes-content" data-notes="practice-question"><p><strong>S29.</strong> Slow. This is the question to carry into the week.</p></div>
+    <div class="notes-content" data-notes="closing-reflection"><p><strong>S30.</strong> One at a time. Invite voices on the last two if there's time.</p></div>
+    <div class="notes-content" data-notes="whats-next"><p><strong>S31.</strong> The coin is the tool. The empire is the system that minted it. That's Part 2.</p></div>
+    <div class="notes-content" data-notes="benediction"><p><strong>S32.</strong> Close in prayer.</p></div>
+  </div>
+</aside>
+
+<div class="keyboard-hint">← → arrows · N to toggle notes · F for fullscreen</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const notesPanes = document.querySelectorAll('.notes-content');
+  const counter = document.getElementById('counter');
+  const progressBar = document.getElementById('progress-bar');
+  const notesEl = document.getElementById('notes');
+  const toggleBtn = document.getElementById('toggle-notes');
+  let current = 0;
+  let notesVisible = true;
+
+  function show(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= slides.length) idx = slides.length - 1;
+    current = idx;
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    const key = slides[idx].dataset.notes;
+    notesPanes.forEach(p => p.classList.toggle('active', p.dataset.notes === key));
+    counter.textContent = `${idx + 1} / ${slides.length}`;
+    progressBar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+    history.replaceState(null, '', `#${idx + 1}`);
+  }
+
+  document.getElementById('next').addEventListener('click', () => show(current + 1));
+  document.getElementById('prev').addEventListener('click', () => show(current - 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); show(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  function toggleNotes() {
+    notesVisible = !notesVisible;
+    notesEl.classList.toggle('hidden', !notesVisible);
+    toggleBtn.textContent = `Notes: ${notesVisible ? 'ON' : 'OFF'}`;
+  }
+  toggleBtn.addEventListener('click', toggleNotes);
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { if (dx < 0) show(current + 1); else show(current - 1); }
+  });
+
+  const startIdx = parseInt(location.hash.slice(1), 10);
+  show(isNaN(startIdx) ? 0 : startIdx - 1);
+</script>
+
+</body>
+</html>

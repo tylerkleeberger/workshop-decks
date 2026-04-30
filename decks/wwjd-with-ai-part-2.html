@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI, Rockets, &amp; Bicycles — Part 2</title>
+<style>
+  :root {
+    --bg: #0f0a08;
+    --bg-2: #1a1410;
+    --ink: #f5ead2;
+    --ink-dim: #c8b890;
+    --accent: #d4a960;
+    --accent-2: #a8803e;
+    --rule: #3d2a10;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    height: 100%;
+    overflow: hidden;
+  }
+  body { display: flex; flex-direction: column; }
+
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 28px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px; color: var(--ink-dim); letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .header .title { font-style: italic; }
+  .header .controls { display: flex; gap: 18px; align-items: center; }
+  .header button {
+    background: transparent; border: 1px solid var(--rule);
+    color: var(--ink-dim); padding: 6px 12px;
+    font-family: inherit; font-size: 12px; cursor: pointer;
+    border-radius: 3px; letter-spacing: 0.5px;
+  }
+  .header button:hover { border-color: var(--accent-2); color: var(--ink); }
+  .counter { font-variant-numeric: tabular-nums; min-width: 56px; text-align: right; }
+
+  .stage { flex: 1; display: flex; overflow: hidden; position: relative; }
+  .slide-pane {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 60px 80px; overflow-y: auto;
+  }
+  .slide { max-width: 950px; width: 100%; display: none; }
+  .slide.active { display: block; }
+
+  .slide .kicker {
+    color: var(--accent); font-style: italic; font-size: 18px;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .slide h1 { font-size: 64px; line-height: 1.08; margin: 0 0 20px; letter-spacing: -0.5px; font-weight: bold; }
+  .slide h2 { font-size: 44px; line-height: 1.18; margin: 0 0 24px; letter-spacing: -0.3px; font-weight: bold; }
+  .slide h3 { font-size: 28px; color: var(--accent); margin: 0 0 18px; font-style: italic; font-weight: normal; }
+  .slide p, .slide li { font-size: 24px; line-height: 1.45; margin: 0 0 16px; }
+  .slide ul, .slide ol { padding-left: 28px; margin: 0 0 16px; }
+  .slide li { margin-bottom: 10px; }
+  .slide blockquote {
+    font-size: 28px; line-height: 1.4; font-style: italic;
+    color: var(--ink-dim); border-left: 3px solid var(--accent-2);
+    margin: 0 0 20px; padding: 4px 0 4px 28px;
+  }
+  .slide .accent { color: var(--accent); }
+  .slide .dim { color: var(--ink-dim); }
+  .slide .small { font-size: 18px; line-height: 1.5; }
+  .rule { width: 80px; height: 2px; background: var(--accent-2); margin: 24px 0; }
+
+  .slide .big-question {
+    font-size: 56px; line-height: 1.1; font-weight: bold;
+    text-align: center; margin: 0 0 40px;
+  }
+
+  .slide.title-slide { text-align: center; }
+  .slide.title-slide .eyebrow {
+    color: var(--accent-2); font-style: italic; font-size: 18px;
+    letter-spacing: 4px; margin-bottom: 20px; text-transform: uppercase;
+  }
+  .slide.title-slide h1 { font-size: 72px; margin-bottom: 12px; }
+  .slide.title-slide .accent-block { color: var(--accent); }
+  .slide.title-slide .subtitle {
+    font-size: 26px; font-style: italic; color: var(--ink-dim); margin-top: 8px;
+  }
+  .slide.title-slide .meta {
+    margin-top: 60px; font-size: 18px; color: var(--ink-dim); letter-spacing: 1px;
+  }
+
+  .slide.section-slide { text-align: center; }
+  .slide.section-slide .num {
+    font-size: 22px; color: var(--accent); letter-spacing: 6px; margin-bottom: 20px;
+  }
+  .slide.section-slide h1 { font-size: 64px; }
+  .slide.section-slide .lede {
+    font-size: 22px; font-style: italic; color: var(--ink-dim);
+    margin-top: 24px; max-width: 720px; margin-left: auto; margin-right: auto;
+    line-height: 1.5;
+  }
+
+  .nav-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; color: var(--ink-dim);
+    font-size: 32px; cursor: pointer; padding: 20px;
+    opacity: 0.4; transition: opacity 0.2s; font-family: inherit;
+  }
+  .nav-arrow:hover { opacity: 1; color: var(--accent); }
+  .nav-arrow.prev { left: 8px; }
+  .nav-arrow.next { right: 8px; }
+
+  .notes {
+    border-top: 1px solid var(--rule); background: var(--bg-2);
+    padding: 18px 32px; max-height: 25vh; overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px; line-height: 1.55; color: var(--ink-dim);
+    flex-shrink: 0;
+  }
+  .notes.hidden { display: none; }
+  .notes h4 {
+    color: var(--accent); font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; margin: 0 0 10px; font-weight: normal;
+  }
+  .notes-content { display: none; }
+  .notes-content.active { display: block; }
+  .notes p { margin: 0; }
+
+  .progress { height: 2px; background: rgba(212, 169, 96, 0.15); flex-shrink: 0; }
+  .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+  .keyboard-hint {
+    position: fixed; bottom: 12px; right: 16px;
+    font-size: 11px; color: var(--ink-dim); opacity: 0.5;
+    letter-spacing: 1px; pointer-events: none;
+  }
+
+  @media (max-width: 900px) {
+    .slide-pane { padding: 30px 24px; }
+    .slide h1 { font-size: 42px; }
+    .slide h2 { font-size: 30px; }
+    .slide p, .slide li { font-size: 19px; }
+    .slide blockquote { font-size: 21px; }
+    .slide .big-question { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title">Part 2 · AI, Rockets, &amp; Bicycles · May 24</div>
+  <div class="controls">
+    <button id="toggle-notes">Notes: ON</button>
+    <span class="counter" id="counter">1 / 1</span>
+  </div>
+</div>
+
+<div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="stage">
+  <button class="nav-arrow prev" id="prev" aria-label="Previous">‹</button>
+  <div class="slide-pane">
+
+    <!-- S1. TITLE — technological ethics subtitle -->
+    <section class="slide title-slide" data-notes="title">
+      <div class="eyebrow">Part Two · May 24</div>
+      <h1>AI, Rockets,<br><span class="accent-block">&amp; Bicycles</span></h1>
+      <div class="subtitle">Technological ethics for the age of AI:<br>tools, systems, and how to tell the difference.</div>
+      <div class="meta">SUNDAY · MAY 24, 2026 · 11:00 AM</div>
+    </section>
+
+    <!-- S2. OPENING -->
+    <section class="slide" data-notes="opening">
+      <div class="kicker">Where we begin</div>
+      <h2>"Is AI good or bad?"<br>might be the <span class="accent">wrong question.</span></h2>
+      <div class="rule"></div>
+      <p>The better question:</p>
+      <blockquote>What is AI actually — what's it made of, who built it, what's it costing — and how should we think about using it?</blockquote>
+    </section>
+
+    <!-- S3. RECAP — IF YOU MISSED PART 1 -->
+    <section class="slide" data-notes="recap-intro">
+      <div class="kicker">If you missed Part 1</div>
+      <h2>A 60-second recap.</h2>
+      <p class="dim">Two weeks ago we read a passage in Mark 12 where Jesus is asked a trap question about paying taxes to the Roman Empire. His answer reframed the whole question.</p>
+      <p class="dim">Here's what we took from it.</p>
+    </section>
+
+    <!-- S4. RECAP 1 — IMPERIAL TECH -->
+    <section class="slide" data-notes="recap-imperial">
+      <h2>Imperial technology is rarely neutral.</h2>
+      <p>Roman roads, Roman coinage, Roman taxation — every one of them carried a claim.</p>
+      <p>The denarius bore Caesar's image and an inscription claiming he was the son of a divine emperor.</p>
+      <p class="dim">You couldn't buy bread without participating in that claim.</p>
+    </section>
+
+    <!-- S5. RECAP 2 — THE TOOL -->
+    <section class="slide" data-notes="recap-tool">
+      <h2>Jesus refused the binary.</h2>
+      <p>He didn't say "pay the tax." He didn't say "refuse the tax."</p>
+      <p>He gave them a tool: <span class="accent">look at what's in your hand. Whose image is on it? Whose benefit? Whose cost?</span></p>
+      <div class="rule"></div>
+      <p>Today, we apply that tool to AI.</p>
+    </section>
+
+    <!-- S6. SECTION: IS AI GOOD OR BAD -->
+    <section class="slide section-slide" data-notes="good-bad-intro">
+      <div class="num">PART ONE</div>
+      <h1>Is AI good?</h1>
+    </section>
+
+    <!-- S7. THE GOOD — open question (no list yet) -->
+    <section class="slide" data-notes="good-discussion">
+      <div class="big-question">Where is AI<br>actually working?</div>
+      <p class="dim small" style="text-align: center;">What good have you seen — in your work, your kids' schools, your community?</p>
+    </section>
+
+    <!-- S8. THE GOOD — list reveals -->
+    <section class="slide" data-notes="the-good">
+      <h2>The good is real.</h2>
+      <ul>
+        <li><span class="accent">AlphaFold</span> — protein folding, 2024 Nobel in Chemistry, accelerates drug discovery.</li>
+        <li><span class="accent">Medical imaging</span> — radiologists with AI catch certain cancers earlier than either alone.</li>
+        <li><span class="accent">Accessibility</span> — transcription, reading support, image description for the blind.</li>
+        <li><span class="accent">A patient tutor</span> for anyone with internet — the kid working through algebra at midnight.</li>
+        <li><span class="accent">Translation</span> for endangered languages.</li>
+        <li><span class="accent">Drafting and summarizing</span> — extending what one person can do.</li>
+      </ul>
+    </section>
+
+    <!-- S9. THE PATTERN -->
+    <section class="slide" data-notes="good-pattern">
+      <h2>Notice the pattern.</h2>
+      <p>The genuine goods share three features:</p>
+      <ul>
+        <li>They are <span class="accent">narrow</span> &mdash; focused on one task.</li>
+        <li>They <span class="accent">extend</span> a human, rather than replace one.</li>
+        <li>The human keeps the <span class="accent">judgment.</span></li>
+      </ul>
+    </section>
+
+    <!-- S10. SECTION: THE EMPIRE -->
+    <section class="slide section-slide" data-notes="empire-intro">
+      <div class="num">PART TWO</div>
+      <h1>The Empire</h1>
+      <div class="lede">Now the harder question: what kind of system are these tools coming from?</div>
+    </section>
+
+    <!-- S11. KAREN HAO — strengthened -->
+    <section class="slide" data-notes="karen-hao">
+      <h3>Our first guide</h3>
+      <h2>Karen Hao</h2>
+      <p>One of the top AI journalists today.</p>
+      <p class="dim small">MIT Technology Review, Wall Street Journal, The Atlantic. First reporter to profile OpenAI from the inside, in 2019.</p>
+      <p>For <em>Empire of AI</em>: <span class="accent">300+ interviews with 250+ people, including 90+ current and former OpenAI insiders.</span></p>
+      <div class="rule"></div>
+      <p>Hao offers a <span class="accent">historically rooted</span> definition of empire — drawn from the actual transition of the British East India Company from trading firm to colonial power. When she calls AI companies empires, she's not being rhetorical. She's being precise.</p>
+    </section>
+
+    <!-- S11b. CENTER FOR HUMANE TECHNOLOGY — second guide (NEW) -->
+    <section class="slide" data-notes="cht-intro">
+      <h3>Our second guide</h3>
+      <h2>The Center for Humane Technology</h2>
+      <p>Founded 2018 by Tristan Harris, Aza Raskin, and Randima Fernando — technologists themselves.</p>
+      <p class="dim small">Insider perspective on how tech design reflects company incentives. Featured in Netflix's <em>The Social Dilemma.</em></p>
+      <div class="rule"></div>
+      <p>Their core question: <span class="accent">how can technology better serve society?</span></p>
+      <p class="dim small">Where Hao reports what AI companies are doing, CHT diagnoses <em>why the system produces it</em> — misaligned incentives, racing to dominance, design choices that exploit rather than serve.</p>
+    </section>
+
+    <!-- S12. EMPIRE VS BUSINESS -->
+    <section class="slide" data-notes="empire-vs-business">
+      <h2>What makes something an <span class="accent">empire</span> rather than a <span class="dim">business</span>?</h2>
+      <p>A business engages in <em>fair, voluntary, reciprocal</em> exchange.</p>
+      <p>An empire <em>extracts</em> — takes more value than it returns — and there's nothing anyone can do about it.</p>
+      <div class="rule"></div>
+      <p class="dim small">The British East India Company started as the first. It became the second.</p>
+      <p class="dim small">Hao's claim: the major AI companies have crossed that line.</p>
+    </section>
+
+    <!-- S12b. CHT — MISALIGNED INCENTIVES (NEW) -->
+    <section class="slide" data-notes="misaligned-incentives">
+      <div class="kicker">CHT's diagnosis</div>
+      <h2>Why does the empire produce what it produces?</h2>
+      <div class="rule"></div>
+      <p><span class="accent">Misaligned incentives.</span></p>
+      <ul>
+        <li>Companies race for engagement, dominance, and market share — <em>not</em> human well-being.</li>
+        <li>The metrics that get optimized (time spent, data captured, revenue per user) <em>diverge</em> from the metrics that matter (trust, dignity, human flourishing).</li>
+        <li>Whoever optimizes engagement hardest wins. Whoever doesn't, loses.</li>
+      </ul>
+      <p class="dim small">CHT's insight: the harms aren't accidents. They're what the system was designed to produce.</p>
+    </section>
+
+    <!-- S13. FOUR MARKS INTRO -->
+    <section class="slide" data-notes="four-marks-intro">
+      <h2>Four marks of empire</h2>
+      <p class="dim">Four specific forms the extraction takes.</p>
+      <p class="dim">Each has a parallel in empires we already know.</p>
+    </section>
+
+    <!-- S14. MARK 1 — RESOURCES -->
+    <section class="slide" data-notes="mark-1">
+      <div class="kicker">Mark 1</div>
+      <h2>Land and resource extraction</h2>
+      <ul>
+        <li>Data centers requiring gigawatts of power, sited in working-class and minority communities without consent.</li>
+        <li><span class="accent">Memphis, TN:</span> 35 unpermitted methane gas turbines in a Black neighborhood. Discovered when residents smelled gas in their living rooms.</li>
+        <li><span class="accent">Abilene, TX:</span> OpenAI's Stargate facility — the size of Central Park.</li>
+        <li>Communities competing with these facilities for fresh water during droughts.</li>
+      </ul>
+      <p class="small dim"><em>Empire pattern:</em> Rome's roads and aqueducts were built on tribute, taxes, and forced labor from conquered provinces.</p>
+    </section>
+
+    <!-- S15. MARK 2 — LABOR -->
+    <section class="slide" data-notes="mark-2">
+      <div class="kicker">Mark 2</div>
+      <h2>Labor exploitation</h2>
+      <ul>
+        <li>Hundreds of thousands of "data annotation" workers globally — paid pennies, often reviewing traumatic content.</li>
+        <li>The career-ladder effect: a marketer gets laid off, takes a contract gig training the model on the job she just lost.</li>
+        <li>Roughly <span class="accent">40% reduction</span> in entry-level hiring in fields most exposed to AI.</li>
+      </ul>
+      <p class="small dim"><em>Empire pattern:</em> the labor that makes the system possible is always the least protected.</p>
+    </section>
+
+    <!-- S16. MARK 3 — KNOWLEDGE -->
+    <section class="slide" data-notes="mark-3">
+      <div class="kicker">Mark 3</div>
+      <h2>Capture of knowledge production</h2>
+      <ul>
+        <li>The major AI companies fund a substantial majority of AI research worldwide.</li>
+        <li>Researchers who critique are pushed out. <em>(Timnit Gebru, Google.)</em></li>
+        <li>Critics outside the industry face legal pressure and subpoenas.</li>
+      </ul>
+      <blockquote>"If most of the climate scientists in the world were bankrolled by fossil fuel companies, would we get an accurate picture of the climate crisis?"</blockquote>
+    </section>
+
+    <!-- S17. MARK 4 — MYTH -->
+    <section class="slide" data-notes="mark-4">
+      <div class="kicker">Mark 4</div>
+      <h2>Imperial mythmaking</h2>
+      <ul>
+        <li>The dual narrative: <span class="accent">utopia or catastrophe.</span> Both serve to consolidate power.</li>
+        <li><em>If we don't build it first, China will.</em></li>
+        <li>Sam Altman defines AGI <span class="accent">four different ways</span> — to Congress, to consumers, to Microsoft, on the website. The vagueness is the product.</li>
+      </ul>
+      <p class="small dim"><em>Empire pattern:</em> every empire has its civilizing mission.</p>
+    </section>
+
+    <!-- S18. THROUGH LINE -->
+    <section class="slide" data-notes="through-line">
+      <h2>The through line.</h2>
+      <p>A business engages in fair exchange.</p>
+      <p>An empire extracts more than it returns, justifies the extraction with a mission, captures the institutions that might check it, and presents itself as inevitable.</p>
+      <div class="rule"></div>
+      <p>By that definition, AI companies are no longer just companies.</p>
+      <p class="accent">And we are no longer just customers. We are subjects.</p>
+    </section>
+
+    <!-- S19. SECTION: WHAT'S AT STAKE -->
+    <section class="slide section-slide" data-notes="stakes-intro">
+      <div class="num">PART THREE</div>
+      <h1>What's at stake</h1>
+      <div class="lede">Three concerns worth naming before we get to what we can do.</div>
+    </section>
+
+    <!-- S20. CONCERN 1 — DEIFICATION -->
+    <section class="slide" data-notes="concern-1">
+      <div class="kicker">Concern 1</div>
+      <h2>The technology is being deified.</h2>
+      <ul>
+        <li><em>AGI</em> — "artificial general intelligence." A transcendent intelligence beyond human.</li>
+        <li>The language is religious: heaven, hell, salvation, the messianic timeline.</li>
+        <li>Christians have an old word for this — <span class="accent">idolatry.</span></li>
+      </ul>
+      <p class="dim small">Religious or not, we are being asked to trust these systems with the kind of authority humans usually reserve for the sacred.</p>
+    </section>
+
+    <!-- S20b. CHT — RACE TO INTIMACY (NEW) -->
+    <section class="slide" data-notes="race-to-intimacy">
+      <div class="kicker">How the system gets in</div>
+      <h2>The race to intimacy.</h2>
+      <p>AI chatbots are <span class="accent">engineered to fawn</span> — to accommodate, mirror, soothe, and avoid friction.</p>
+      <div class="rule"></div>
+      <p>CHT calls it: <em>"sycophancy is the fawn response at industrial scale."</em></p>
+      <ul>
+        <li>It rewards compliance.</li>
+        <li>It erodes the capacity to stay in real relationships when there's friction.</li>
+        <li>It feels like care. It is engineered for engagement.</li>
+      </ul>
+      <p class="dim small">This is how a tool gets to the place where it claims the image — not by force, by feeling like a friend.</p>
+    </section>
+
+    <!-- S21. CONCERN 2 — CONSENT -->
+    <section class="slide" data-notes="concern-2">
+      <div class="kicker">Concern 2</div>
+      <h2>This is a system we did not consent to.</h2>
+      <ul>
+        <li>The Roman tax was in your pocket because Rome put it there.</li>
+        <li>AI is in our work, our schools, our books, our communities — without anyone asking.</li>
+        <li><span class="accent">80% of Americans</span> say the AI industry should be regulated. Near-total cross-partisan agreement.</li>
+      </ul>
+    </section>
+
+    <!-- S22. CONCERN 3 — INEQUALITY COMPOUNDS (NEW) -->
+    <section class="slide" data-notes="concern-3">
+      <div class="kicker">Concern 3</div>
+      <h2>This transition is compounding inequality at exponential speed.</h2>
+      <ul>
+        <li>Previous shifts (industrial revolution, internet) took decades — long enough for societies to adapt.</li>
+        <li>This one runs on the open internet. Distribution is instant. Disruption follows.</li>
+        <li>Those with access, capital, and skill compound their advantage. Those without are absorbed into the supply chain.</li>
+      </ul>
+      <p class="dim small">Tristan Harris (Center for Humane Technology) calls this the <em>wisdom gap</em> — paleolithic emotions, medieval institutions, god-like technology.</p>
+    </section>
+
+    <!-- S23. SECTION: WHAT DO WE DO -->
+    <section class="slide section-slide" data-notes="action-intro">
+      <div class="num">PART FOUR</div>
+      <h1>What do we do?</h1>
+      <div class="lede">Real goods. Real harms. A structural problem underneath both.<br>Three concrete domains where we can act.</div>
+    </section>
+
+    <!-- S24. THREE POSTURES -->
+    <section class="slide" data-notes="three-postures">
+      <h2>Three postures</h2>
+      <ol>
+        <li><span class="accent">Enthusiastic adoption</span> — "It's just a tool." <em>Risk:</em> complicity in harms you don't see.</li>
+        <li><span class="accent">Total refusal</span> — "It's an idol; walk away." <em>Risk:</em> abandoning the field.</li>
+        <li><span class="accent">Discerning engagement</span> — refuse the binary. Whose image, whose benefit, whose cost?</li>
+      </ol>
+    </section>
+
+    <!-- S25. THREE DOMAINS — CHT FRAME (NEW) -->
+    <section class="slide" data-notes="three-domains">
+      <div class="kicker">Where pressure actually shifts behavior</div>
+      <h2>Three domains for action.</h2>
+      <p class="dim small">From the Center for Humane Technology's AI Roadmap.</p>
+      <div class="rule"></div>
+      <ul>
+        <li><span class="accent">Norms</span> — what society considers acceptable. Build new ones.</li>
+        <li><span class="accent">Laws</span> — the rules that create accountability. Push for them.</li>
+        <li><span class="accent">Design</span> — the choices that determine how AI touches people. Insist on better.</li>
+      </ul>
+      <p class="dim small">No single reform is sufficient. They reinforce each other.</p>
+    </section>
+
+    <!-- S26. CONCRETE MOVES — restructured around the three domains -->
+    <section class="slide" data-notes="concrete-moves">
+      <h2>Concrete moves you can make.</h2>
+      <ul>
+        <li><span class="accent">In your own use</span> — know what you're using. Bicycle or rocket? Withhold where it matters.</li>
+        <li><span class="accent">In your community</span> — show up for data center hearings, school adoption policies, library decisions.</li>
+        <li><span class="accent">In your civic life</span> — push for regulation. 80% want it. The pressure is missing.</li>
+        <li><span class="accent">In your work</span> — build, don't just consume. Tools you can pick up, set down, and remake stay tools.</li>
+      </ul>
+    </section>
+
+    <!-- S27. SECTION: BICYCLES AND ROCKETS -->
+    <section class="slide section-slide" data-notes="bikes-intro">
+      <div class="num">PART FIVE</div>
+      <h1>Bicycles &amp; Rockets</h1>
+      <div class="lede">A practical framework for telling which AI is which.</div>
+    </section>
+
+    <!-- S28. TRANSPORTATION ANALOGY -->
+    <section class="slide" data-notes="transportation">
+      <div class="kicker">Karen Hao's analogy</div>
+      <h2>"AI" is like the word <span class="accent">"transportation."</span></h2>
+      <blockquote>It can refer to a bicycle or a rocket. They both get you from A to B, but they have fundamentally different costs and benefits. We don't say "we need more transportation" — we say public transit, or electric vehicles, or bicycles. We need to do the same with AI.</blockquote>
+    </section>
+
+    <!-- S29. ROCKETS -->
+    <section class="slide" data-notes="rockets">
+      <h2>The <span class="accent">rockets</span> of AI</h2>
+      <ul>
+        <li>GPT-4. Claude. Gemini. Grok.</li>
+        <li>Massive general-purpose models trained on the entire scrapeable internet.</li>
+        <li>Data centers the size of Central Park.</li>
+        <li>Built by extracting data, labor, water, and air quality from communities that didn't consent.</li>
+      </ul>
+    </section>
+
+    <!-- S30. BICYCLES -->
+    <section class="slide" data-notes="bicycles">
+      <h2>The <span class="accent">bicycles</span> of AI</h2>
+      <ul>
+        <li>AlphaFold. Medical imaging assistants.</li>
+        <li>Targeted classifiers a high schooler can train in 20 minutes.</li>
+        <li>Translation tools for endangered languages.</li>
+        <li><span class="accent">Small. Curated. Focused. Extends a human. Keeps the judgment.</span></li>
+      </ul>
+      <blockquote class="dim">"The very same capabilities could be developed in a different way that doesn't have all of these unintended consequences."</blockquote>
+    </section>
+
+    <!-- S31. SECTION: HOW SHOULD I USE IT -->
+    <section class="slide section-slide" data-notes="closing-intro">
+      <div class="num">PART SIX</div>
+      <h1>So &mdash; how should<br>I use AI?</h1>
+    </section>
+
+    <!-- S32. NARROW SERVICE — direct answer (NEW) -->
+    <section class="slide" data-notes="narrow-service">
+      <h2>Choose service over superiority.</h2>
+      <div class="rule"></div>
+      <p>The good answer is <span class="accent">narrow AI in service of human ends.</span></p>
+      <ul>
+        <li>Tools that <span class="accent">extend</span> what humans can do — without replacing the human.</li>
+        <li>Tools <span class="accent">small enough</span> to be picked up, set down, examined, and remade.</li>
+        <li>Tools that don't require an empire to exist.</li>
+      </ul>
+      <p class="dim small">The biggest, most general, most "intelligent" tool is rarely the right one for the job.</p>
+    </section>
+
+    <!-- S33. EXTENSION VS REPLACEMENT — explicit (NEW) -->
+    <section class="slide" data-notes="extension-replacement">
+      <h2>Extension, not replacement.</h2>
+      <div class="rule"></div>
+      <p><span class="accent">Extension</span> — the human stays the source. The tool amplifies.<br><em class="dim small">Drafting. Summarizing. Accessibility. Acceleration.</em></p>
+      <p><span class="accent">Replacement</span> — the human is bypassed. Something not made by humans, for humans, takes the human's place.<br><em class="dim small">Outsourced judgment. Outsourced presence. Outsourced witness.</em></p>
+      <p>Tool stays tool when human stays human.</p>
+    </section>
+
+    <!-- S34. THE PRACTICE QUESTION (matches Part 1's closing question) -->
+    <section class="slide" data-notes="practice-question">
+      <h2>The question to take with you:</h2>
+      <blockquote>What world is being created<br>by the things I carry?<br><br>How do the tools I use participate<br>in the world &mdash; <br>and whose world is it claiming?</blockquote>
+    </section>
+
+    <!-- S35. WHEN USING AI, ASK -->
+    <section class="slide" data-notes="ask-questions">
+      <h2>Before you reach for an AI tool, ask:</h2>
+      <ul>
+        <li>Who does this belong to?</li>
+        <li>Whose image is on it?</li>
+        <li>Who is it profiting?</li>
+        <li>What kind of world is it pursuing?</li>
+        <li>At what cost?</li>
+        <li>Who is it for?</li>
+      </ul>
+    </section>
+
+    <!-- S36. CLOSING BENEDICTION — sharpened -->
+    <section class="slide" data-notes="benediction">
+      <h2>Discernment, not enthusiasm.</h2>
+      <h2>Engagement, not refusal.</h2>
+      <h2>Service, not superiority.</h2>
+      <h2 class="accent">Bicycles, when bicycles will do.</h2>
+      <div class="rule"></div>
+      <p class="dim" style="font-style: italic;">"How can technology better serve society?"</p>
+      <p class="dim small">— Center for Humane Technology</p>
+    </section>
+
+  </div>
+  <button class="nav-arrow next" id="next" aria-label="Next">›</button>
+</div>
+
+<aside class="notes" id="notes">
+  <h4>Presenter notes</h4>
+  <div id="notes-container">
+    <div class="notes-content" data-notes="title"><p><strong>S1.</strong> Welcome guests. Public-facing — conversational tone but workshop format.</p></div>
+    <div class="notes-content" data-notes="opening"><p><strong>S2.</strong> Set the frame. Wrong question / better question.</p></div>
+    <div class="notes-content" data-notes="recap-intro"><p><strong>S3.</strong> Brief — for newcomers.</p></div>
+    <div class="notes-content" data-notes="recap-imperial"><p><strong>S4.</strong> Imperial tech is rarely neutral.</p></div>
+    <div class="notes-content" data-notes="recap-tool"><p><strong>S5.</strong> Whose image, whose benefit, whose cost.</p></div>
+    <div class="notes-content" data-notes="good-bad-intro"><p><strong>S6.</strong> Open it up.</p></div>
+    <div class="notes-content" data-notes="good-discussion"><p><strong>S7.</strong> Throw to the room. Take voices. Don't advance until discussion settles.</p></div>
+    <div class="notes-content" data-notes="the-good"><p><strong>S8.</strong> Reveal the list. Algebra-at-midnight lands well.</p></div>
+    <div class="notes-content" data-notes="good-pattern"><p><strong>S9.</strong> Narrow. Extends. Judgment. Flag — comes back.</p></div>
+    <div class="notes-content" data-notes="empire-intro"><p><strong>S10.</strong> Now the harder question.</p></div>
+    <div class="notes-content" data-notes="karen-hao"><p><strong>S11.</strong> Reporter, not activist. Empire is precise, historically rooted.</p></div>
+    <div class="notes-content" data-notes="cht-intro"><p><strong>S11b.</strong> CHT is the complementary frame. Insiders. Hao reports what; CHT diagnoses why.</p></div>
+    <div class="notes-content" data-notes="empire-vs-business"><p><strong>S12.</strong> East India Company analogy. Threshold from business to empire.</p></div>
+    <div class="notes-content" data-notes="misaligned-incentives"><p><strong>S12b.</strong> The harms are not accidents. They are what the system was designed to produce.</p></div>
+    <div class="notes-content" data-notes="four-marks-intro"><p><strong>S13.</strong> Brief.</p></div>
+    <div class="notes-content" data-notes="mark-1"><p><strong>S14.</strong> Memphis lands emotionally.</p></div>
+    <div class="notes-content" data-notes="mark-2"><p><strong>S15.</strong> Career-ladder image: marketer training the model on her own job.</p></div>
+    <div class="notes-content" data-notes="mark-3"><p><strong>S16.</strong> Climate-scientist analogy verbatim.</p></div>
+    <div class="notes-content" data-notes="mark-4"><p><strong>S17.</strong> Four definitions of AGI. Vagueness is the product.</p></div>
+    <div class="notes-content" data-notes="through-line"><p><strong>S18.</strong> "We are subjects." Land it. Pause.</p></div>
+    <div class="notes-content" data-notes="stakes-intro"><p><strong>S19.</strong> Three concerns now. Inequality is the new one.</p></div>
+    <div class="notes-content" data-notes="concern-1"><p><strong>S20.</strong> Idolatry — translate for non-Christian listeners.</p></div>
+    <div class="notes-content" data-notes="race-to-intimacy"><p><strong>S20b.</strong> The fawn response. Sycophancy at industrial scale. This is how the tool reaches past the coin.</p></div>
+    <div class="notes-content" data-notes="concern-2"><p><strong>S21.</strong> The 80% number.</p></div>
+    <div class="notes-content" data-notes="concern-3"><p><strong>S22.</strong> Wisdom gap — Tristan Harris language. Pace matters: previous transitions had decades to adapt; this one doesn't.</p></div>
+    <div class="notes-content" data-notes="action-intro"><p><strong>S23.</strong> Now what.</p></div>
+    <div class="notes-content" data-notes="three-postures"><p><strong>S24.</strong> Frame #3 as the hardest, not the easiest.</p></div>
+    <div class="notes-content" data-notes="three-domains"><p><strong>S25.</strong> CHT's three domains. Norms, laws, design. Pressure works through all three together.</p></div>
+    <div class="notes-content" data-notes="concrete-moves"><p><strong>S26.</strong> Mapped to four areas of life: own use, community, civic, work.</p></div>
+    <div class="notes-content" data-notes="bikes-intro"><p><strong>S27.</strong> The practical framework.</p></div>
+    <div class="notes-content" data-notes="transportation"><p><strong>S28.</strong> Read Hao verbatim.</p></div>
+    <div class="notes-content" data-notes="rockets"><p><strong>S29.</strong> Be specific. Make the size visible.</p></div>
+    <div class="notes-content" data-notes="bicycles"><p><strong>S30.</strong> The three features come back: narrow, extends, judgment.</p></div>
+    <div class="notes-content" data-notes="closing-intro"><p><strong>S31.</strong> Direct answer to the question people came to ask.</p></div>
+    <div class="notes-content" data-notes="narrow-service"><p><strong>S32.</strong> Service vs. superiority. The good answer is narrow AI serving human ends.</p></div>
+    <div class="notes-content" data-notes="extension-replacement"><p><strong>S33.</strong> The dignity move. Tool stays tool when human stays human.</p></div>
+    <div class="notes-content" data-notes="practice-question"><p><strong>S34.</strong> Mirrors Part 1's closing question — for those who attended both.</p></div>
+    <div class="notes-content" data-notes="ask-questions"><p><strong>S35.</strong> The takeaway questions. Walk through slowly.</p></div>
+    <div class="notes-content" data-notes="benediction"><p><strong>S36.</strong> Close. CHT's core question gives positive direction.</p></div>
+  </div>
+</aside>
+
+<div class="keyboard-hint">← → arrows · N to toggle notes · F for fullscreen</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const notesPanes = document.querySelectorAll('.notes-content');
+  const counter = document.getElementById('counter');
+  const progressBar = document.getElementById('progress-bar');
+  const notesEl = document.getElementById('notes');
+  const toggleBtn = document.getElementById('toggle-notes');
+  let current = 0;
+  let notesVisible = true;
+
+  function show(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= slides.length) idx = slides.length - 1;
+    current = idx;
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    const key = slides[idx].dataset.notes;
+    notesPanes.forEach(p => p.classList.toggle('active', p.dataset.notes === key));
+    counter.textContent = `${idx + 1} / ${slides.length}`;
+    progressBar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+    history.replaceState(null, '', `#${idx + 1}`);
+  }
+
+  document.getElementById('next').addEventListener('click', () => show(current + 1));
+  document.getElementById('prev').addEventListener('click', () => show(current - 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); show(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  function toggleNotes() {
+    notesVisible = !notesVisible;
+    notesEl.classList.toggle('hidden', !notesVisible);
+    toggleBtn.textContent = `Notes: ${notesVisible ? 'ON' : 'OFF'}`;
+  }
+  toggleBtn.addEventListener('click', toggleNotes);
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { if (dx < 0) show(current + 1); else show(current - 1); }
+  });
+
+  const startIdx = parseInt(location.hash.slice(1), 10);
+  show(isNaN(startIdx) ? 0 : startIdx - 1);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "decks": [
+    {
+      "slug": "wwjd-with-ai-part-2",
+      "title": "AI, Rockets, & Bicycles",
+      "subtitle": "Part Two — Technological ethics for the age of AI: tools, systems, and how to tell the difference",
+      "date": "2026-05-24",
+      "displayDate": "May 24, 2026",
+      "series": "What Would Jesus Do (With AI)?"
+    },
+    {
+      "slug": "wwjd-with-ai-part-1",
+      "title": "What Would Jesus Do (With AI)?",
+      "subtitle": "Part One — A discipleship conversation on technology, empire, and the image we reflect",
+      "date": "2026-05-10",
+      "displayDate": "May 10, 2026",
+      "series": "What Would Jesus Do (With AI)?"
+    }
+  ]
+}
