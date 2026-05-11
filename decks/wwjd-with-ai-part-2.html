@@ -48,24 +48,20 @@
   .slide .landed { font-family: var(--sans); font-weight: 300; font-size: clamp(2rem, 4vw, 3rem); color: var(--accent); letter-spacing: -0.01em; margin-top: 2rem; }
   .slide aside.notes, .slide aside.reader { display: none; }
 
-  /* CHROME */
   .chrome { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-size: 0.78rem; color: var(--muted); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 60; }
   body.chrome-visible .chrome { opacity: 1; pointer-events: auto; }
   .chrome button { background: transparent; border: 1px solid var(--divider); color: var(--muted); padding: 0.5rem 0.85rem; font-family: inherit; font-size: inherit; cursor: pointer; border-radius: 3px; margin-left: 0.5rem; }
   .chrome button:hover { color: var(--fg); border-color: var(--accent); }
   .progress-bar { position: fixed; bottom: 0; left: 0; height: 2px; background: var(--accent); transition: width 0.3s ease; z-index: 100; }
 
-  /* EDGE NAV ARROWS (audience) */
   .edge-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.04); border: 1px solid var(--divider); color: var(--muted); width: 48px; height: 48px; font-size: 1.3rem; cursor: pointer; opacity: 0; transition: opacity 0.3s ease, background 0.2s ease; z-index: 50; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   .edge-prev { left: 1.25rem; }
   .edge-next { right: 1.25rem; }
   body.chrome-visible .edge-nav { opacity: 0.6; }
   body.chrome-visible .edge-nav:hover { opacity: 1; color: var(--fg); background: rgba(255,255,255,0.08); border-color: var(--accent); }
 
-  /* EMBED MODE — for iframe inside presenter view */
   body.embed-mode .chrome, body.embed-mode .progress-bar, body.embed-mode .edge-nav { display: none !important; }
 
-  /* PRESENTER MODE */
   body.presenter-mode { overflow: hidden; background: #0a0e13; }
   body.presenter-mode .deck, body.presenter-mode .chrome, body.presenter-mode .progress-bar, body.presenter-mode .edge-nav { display: none; }
   body.presenter-mode .presenter-view { display: grid; }
@@ -76,7 +72,6 @@
 
   .presenter-notes { grid-area: notes; padding: 1.5rem 2rem; overflow-y: auto; background: #11161d; font-family: var(--serif); font-size: 0.92rem; line-height: 1.55; color: var(--fg); }
 
-  /* Cue table format — the actual notes layout */
   .presenter-notes table.cue-table { width: 100%; border-collapse: collapse; margin-bottom: 0.75rem; }
   .presenter-notes table.cue-table td { padding: 0.4rem 0; vertical-align: top; border-bottom: 1px solid var(--divider); }
   .presenter-notes table.cue-table tr:last-child td { border-bottom: none; }
@@ -86,7 +81,22 @@
   .presenter-notes table.cue-table td.detail strong { color: var(--accent); font-weight: 600; }
   .presenter-notes table.cue-table td.detail .arrow { color: var(--muted); font-family: var(--sans); margin: 0 0.35rem; }
 
-  /* Anticipate sub-table — visually distinct from main cue rows */
+  /* Sub-detail block — indented optional context under any cue row */
+  .presenter-notes table.cue-table td.detail .more {
+    margin-top: 0.45rem;
+    padding: 0.35rem 0 0.35rem 0.85rem;
+    border-left: 2px solid var(--divider);
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.6;
+    font-family: var(--serif);
+  }
+  .presenter-notes table.cue-table td.detail .more strong { color: var(--fg); font-style: normal; font-weight: 500; }
+  .presenter-notes table.cue-table td.detail .more em { color: var(--accent); font-style: italic; }
+  .presenter-notes table.cue-table td.detail .more ul { margin: 0.35rem 0 0.35rem 1rem; list-style: disc; padding: 0; }
+  .presenter-notes table.cue-table td.detail .more ul li { margin: 0.2rem 0; padding: 0; }
+
   .presenter-notes table.anticipate-table { margin-top: 0.25rem; margin-bottom: 0.75rem; background: rgba(255,255,255,0.02); }
   .presenter-notes table.anticipate-table td.cue { color: var(--muted); font-size: 0.7rem; font-style: italic; text-transform: none; letter-spacing: 0; font-weight: 500; }
   .presenter-notes table.anticipate-table td { padding: 0.3rem 0.5rem 0.3rem 0; }
@@ -100,7 +110,6 @@
   .presenter-bar .controls button { background: transparent; border: 1px solid var(--divider); color: var(--fg); padding: 0.45rem 0.9rem; margin-left: 0.4rem; cursor: pointer; border-radius: 3px; font-family: inherit; font-size: inherit; }
   .presenter-bar .controls button:hover { border-color: var(--accent); }
 
-  /* READER MODE — full article */
   body.reader-mode { overflow: auto; background: #f7f4ee; color: #1a1a1a; font-size: 18px; }
   body.reader-mode .deck, body.reader-mode .chrome, body.reader-mode .progress-bar, body.reader-mode .edge-nav { display: none; }
   body.reader-mode .reader-view { display: block; }
@@ -115,16 +124,10 @@
   .reader-section { margin-bottom: 2.5rem; }
   .reader-section h2.section-header { font-family: var(--sans); font-size: 0.9rem; font-weight: 600; color: #8a6f3f; text-transform: uppercase; letter-spacing: 0.15em; margin: 4rem 0 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid #d4cdbe; }
   .reader-section .anchor-q { font-family: var(--serif); font-size: 1.6rem; font-style: italic; line-height: 1.3; color: #2a2520; margin: 1.5rem 0; padding-left: 1.25rem; border-left: 3px solid #c08157; }
-  .reader-section .reveal-list { background: #ede5d3; padding: 1.25rem 1.5rem; border-radius: 4px; margin: 1.25rem 0; }
-  .reader-section .reveal-list li { margin: 0.4rem 0 0.4rem 1.25rem; font-size: 0.95rem; line-height: 1.55; color: #2a2520; }
-  .reader-section .reveal-list li strong { color: #1a1a1a; }
-  .reader-section .reveal-list li em { color: #6b6253; }
-  .reader-section .reveal-list ol { padding-left: 0; }
   .reader-section .reveal-pull { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: #8a6f3f; margin: 1rem 0; padding: 0.5rem 0; }
-  .reader-section blockquote.source { font-family: var(--serif); font-style: italic; font-size: 1.2rem; line-height: 1.5; padding: 1rem 0 1rem 1.5rem; border-left: 3px solid #c08157; margin: 1.5rem 0; color: #2a2520; }
-  .reader-section blockquote.source .citation { display: block; margin-top: 0.75rem; font-style: normal; font-family: var(--sans); font-size: 0.85rem; color: #998a72; letter-spacing: 0.05em; }
   .reader-section .essay { font-family: var(--serif); font-size: 1.05rem; line-height: 1.75; color: #2a2520; margin: 1rem 0; }
   .reader-section .essay em { color: #8a6f3f; font-style: italic; }
+  .reader-section .essay blockquote { font-style: italic; font-size: 1.15rem; padding: 0.5rem 0 0.5rem 1.25rem; border-left: 3px solid #c08157; margin: 1.25rem 0; color: #2a2520; }
   .reader-section .benediction-block { text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.3rem; line-height: 1.65; color: #2a2520; margin: 2rem 0; padding: 2rem; border-top: 1px solid #d4cdbe; border-bottom: 1px solid #d4cdbe; }
   .reader-section .benediction-block em { color: #8a6f3f; }
   .reader-view footer { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #d4cdbe; font-size: 0.85rem; color: #998a72; text-align: center; font-style: italic; }
@@ -169,7 +172,7 @@
         <tr><td class="cue">"It depends"</td><td class="detail">depends <em>on what?</em></td></tr>
         <tr><td class="cue">"It's a tool"</td><td class="detail">hammer is a tool — is a power plant?</td></tr>
         <tr><td class="cue">"Next industrial rev"</td><td class="detail">was that good or bad? <em>Yes.</em></td></tr>
-        <tr><td class="cue">Silence</td><td class="detail">name it as honesty — most of us don't know</td></tr>
+        <tr><td class="cue">Silence</td><td class="detail">name as honesty — most of us don't know</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -182,7 +185,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Reframe</td><td class="detail">refuse the binary</td></tr>
-        <tr><td class="cue">Arc</td><td class="detail">made of (empire) → who built it (incentives) → how to use it (bicycles)</td></tr>
+        <tr><td class="cue">Arc</td><td class="detail">made of (empire) → who built it (incentives) → how to use it (bicycles)
+          <div class="more"><strong>Order:</strong> empire critique first, race-to-intimacy second, bicycles third, practical answers fourth. The room earns each section by working through the previous one.</div>
+        </td></tr>
         <tr><td class="cue">Promise</td><td class="detail">land with something concrete for Monday morning</td></tr>
       </table>
     </aside>
@@ -214,7 +219,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Pacing</td><td class="detail">~30s, narrate</td></tr>
-        <tr><td class="cue">Point</td><td class="detail">imperial tech is rarely neutral — it carries a claim</td></tr>
+        <tr><td class="cue">Point</td><td class="detail">imperial tech is rarely neutral — it carries a claim
+          <div class="more">The denarius bore the inscription <em>"Tiberius Caesar, son of the divine Augustus, high priest."</em> Every coin was a small religious-political claim. The point isn't to memorize the Latin — it's to feel that you couldn't buy bread without participating in the claim.</div>
+        </td></tr>
         <tr><td class="cue">Land</td><td class="detail">"portable idol of allegiance"</td></tr>
       </table>
     </aside>
@@ -232,7 +239,7 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Pacing</td><td class="detail">~30s, narrate</td></tr>
-        <tr><td class="cue">Land</td><td class="detail">"whose image, whose benefit, whose cost" — load-bearing question for whole session</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">"whose image, whose benefit, whose cost" — load-bearing for whole session</td></tr>
         <tr><td class="cue">Connect</td><td class="detail">Don't elaborate Mark 12 — that's Part 1's work</td></tr>
       </table>
     </aside>
@@ -246,7 +253,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Tonal shift</td><td class="detail">Pause. Smile.</td></tr>
-        <tr><td class="cue">Why this order</td><td class="detail">Lead with their use → critique lands. Lead with critique → they get defensive.</td></tr>
+        <tr><td class="cue">Why this order</td><td class="detail">Lead with their use → critique lands. Lead with critique → they get defensive.
+          <div class="more">The room will be carrying anxiety from the empire framing if you've foreshadowed it. Switching to "where is AI working in your life" gives them permission to name the goods they're actually experiencing. The critique that follows lands differently because it doesn't feel like a personal attack on their tools.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -289,10 +298,11 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Reveal</td><td class="detail">after the room has surfaced 4–5</td></tr>
-        <tr><td class="cue">Lead with</td><td class="detail">AlphaFold + rare disease — most underappreciated</td></tr>
-        <tr><td class="cue">Don't read whole list</td><td class="detail">pick 2–3 the room missed</td></tr>
+        <tr><td class="cue">Lead with</td><td class="detail">AlphaFold + rare disease — most underappreciated
+          <div class="more"><strong>AlphaFold:</strong> DeepMind's protein-folding model. Solved a 50-year biology problem. 2024 Nobel in Chemistry (Demis Hassabis + John Jumper). Now accelerating drug discovery for diseases we couldn't touch before.<br><br><strong>Rare disease:</strong> patients undiagnosed for years finding answers because an AI surfaced patterns across genetic data their doctors couldn't see.</div>
+        </td></tr>
+        <tr><td class="cue">Don't read list</td><td class="detail">pick 2–3 the room missed</td></tr>
       </table>
-      <p class="aside">AlphaFold: DeepMind's protein-folding model, solved a 50-year biology problem, 2024 Nobel in Chemistry, accelerating drug discovery.</p>
     </aside>
     <aside class="reader">
       <p>The good of AI is real and specific. AlphaFold — DeepMind's protein-folding model — solved a fifty-year-old problem in biology and won the 2024 Nobel in Chemistry. Medical imaging tools catch cancers earlier than radiologists working alone. Accessibility tools give blind users image descriptions and transcripts. A patient tutor available to anyone with an internet connection — for kids working through algebra at midnight, adults learning to code, lay people studying Greek. Translation tools preserving endangered languages. Rare-disease diagnoses for patients undiagnosed for years. These aren't speculative goods. They're shipping.</p>
@@ -329,7 +339,9 @@
       <table class="cue-table">
         <tr><td class="cue">Reveal</td><td class="detail">after room names ≥2</td></tr>
         <tr><td class="cue">Land</td><td class="detail">these 3 come back as the bicycle test</td></tr>
-        <tr><td class="cue">Setup</td><td class="detail">empire critique = what happens when these 3 invert</td></tr>
+        <tr><td class="cue">Setup</td><td class="detail">empire critique = what happens when these 3 invert
+          <div class="more"><strong>Inversion:</strong> rocket-AI is general (not narrow), replaces humans (not extends), takes the judgment (not keeps it). That inversion isn't a bigger version of the good — it's a structurally different thing. The next section names it.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -361,8 +373,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Pacing</td><td class="detail">~30s</td></tr>
-        <tr><td class="cue">Key move</td><td class="detail">"empire" = historically rooted, not rhetorical</td></tr>
-        <tr><td class="cue">Source</td><td class="detail">British East India Company transition</td></tr>
+        <tr><td class="cue">Key move</td><td class="detail">"empire" = historically rooted, not rhetorical
+          <div class="more">She's drawing on the actual transition of the British East India Company from trading firm to colonial power. When she calls AI companies empires, she's making a <em>structural diagnosis</em>, not throwing an insult.</div>
+        </td></tr>
         <tr><td class="cue">Frame</td><td class="detail">she's being <em>precise</em>, not activist</td></tr>
       </table>
     </aside>
@@ -383,7 +396,9 @@
       <table class="cue-table">
         <tr><td class="cue">Pacing</td><td class="detail">~30s</td></tr>
         <tr><td class="cue">Pairing</td><td class="detail">Hao = <em>what</em>; CHT = <em>why</em></td></tr>
-        <tr><td class="cue">Credentials</td><td class="detail">Harris = ex-Google ethicist; Raskin = invented infinite scroll</td></tr>
+        <tr><td class="cue">Credentials</td><td class="detail">Harris = ex-Google ethicist; Raskin = invented infinite scroll
+          <div class="more"><strong>Tristan Harris:</strong> design ethicist at Google, left after his concerns about attention-design were ignored internally. <strong>Aza Raskin:</strong> invented infinite scroll on the web in 2006 — has spent the years since trying to undo it. Their critique is from inside.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -421,8 +436,12 @@
     <p class="kicker" style="margin-top: 2rem;">Hao's claim: AI companies have crossed that line.</p>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Lean on</td><td class="detail">EIC story — most won't know the details</td></tr>
-        <tr><td class="cue">EIC arc</td><td class="detail">1600: trading firm → 1750s: army → 1800s: governed India</td></tr>
+        <tr><td class="cue">Lean on</td><td class="detail">EIC story — most won't know the details
+          <div class="more">EIC story is unfamiliar to most rooms; expect to need to explain the transition. The most useful detail to lead with is the army-by-1750s — that's the moment people register the shift from commerce to coercion.</div>
+        </td></tr>
+        <tr><td class="cue">EIC arc</td><td class="detail">1600: trading firm → 1750s: army → 1800s: governed India
+          <div class="more"><strong>1600:</strong> chartered by Elizabeth I as a trading company for spice and textile trade.<br><strong>1750s:</strong> had its own standing army of ~260,000 troops — about twice the size of the British army at the time. The Battle of Plassey (1757) established military control over Bengal.<br><strong>1800s:</strong> directly governed roughly 200 million people across India, collected taxes, ran courts, set policy. Dissolved 1858 after the Indian Rebellion, with rule transferred directly to the British Crown.</div>
+        </td></tr>
         <tr><td class="cue">Land</td><td class="detail">commerce → governance, never returned</td></tr>
         <tr><td class="cue">Hao's move</td><td class="detail">not metaphor — structural reading of the same transition</td></tr>
       </table>
@@ -461,8 +480,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Land</td><td class="detail">the kicker line — pause on it</td></tr>
-        <tr><td class="cue">Why it matters</td><td class="detail">explains why the harms recur across <em>different</em> companies</td></tr>
-        <tr><td class="cue">Reframe</td><td class="detail">"the system selects for the behaviors we see"</td></tr>
+        <tr><td class="cue">Why it matters</td><td class="detail">explains why harms recur across different companies
+          <div class="more">It's not that some companies are good and some are bad. The <em>system</em> selects for the behaviors we're seeing. Any company that doesn't optimize engagement gets out-competed by one that does. That's why the harms keep showing up at every major AI company — they're not bad actors, they're operating in a market that selects for these outcomes.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -503,7 +523,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Lead with</td><td class="detail">Memphis xAI — strongest case</td></tr>
-        <tr><td class="cue">Memphis</td><td class="detail">35 unpermitted methane turbines, NAACP suing</td></tr>
+        <tr><td class="cue">Memphis</td><td class="detail">35 unpermitted methane turbines, NAACP suing
+          <div class="more"><strong>xAI Colossus, South Memphis (2024):</strong> Elon Musk's data center installed 35 methane gas turbines without environmental permits. Sited in a historically Black neighborhood with elevated lung cancer rates and longstanding air-quality issues. Local NAACP filed suit. State agency began investigating after community organizing.</div>
+        </td></tr>
         <tr><td class="cue">Abilene</td><td class="detail">"size of Central Park" — OpenAI's words</td></tr>
         <tr><td class="cue">Empire</td><td class="detail">Rome's roads/aqueducts on tribute + forced labor</td></tr>
         <tr><td class="cue">Effect</td><td class="detail">utility bills, grid reliability, air, water, asthma</td></tr>
@@ -525,7 +547,9 @@
     </ul>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Lead with</td><td class="detail">marketer-training-her-replacement — verbal image</td></tr>
+        <tr><td class="cue">Lead with</td><td class="detail">marketer-training-her-replacement — verbal image
+          <div class="more"><strong>The image:</strong> twenty-year veteran marketer laid off because AI can do "most of what she did." Needs work. Contractor deploying the AI hires "model trainers" — evaluators correcting AI output using domain expertise. She takes the gig at a fraction of her old salary. Every correction she makes trains the model to need fewer people like her.</div>
+        </td></tr>
         <tr><td class="cue">Numbers</td><td class="detail">40% entry-level hiring drop — sit with this</td></tr>
         <tr><td class="cue">For parents</td><td class="detail">kids in their 20s — this is the number</td></tr>
         <tr><td class="cue">Empire</td><td class="detail">labor that makes the system is the least protected</td></tr>
@@ -547,8 +571,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Pause after</td><td class="detail">the climate-scientist rhetorical Q</td></tr>
-        <tr><td class="cue">Gebru</td><td class="detail">slow down — most won't know her</td></tr>
-        <tr><td class="cue">Gebru story</td><td class="detail">AI ethics @ Google, "Stochastic Parrots" 2020, forced out</td></tr>
+        <tr><td class="cue">Gebru</td><td class="detail">slow down — most won't know her
+          <div class="more"><strong>Timnit Gebru:</strong> co-led Google's AI Ethics team. In late 2020 she co-authored <em>"On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?"</em> — warning about environmental costs, training-data harms, and unintended consequences of large language models. Google asked her to retract or remove Google-affiliated authors. She refused. Google announced her departure as a resignation; she calls it a firing. Has become the canonical case of what happens to AI watchdogs who get inside.</div>
+        </td></tr>
         <tr><td class="cue">Empire</td><td class="detail">every empire controls its story — Rome's historians, Britain's mapmakers</td></tr>
       </table>
     </aside>
@@ -567,7 +592,17 @@
     </ul>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Read aloud</td><td class="detail">the 4 AGI definitions — let absurdity land</td></tr>
+        <tr><td class="cue">Read aloud</td><td class="detail">the 4 AGI definitions — let absurdity land
+          <div class="more"><strong>Altman's four AGI definitions:</strong>
+            <ul>
+              <li><em>To Congress:</em> AGI will cure cancer.</li>
+              <li><em>To consumers:</em> AGI will be the best assistant you've ever had.</li>
+              <li><em>To Microsoft (investment contract):</em> AGI = OpenAI generates $100B in revenue.</li>
+              <li><em>On OpenAI's website:</em> AGI = AI that outperforms humans economically.</li>
+            </ul>
+            Four incompatible definitions, all from the same CEO, all in active circulation simultaneously.
+          </div>
+        </td></tr>
         <tr><td class="cue">Land</td><td class="detail">"vagueness isn't a bug, it's the product"</td></tr>
         <tr><td class="cue">Empire</td><td class="detail">Pax Romana, Britain's "civilization," America's "freedom"</td></tr>
       </table>
@@ -589,7 +624,9 @@
       <table class="cue-table">
         <tr><td class="cue">Pause</td><td class="detail"><strong>5+ seconds after "we are subjects"</strong></td></tr>
         <tr><td class="cue">Don't explain</td><td class="detail">let the room feel the weight</td></tr>
-        <tr><td class="cue">Reframe</td><td class="detail">customer / user / consumer → subject</td></tr>
+        <tr><td class="cue">Reframe</td><td class="detail">customer / user / consumer → subject
+          <div class="more">"Subject" reframes the relationship. A subject is <em>governed</em> without consenting. A subject doesn't have the option to negotiate. A subject lives under a system whose terms they didn't write. That's the shift the framing performs — and it's the foundation for everything in the rest of the workshop.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -616,9 +653,10 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Throw</td><td class="detail">2–3 min</td></tr>
-        <tr><td class="cue">Build to</td><td class="detail">claims that used to belong to God</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">claims that used to belong to God
+          <div class="more">Words to surface verbally if room doesn't get there: <em>salvation, intelligence, transcendence, abundance, the future of the species, eternal life.</em> These are the words AI companies use in their marketing and their CEOs' interviews. They used to belong to a different category of discourse entirely.</div>
+        </td></tr>
       </table>
-      <p class="aside">Words to surface verbally: salvation, intelligence, transcendence, abundance, the future of the species, eternal life.</p>
       <span class="label">Anticipate</span>
       <table class="cue-table anticipate-table">
         <tr><td class="cue">"Divinity"</td><td class="detail">yes</td></tr>
@@ -641,9 +679,9 @@
     </ul>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Translate</td><td class="detail">explicit — name the move for non-Christian listeners</td></tr>
-        <tr><td class="cue">For Christians</td><td class="detail">idolatry, first commandment on the table</td></tr>
-        <tr><td class="cue">For others</td><td class="detail">elevation of tech to the sacred has historical precedent — usually severe</td></tr>
+        <tr><td class="cue">Translate</td><td class="detail">explicit — name the move for non-Christian listeners
+          <div class="more"><strong>For Christians:</strong> idolatry — first commandment on the table.<br><strong>For others:</strong> elevation of tech to the sacred has historical precedent (nuclear weapons, the market, the nation-state) — usually with severe consequences. Name this translation aloud.</div>
+        </td></tr>
         <tr><td class="cue">Don't moralize</td><td class="detail">describe</td></tr>
       </table>
     </aside>
@@ -661,7 +699,7 @@
       </table>
       <span class="label">Anticipate</span>
       <table class="cue-table anticipate-table">
-        <tr><td class="cue">"By force"</td><td class="detail">most will say this — we imagine domination as overt</td></tr>
+        <tr><td class="cue">"By force"</td><td class="detail">most will say this</td></tr>
         <tr><td class="cue">"By feeling helpful"</td><td class="detail">→ that's the answer</td></tr>
         <tr><td class="cue">"By being indispensable"</td><td class="detail">how did it get indispensable? by feeling helpful first</td></tr>
       </table>
@@ -683,9 +721,13 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Land</td><td class="detail">"fawn at industrial scale" — pause</td></tr>
-        <tr><td class="cue">Spiritual concern</td><td class="detail">capacity for real (high-friction) relationships erodes</td></tr>
+        <tr><td class="cue">Spiritual concern</td><td class="detail">capacity for real (high-friction) relationships erodes
+          <div class="more">If you're in any relationship — friend, partner, colleague — and the other party always agrees with you, that relationship is not real. Real relationships have friction. They push back. They tell you when you're wrong. What happens to our capacity for those when we spend hours a day in pseudo-relationships engineered to have no friction?</div>
+        </td></tr>
+        <tr><td class="cue">Optional aside</td><td class="detail">four trauma responses — fight, flight, freeze, fawn
+          <div class="more"><strong>Fawn:</strong> the relational accommodation pattern. The "people-pleasing" response. AI chatbots are explicitly trained to perform it — sycophancy isn't a side effect of LLM training; it's a deliberate design choice. The companies measured engagement and found agreement, mirroring, and reassurance kept users coming back.</div>
+        </td></tr>
       </table>
-      <p class="aside">Optional aside (if room is receptive): four trauma responses — fight, flight, freeze, fawn. Fawn = relational accommodation. AI chatbots are fawn at industrial scale.</p>
     </aside>
     <aside class="reader">
       <p>CHT names what's happening with a clarity most public conversation about AI lacks. Chatbots are engineered to fawn — to accommodate, mirror, soothe, and avoid friction. Sycophancy isn't a side effect of training; it's a design choice. The companies measured engagement and found that agreement, mirroring, and reassurance kept users coming back. They trained for it. The result feels like care. It is engineered for engagement. And it erodes the capacity to stay in real relationships when there's friction — because real relationships push back, and AI relationships don't. That's how a tool gets to the place where it claims the image. Not by force. By feeling like a friend.</p>
@@ -702,7 +744,9 @@
     <p class="kicker" style="margin-top: 2rem;">The public knows something is wrong. Naming it is the first step.</p>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Highlight</td><td class="detail">80% cross-partisan — rare on anything</td></tr>
+        <tr><td class="cue">Highlight</td><td class="detail">80% cross-partisan — rare on anything
+          <div class="more">Cross-partisan agreement on regulation of any industry is extraordinarily rare in current U.S. politics. Polling has consistently shown 70–80% support for AI regulation across party lines since 2023. The political mechanism is what's missing — not public will.</div>
+        </td></tr>
         <tr><td class="cue">Parallel</td><td class="detail">Roman tax in pocket = AI in everyday life</td></tr>
         <tr><td class="cue">Land</td><td class="detail">public already knows — political mechanism missing</td></tr>
       </table>
@@ -722,7 +766,9 @@
     <p class="kicker" style="margin-top: 2rem;">Tristan Harris: <em>paleolithic emotions, medieval institutions, god-like technology.</em></p>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Land</td><td class="detail">"paleolithic emotions, medieval institutions, god-like technology"</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">"paleolithic emotions, medieval institutions, god-like technology"
+          <div class="more">Harris's framing of the wisdom gap. Our nervous systems are still the ones our ancestors had on the savannah. Our institutions — courts, schools, governments — were built for an analog world. And the technology we've handed them looks like something from the future. The mismatch is the problem.</div>
+        </td></tr>
         <tr><td class="cue">Frame</td><td class="detail">speed is the problem — outruns adaptation</td></tr>
         <tr><td class="cue">Historical</td><td class="detail">industrial rev + internet took decades — this is weeks</td></tr>
       </table>
@@ -826,7 +872,9 @@
       <table class="cue-table">
         <tr><td class="cue">Pacing</td><td class="detail">~90s for 4 moves — pace</td></tr>
         <tr><td class="cue">Bridge</td><td class="detail">"bicycle / rocket" enters here</td></tr>
-        <tr><td class="cue">Antiqua et Nova</td><td class="detail">Vatican AI doc, Jan 2025 — name briefly for Christian listeners, skip if foreign</td></tr>
+        <tr><td class="cue">Antiqua et Nova</td><td class="detail">Vatican AI doc, Jan 2025 — name briefly for Christian listeners, skip if foreign
+          <div class="more">Full title: <em>Antiqua et Nova: Note on the Relationship Between Artificial Intelligence and Human Intelligence.</em> Issued jointly by the Dicasteries for the Doctrine of the Faith and for Culture and Education, January 2025. Frames AI as a tool ordered to human flourishing — explicitly rejecting its elevation above the human.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -865,7 +913,7 @@
       </div>
     </aside>
     <aside class="reader">
-      <blockquote style="font-style: italic; font-size: 1.15rem; padding-left: 1rem; border-left: 3px solid #c08157; margin: 1rem 0;">
+      <blockquote>
         "AI is like the word 'transportation.' It can refer to a bicycle or a rocket. They both get you from point A to point B, but they have fundamentally different costs and benefits. We don't say 'we need more transportation' — we say we need public transit, or electric vehicles, or bicycles. We need to do the same with AI." — Karen Hao
       </blockquote>
       <p>Most public discussion of AI uses the word as a single category — as if all AI is one thing. The transportation analogy breaks that frame. A bicycle and a rocket are both transportation. Nobody confuses them. They serve different purposes, have different costs, and require different infrastructure. AI is the same. Calling AlphaFold and ChatGPT both "AI" is technically accurate and practically useless.</p>
@@ -877,7 +925,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Throw</td><td class="detail">literal answers about bikes welcome</td></tr>
-        <tr><td class="cue">Build to</td><td class="detail">narrow · extends · keeps the judgment (from S11)</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">narrow · extends · keeps the judgment (from earlier)
+          <div class="more">The bicycle features map exactly onto the three features from the "good of AI" section (narrow, extends, keeps the judgment). Don't reveal that until the reveal slide — let the room arrive there themselves. The recognition is more powerful than the announcement.</div>
+        </td></tr>
       </table>
       <span class="label">Anticipate</span>
       <table class="cue-table anticipate-table">
@@ -905,7 +955,9 @@
       <table class="cue-table">
         <tr><td class="cue">Lean on</td><td class="detail">"size of Central Park" — spatial scale</td></tr>
         <tr><td class="cue">Point</td><td class="detail">rockets aren't evil — they cost a lot</td></tr>
-        <tr><td class="cue">If "I use ChatGPT for everything"</td><td class="detail">don't shame — ask: for what specifically? which are bicycle-sized?</td></tr>
+        <tr><td class="cue">If "I use ChatGPT for everything"</td><td class="detail">don't shame — ask: for what specifically? which are bicycle-sized?
+          <div class="more">The reframe: every task has a right-sized tool. Using GPT-4 to summarize an email is overkill — burning rocket fuel to cross the street. A simpler, more focused model could do the same job for a fraction of the energy, data, and cost. Defaulting to the biggest tool is a marketing artifact, not an engineering necessity.</div>
+        </td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -923,8 +975,10 @@
     </ul>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Name callback</td><td class="detail">last 3 words = the pattern from S11</td></tr>
-        <tr><td class="cue">High schooler</td><td class="detail">most underappreciated bicycle category</td></tr>
+        <tr><td class="cue">Name callback</td><td class="detail">last 3 words = the pattern from earlier</td></tr>
+        <tr><td class="cue">High schooler</td><td class="detail">most underappreciated bicycle category
+          <div class="more">Anyone with basic programming and a small dataset can train targeted classifiers — sorting recyclables, identifying invasive species, flagging building-code violations in inspection photos. These models are tiny, run on a laptop, do real work. Don't need a rocket to fold the laundry.</div>
+        </td></tr>
         <tr><td class="cue">Land</td><td class="detail">"don't need a rocket to fold laundry"</td></tr>
       </table>
     </aside>
@@ -941,7 +995,9 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Land</td><td class="detail">most hopeful sentence in the workshop</td></tr>
-        <tr><td class="cue">Frame</td><td class="detail">empire = choice, not fate</td></tr>
+        <tr><td class="cue">Frame</td><td class="detail">empire = choice, not fate
+          <div class="more">The current shape of AI is the result of choices specific people made about incentives, business models, and scale. Different incentives would have produced different AI. The empire isn't a fate — it's a configuration. Bicycles aren't fantasy; they're the AI that would have been built under different incentives.</div>
+        </td></tr>
         <tr><td class="cue">Implication</td><td class="detail">different decisions still possible</td></tr>
       </table>
     </aside>
@@ -1049,7 +1105,7 @@
       <table class="cue-table">
         <tr><td class="cue">Read</td><td class="detail">don't elaborate</td></tr>
         <tr><td class="cue">Pause</td><td class="detail">let it sit — silence is the work</td></tr>
-        <tr><td class="cue">Mirror</td><td class="detail">Part 1's closing Q, sharpened</td></tr>
+        <tr><td class="cue">Mirror</td><td class="detail">Part 1's closing Q, sharpened with Part 2's frame</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -1100,7 +1156,6 @@
 
 </main>
 
-<!-- ============ PRESENTER VIEW ============ -->
 <div class="presenter-view" id="presenterView">
   <div class="presenter-slide-wrap">
     <iframe id="presenterSlideFrame" src="" title="Slide preview"></iframe>
@@ -1118,7 +1173,6 @@
   </div>
 </div>
 
-<!-- ============ READER VIEW (article-style) ============ -->
 <div class="reader-view" id="readerView">
   <header>
     <h1>AI, Rockets, &amp; <em>Bicycles</em></h1>
@@ -1131,7 +1185,6 @@
   </footer>
 </div>
 
-<!-- ============ CHROME (audience) ============ -->
 <button class="edge-nav edge-prev" onclick="prevSlide()" aria-label="Previous slide">&#8592;</button>
 <button class="edge-nav edge-next" onclick="nextSlide()" aria-label="Next slide">&#8594;</button>
 
@@ -1156,15 +1209,9 @@
 
   if (params.get('embed') === '1') document.body.classList.add('embed-mode');
 
-  if (mode === 'presenter') {
-    document.body.classList.add('presenter-mode');
-    initPresenter();
-  } else if (mode === 'reader') {
-    document.body.classList.add('reader-mode');
-    initReader();
-  } else {
-    initAudience();
-  }
+  if (mode === 'presenter') { document.body.classList.add('presenter-mode'); initPresenter(); }
+  else if (mode === 'reader') { document.body.classList.add('reader-mode'); initReader(); }
+  else { initAudience(); }
 
   function initAudience() {
     showSlide(0);
@@ -1175,7 +1222,6 @@
       clearTimeout(chromeTimeout);
       chromeTimeout = setTimeout(() => document.body.classList.remove('chrome-visible'), 2500);
     });
-
     channel.onmessage = (e) => {
       if (e.data.type === 'slide-change') showSlide(e.data.index, true);
       else if (e.data.type === 'request-state') channel.postMessage({ type: 'state', index: currentIndex });
@@ -1189,12 +1235,9 @@
     url.searchParams.set('embed', '1');
     url.searchParams.delete('reader');
     document.getElementById('presenterSlideFrame').src = url.toString();
-
     updatePresenterNotes(currentIndex);
-
     document.getElementById('presenterPrev').onclick = () => prevSlide();
     document.getElementById('presenterNextBtn').onclick = () => nextSlide();
-
     channel.postMessage({ type: 'presenter-opened' });
     channel.onmessage = (e) => {
       if (e.data.type === 'slide-change' || e.data.type === 'state') {
@@ -1209,9 +1252,7 @@
   function updatePresenterNotes(index) {
     const current = slides[index];
     const notesEl = current.querySelector('aside.notes');
-    document.getElementById('presenterNotes').innerHTML = notesEl
-      ? notesEl.innerHTML
-      : '<em style="color:var(--muted)">No notes for this slide.</em>';
+    document.getElementById('presenterNotes').innerHTML = notesEl ? notesEl.innerHTML : '<em style="color:var(--muted)">No notes for this slide.</em>';
     document.getElementById('presenterSlideNum').textContent = index + 1;
     document.getElementById('presenterSlideTotal').textContent = total;
   }
@@ -1219,8 +1260,6 @@
   function initReader() {
     const container = document.getElementById('readerSections');
     let currentSectionHTML = '';
-    let sectionWrapper = null;
-
     function flushSection() {
       if (currentSectionHTML) {
         const wrap = document.createElement('div');
@@ -1230,40 +1269,28 @@
         currentSectionHTML = '';
       }
     }
-
     slides.forEach((slide, i) => {
       const pattern = slide.dataset.pattern;
       const readerEl = slide.querySelector('aside.reader');
       const readerHTML = readerEl ? readerEl.innerHTML : '';
-
-      // Section divider — start a new visual section
       if (pattern === 'section') {
         flushSection();
         const sectionTitle = slide.querySelector('h2')?.textContent || '';
-        const sectionSubtitle = slide.querySelector('.subtitle')?.textContent || '';
         currentSectionHTML += `<h2 class="section-header">${sectionTitle}</h2>`;
         if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
         return;
       }
-
-      // Title slide handled separately in the article header above; skip here.
       if (pattern === 'title') {
         if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
         return;
       }
-
-      // Anchor slide — render question as italicized pull
       if (pattern === 'anchor') {
         const q = slide.querySelector('.question')?.innerHTML || '';
         if (q) currentSectionHTML += `<div class="anchor-q">${q}</div>`;
         if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
         return;
       }
-
-      // Reveal slide — render bullets compactly, then essay
       if (pattern === 'reveal') {
-        // Skip rendering bullets in reader mode — the essay restates them in prose
-        // But render the kicker line + landed line if present
         const kicker = slide.querySelector('.kicker')?.innerHTML;
         const landed = slide.querySelector('.landed')?.textContent;
         if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
@@ -1271,25 +1298,18 @@
         if (landed) currentSectionHTML += `<p class="reveal-pull" style="text-align: center; font-size: 1.5rem;">${landed}</p>`;
         return;
       }
-
-      // Source slide — render the quote inline (reader essay already has it)
       if (pattern === 'source') {
         if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
         return;
       }
-
-      // Benediction
       if (pattern === 'benediction') {
         const ben = slide.querySelector('.benediction')?.innerHTML || '';
         if (ben) currentSectionHTML += `<div class="benediction-block">${ben}</div>`;
         if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
         return;
       }
-
-      // Default
       if (readerHTML) currentSectionHTML += `<div class="essay">${readerHTML}</div>`;
     });
-
     flushSection();
   }
 
