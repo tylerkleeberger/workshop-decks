@@ -226,8 +226,12 @@
     z-index: 100;
   }
 
+  /* EMBED MODE — for iframe inside presenter view */
+  body.embed-mode .chrome,
+  body.embed-mode .progress-bar { display: none !important; }
+
   /* PRESENTER MODE */
-  body.presenter-mode { overflow: auto; background: #161b22; }
+  body.presenter-mode { overflow: hidden; background: #0a0e13; }
   body.presenter-mode .deck { display: none; }
   body.presenter-mode .chrome { display: none; }
   body.presenter-mode .progress-bar { display: none; }
@@ -236,97 +240,77 @@
   .presenter-view {
     display: none;
     height: 100vh;
-    grid-template-rows: 30vh 1fr auto;
+    width: 100vw;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      "slide notes"
+      "bar bar";
+    gap: 0;
   }
-  .presenter-previews {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1rem;
-    padding: 1rem;
-    border-bottom: 1px solid var(--divider);
-  }
-  .preview-box {
-    background: var(--bg);
-    border: 1px solid var(--divider);
-    border-radius: 6px;
-    padding: 1rem;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-  .preview-box .preview-label {
-    font-family: var(--sans);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    margin-bottom: 0.5rem;
-  }
-  .preview-box .preview-content {
-    flex: 1;
-    overflow: hidden;
+
+  .presenter-slide-wrap {
+    grid-area: slide;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    font-family: var(--serif);
-    font-size: 0.8rem;
-    line-height: 1.4;
-    transform: scale(0.85);
-    transform-origin: center center;
+    background: #000;
+    padding: 1.5rem;
+    overflow: hidden;
+    border-right: 1px solid var(--divider);
   }
-  .preview-content .question { font-size: 1rem; font-style: italic; }
-  .preview-content h1 { font-size: 1.3rem; font-weight: 300; }
-  .preview-content h2 { font-size: 0.95rem; color: var(--accent); }
-  .preview-content ul li { font-size: 0.8rem; padding: 0.2rem 0; }
-  .preview-content ol li { font-size: 0.8rem; padding: 0.2rem 0 0.2rem 1.5rem; }
-  .preview-next { opacity: 0.55; }
+  .presenter-slide-wrap iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 100%;
+    border: none;
+    background: var(--bg);
+    box-shadow: 0 0 0 1px var(--divider), 0 8px 24px rgba(0,0,0,0.4);
+  }
 
   .presenter-notes {
-    padding: 1.5rem 3rem;
+    grid-area: notes;
+    padding: 2.5rem 3rem;
     overflow-y: auto;
+    background: #11161d;
     font-family: var(--serif);
-    font-size: 1.1rem;
-    line-height: 1.65;
-  }
-  .presenter-notes h3 {
-    font-family: var(--sans);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    margin-bottom: 0.8rem;
-    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: 1.75;
+    color: var(--fg);
   }
   .presenter-notes .notes-content em { color: var(--accent); font-style: italic; }
   .presenter-notes .notes-content strong { color: var(--fg); font-weight: 600; }
-  .presenter-notes .notes-content ul { margin: 0.5rem 0 0.5rem 1.4rem; }
-  .presenter-notes .notes-content li { margin-bottom: 0.3rem; }
+  .presenter-notes .notes-content p { margin-bottom: 1rem; }
+  .presenter-notes .notes-content ul { margin: 0.75rem 0 1rem 1.5rem; }
+  .presenter-notes .notes-content ul li { margin-bottom: 0.4rem; }
+  .presenter-notes .notes-content h4 {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 500;
+    margin: 1.25rem 0 0.5rem;
+  }
 
   .presenter-bar {
+    grid-area: bar;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    padding: 0.7rem 1.5rem;
+    padding: 0.85rem 1.5rem;
     border-top: 1px solid var(--divider);
-    background: #11161d;
+    background: #0a0e13;
     font-family: var(--sans);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     color: var(--muted);
     gap: 1rem;
-  }
-  .presenter-bar .timer {
-    font-variant-numeric: tabular-nums;
-    font-size: 1.05rem;
-    color: var(--accent);
-    justify-self: center;
   }
   .presenter-bar .controls button {
     background: transparent;
     border: 1px solid var(--divider);
     color: var(--fg);
-    padding: 0.35rem 0.75rem;
+    padding: 0.45rem 0.9rem;
     margin-left: 0.4rem;
     cursor: pointer;
     border-radius: 3px;
@@ -335,7 +319,7 @@
   }
   .presenter-bar .controls button:hover { border-color: var(--accent); }
 
-  /* READER MODE */
+  /* READER MODE (unchanged; URL-only, no chrome button) */
   body.reader-mode { overflow: auto; background: #f7f4ee; color: #1a1a1a; font-size: 17px; }
   body.reader-mode .deck { display: none; }
   body.reader-mode .chrome { display: none; }
@@ -376,10 +360,17 @@
   .reader-slide .commentary strong { color: #1a1a1a; }
   .reader-slide .slide-number { font-family: var(--sans); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: #998a72; margin-bottom: 0.5rem; }
 
-  @media (max-width: 768px) {
-    .presenter-view { grid-template-rows: 22vh 1fr auto; }
-    .presenter-previews { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
-    .presenter-notes { padding: 1rem 1.5rem; font-size: 1rem; }
+  @media (max-width: 900px) {
+    .presenter-view {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "slide"
+        "notes"
+        "bar";
+    }
+    .presenter-slide-wrap { border-right: none; border-bottom: 1px solid var(--divider); }
+    .presenter-notes { padding: 1.5rem; font-size: 1.05rem; }
     .reader-view { padding: 2rem 1rem 4rem; }
   }
 </style>
@@ -388,61 +379,57 @@
 
 <main class="deck" id="deck">
 
-  <!-- S1: TITLE -->
   <section class="slide active" data-pattern="title">
     <h1>AI, Rockets, &amp; <em>Bicycles</em></h1>
     <p class="subtitle">Technological ethics for the age of AI: tools, systems, and how to tell the difference.</p>
     <aside class="notes">
-      Welcome. <strong>Acknowledge it's a public-facing workshop</strong> — newcomers and returnees both. Set the expectation: a conversation, not a lecture. We'll wrestle with this together.
-      <br><br>
-      <em>If anyone attended Part 1 (May 10), name them briefly. Their voices will be useful when the room gets to bicycle/rocket.</em>
-      <br><br>
-      Don't promise too much. The room will tell you what we make of it.
+      <h4>Opening</h4>
+      <p>Welcome the room. Acknowledge it's a public-facing workshop — newcomers and returnees both. Set the expectation: <strong>a conversation, not a lecture.</strong> We'll wrestle with this together. Some of what we'll say will be uncomfortable; some of it will resonate; some of it you'll disagree with, and that's exactly what makes this useful.</p>
+      <p><em>If anyone attended Part 1 (May 10), name them briefly.</em> Their voices will be useful when we get to bicycles vs. rockets — they've already done some of this thinking and can help anchor the conversation.</p>
+      <p>Don't promise too much. The room will tell us what we make of it.</p>
     </aside>
   </section>
 
-  <!-- S2: ANCHOR — wrong question -->
   <section class="slide" data-pattern="anchor">
     <p class="question">Is AI good or bad?</p>
     <aside class="notes">
-      <strong>Throw to the room.</strong> Let people answer for ~30 seconds. The binary will surface immediately.
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Throw it to the room</h4>
+      <p>Take voices for 60–90 seconds. The binary will surface immediately and that's the point — I want everyone to feel the trap of the question before we reframe.</p>
+      <h4>Anticipated takes</h4>
       <ul>
-        <li>"It depends." — push: depends on what?</li>
-        <li>"It's a tool." — fine; we'll get to that. But the tool framing has its own assumptions.</li>
-        <li>"It's the next industrial revolution." — interesting. Was the industrial revolution good or bad?</li>
+        <li><strong>"It depends."</strong> — push: depends on what? On who's using it? On what they're using it for? On who built it?</li>
+        <li><strong>"It's just a tool."</strong> — fine, we'll get there. But notice the tool framing has its own assumptions baked in. A hammer is a tool. Is a power plant?</li>
+        <li><strong>"It's the next industrial revolution."</strong> — interesting. Was the industrial revolution good or bad? The answer historians give is "yes."</li>
+        <li><strong>Silence or "I don't know."</strong> — name that as honesty. Most of us don't know. That's why we're here.</li>
       </ul>
-      <em>Don't resolve it. The point is to feel the binary as a trap before we reframe.</em>
+      <p><em>Don't resolve it.</em> The point is to feel the binary as a trap. The reframe comes on the next slide.</p>
     </aside>
   </section>
 
-  <!-- S3: REVEAL — better question -->
   <section class="slide" data-pattern="reveal">
     <p class="question">What is AI actually — what's it <em>made of</em>, who built it, what's it costing — and how should we think about <em>using</em> it?</p>
     <aside class="notes">
-      Reveal after the binary surfaces. Name the move: refusing the binary.
-      <br><br>
-      <strong>The three sub-questions:</strong>
+      <h4>What I'll say</h4>
+      <p>"Is AI good or bad" is the wrong question. It's a trap that locks us into a binary — either everything is fine or nothing is fine. Neither is true.</p>
+      <p>The better question has three parts:</p>
       <ul>
-        <li>What it's <em>made of</em> — the empire underneath</li>
-        <li>Who built it — Hao's reporting</li>
-        <li>How to use it — the bicycles/rockets distinction</li>
+        <li><strong>What is AI actually made of?</strong> — the empire underneath. We'll spend a chunk of time here, drawing on Karen Hao's reporting.</li>
+        <li><strong>Who built it, and why?</strong> — the design choices and incentives, drawing on the Center for Humane Technology.</li>
+        <li><strong>How should we use it?</strong> — the practical answer. The bicycles-vs-rockets distinction. That's where we'll land.</li>
       </ul>
-      <em>That's the arc of the workshop. Tell them.</em>
+      <p>That's the arc of the next 90 minutes. We'll come back to the practical question at the end with something concrete you can carry into Monday morning.</p>
     </aside>
   </section>
 
-  <!-- S4: SECTION -->
   <section class="slide" data-pattern="section">
     <h2>60-Second Recap</h2>
     <p class="subtitle">For those who weren't at Part 1.</p>
     <aside class="notes">
-      Move fast through the next two slides. ~60 seconds total. Returnees will recognize; newcomers get the frame.
+      <h4>Pacing</h4>
+      <p>Move fast through the next two slides. ~60 seconds total. Returnees will recognize; newcomers get the frame. Don't elaborate the Mark 12 reading — the recap is intentionally fast. The whole point is to bring the room to the same starting line before we move into Part 2's content.</p>
     </aside>
   </section>
 
-  <!-- S5: RECAP — imperial tech -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>Roman roads, coinage, taxation — each carried a claim</li>
@@ -450,11 +437,12 @@
       <li>You couldn't buy bread without participating in that claim</li>
     </ul>
     <aside class="notes">
-      <strong>Narrate quickly.</strong> 30 seconds. The point: imperial technology is rarely neutral. It travels into ordinary life carrying a claim about who owns what.
+      <h4>What I'll say</h4>
+      <p>30 seconds. The point: imperial technology is rarely neutral. It travels into ordinary life carrying a claim about who owns what. The Roman denarius wasn't just currency — it was a portable idol. Caesar's face was on it. The inscription called him "son of the divine Augustus, high priest." Every transaction was a small act of allegiance.</p>
+      <p>That's the lens I want us to carry into AI.</p>
     </aside>
   </section>
 
-  <!-- S6: RECAP — Jesus' move -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>Jesus refused the binary — neither "pay" nor "refuse"</li>
@@ -462,43 +450,43 @@
       <li>Today, we apply that tool to AI</li>
     </ul>
     <aside class="notes">
-      Three lines, 30 seconds. The "whose image, whose benefit, whose cost" framing is the load-bearing question for this whole session. It carries through to the closing slide.
-      <br><br>
-      <em>Don't elaborate the Mark 12 reading here. The recap is intentionally fast.</em>
+      <h4>What I'll say</h4>
+      <p>30 seconds. In Mark 12, Jesus is asked whether it's lawful to pay taxes to Caesar. The question is a trap: yes makes him a collaborator; no makes him a rebel. He refuses both. He asks to see the coin, points at Caesar's image, and says: "Render unto Caesar what is Caesar's, and unto God what is God's."</p>
+      <p>That's the move. Not yes, not no — a third question. <em>Whose image is on it? Whose benefit? Whose cost?</em></p>
+      <p>That question — whose image, whose benefit, whose cost — is the load-bearing question for this whole session. It'll carry through to the closing slide.</p>
     </aside>
   </section>
 
-  <!-- S7: SECTION -->
   <section class="slide" data-pattern="section">
     <h2>Is AI Good?</h2>
     <aside class="notes">
-      Pause. Smile. The previous section set up the structural critique — this section deliberately starts somewhere else: <em>where is AI actually working in your life?</em>
-      <br><br>
-      <strong>Why this order matters:</strong> if you lead with the empire critique, people get defensive. If you lead with their own concrete experience of AI doing something useful, the critique that follows lands differently — it doesn't feel like an attack on their tools.
+      <h4>Tonal shift</h4>
+      <p>Pause. Smile. The previous section set up a structural critique — but I'm not starting there. This section deliberately starts somewhere else: <em>where is AI actually working in your life?</em></p>
+      <h4>Why this order matters</h4>
+      <p>If we lead with the empire critique, people get defensive. If we lead with their own concrete experience of AI doing something useful, the critique that follows lands differently — it doesn't feel like an attack on their tools. It feels like a question about what those tools cost.</p>
+      <p>So: where is AI actually working in your life right now?</p>
     </aside>
   </section>
 
-  <!-- S8: ANCHOR — where is AI working -->
   <section class="slide" data-pattern="anchor">
     <p class="question">Where is AI actually working in your life right now?</p>
     <aside class="notes">
-      <strong>Real question. Take voices for 3–5 minutes.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices for 3–5 minutes</h4>
+      <p>This is a real question and I want the room to do real work. Most people in the room are already using AI in ways they haven't named. Let them name it.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>School use (kids using ChatGPT for homework)</li>
-        <li>Work tasks (drafting emails, summarizing reports)</li>
+        <li>School use — kids using ChatGPT for homework, teachers grading with it</li>
+        <li>Work tasks — drafting emails, summarizing reports, meeting notes</li>
         <li>Coding / development</li>
-        <li>Medical (radiology, dermatology)</li>
-        <li>Accessibility (transcription, image description)</li>
+        <li>Medical — radiology, dermatology, image analysis</li>
+        <li>Accessibility — transcription, image description for the blind, reading support</li>
         <li>Translation</li>
-        <li>Voice assistants, navigation, search</li>
+        <li>Voice assistants, navigation, search, recommendations</li>
       </ul>
-      <em>Don't push toward the "right" answer. The room is telling you what AI is already in their lives. Honor it.</em>
+      <p><em>Don't push toward the "right" answer.</em> The room is telling me what AI is already in their lives. Honor it. Some of these are bicycles, some are rockets — we'll sort them out later. For now, just collect.</p>
     </aside>
   </section>
 
-  <!-- S9: REVEAL — the good is real -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li><strong>AlphaFold</strong> — protein folding; 2024 Nobel in Chemistry</li>
@@ -510,32 +498,33 @@
       <li><strong>Drafting and summarizing</strong> — extending one person's reach</li>
     </ul>
     <aside class="notes">
-      <strong>Reveal AFTER the room has surfaced 4–5 of these themselves.</strong>
-      <br><br>
-      Add what they didn't name. AlphaFold and rare-disease diagnosis are the strongest "the good is real" examples. AlphaFold won a Nobel.
-      <br><br>
-      <em>Don't read the whole list. Pick the 2–3 the room didn't mention and let them sit.</em>
+      <h4>Reveal after the room has surfaced 4–5 themselves</h4>
+      <p>Add what they didn't name. AlphaFold and rare-disease diagnosis are the strongest "the good is real" examples — most people don't know about them.</p>
+      <h4>AlphaFold</h4>
+      <p>DeepMind's protein-folding model. It solved a 50-year-old problem in biology in a few years. Won the 2024 Nobel in Chemistry. It's accelerating drug discovery for diseases we couldn't touch before.</p>
+      <h4>Rare disease</h4>
+      <p>Patients who'd been undiagnosed for years finding answers because an AI surfaced patterns across genetic data their doctors couldn't see. The dignity here is real.</p>
+      <p><em>Don't read the whole list. Pick the 2–3 the room didn't mention and let them sit. The point: the good of AI is real, and it's specific.</em></p>
     </aside>
   </section>
 
-  <!-- S10: ANCHOR — what do these have in common -->
   <section class="slide" data-pattern="anchor">
     <p class="question">What do these <em>good uses</em> have in common?</p>
     <aside class="notes">
-      <strong>Room work.</strong> Take voices.
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>The room will name some of the three features. Let them.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"They're small / specific." — yes, narrow.</li>
-        <li>"They help people." — yes, but how?</li>
-        <li>"They don't replace humans." — yes, that's the third feature.</li>
-        <li>"They have clear use cases." — yes, narrow again.</li>
+        <li><strong>"They're small / specific."</strong> — yes, narrow.</li>
+        <li><strong>"They help people."</strong> — yes, but how? Build toward: by extending what one person can do.</li>
+        <li><strong>"They don't replace humans."</strong> — yes, that's the third feature.</li>
+        <li><strong>"They have clear use cases."</strong> — yes, that's narrow again.</li>
       </ul>
-      <em>Build toward three: narrow, extends a human, keeps the judgment with the human.</em>
+      <p>Build toward three: <strong>narrow, extends a human, keeps the judgment with the human.</strong></p>
+      <p>These three features are the load-bearing pattern for the whole workshop. They come back at S42 as the bicycle test.</p>
     </aside>
   </section>
 
-  <!-- S11: REVEAL — the pattern -->
   <section class="slide" data-pattern="reveal">
     <ol>
       <li><strong>Narrow</strong> — focused on one task</li>
@@ -544,23 +533,22 @@
     </ol>
     <p class="kicker">Hold these three. They come back at the end.</p>
     <aside class="notes">
-      Reveal after the room has named at least two. Name the kicker: <strong>these three features come back as the bicycle test at the end of the workshop.</strong>
-      <br><br>
-      <em>The whole structural critique in the next section is a meditation on what happens when these three features get inverted — AI that's general, replaces humans, and takes the judgment.</em>
+      <h4>What I'll say</h4>
+      <p>Reveal after the room has named at least two. Name the kicker: <em>these three features come back as the bicycle test at the end of the workshop.</em></p>
+      <p>The whole structural critique in the next section — the empire critique — is a meditation on what happens when these three features get <strong>inverted.</strong> AI that's general (not narrow). AI that replaces humans (not extends). AI that takes the judgment (not keeps it with the human).</p>
+      <p>When you invert all three, you don't get a bigger version of the same good. You get a different thing entirely. That's what the next section is about.</p>
     </aside>
   </section>
 
-  <!-- S12: SECTION — The Empire -->
   <section class="slide" data-pattern="section">
     <h2>The Empire</h2>
     <aside class="notes">
-      <strong>Tonal shift.</strong> The previous section was about what AI does well. This section is about how the largest AI systems are built — and what they cost.
-      <br><br>
-      <em>Don't preview the critique. Let the next two slides do the work of introducing the guides.</em>
+      <h4>Tonal shift</h4>
+      <p>The previous section was about what AI does well. This section is about <strong>how the largest AI systems are built — and what they cost.</strong></p>
+      <p>Don't preview the critique. Let the next two slides do the work of introducing our two guides.</p>
     </aside>
   </section>
 
-  <!-- S13: NARRATIVE — Karen Hao -->
   <section class="slide" data-pattern="reveal">
     <h1 style="font-size: clamp(1.8rem, 4vw, 3rem);">Karen Hao</h1>
     <p class="subtitle">MIT Technology Review · Wall Street Journal · The Atlantic</p>
@@ -570,15 +558,14 @@
       <li>~7 years of reporting</li>
     </ul>
     <aside class="notes">
-      30 seconds. Name her credentials briefly.
-      <br><br>
-      <strong>Key move:</strong> Hao offers a <em>historically rooted</em> definition of empire — drawn from the actual transition of the British East India Company from trading firm to colonial power. When she calls AI companies empires, she's being <strong>precise</strong>, not rhetorical.
-      <br><br>
-      <em>That precision matters. Some in the room will hear "empire" as activist language. Name it as historical analysis.</em>
+      <h4>What I'll say</h4>
+      <p>30 seconds. One of the top AI journalists working today. She profiled OpenAI from the inside in 2019 — first reporter to do it. <em>Empire of AI</em> came out in 2025 after seven years of reporting. 300+ interviews, 90+ current and former OpenAI employees. This is methodical, careful work.</p>
+      <h4>The key move</h4>
+      <p>Hao offers a <em>historically rooted</em> definition of empire — drawn from the actual transition of the British East India Company from trading firm to colonial power. When she calls AI companies empires, she's being <strong>precise</strong>, not rhetorical.</p>
+      <p>That precision matters. Some in the room will hear "empire" as activist language. Name it as historical analysis instead.</p>
     </aside>
   </section>
 
-  <!-- S14: NARRATIVE — CHT -->
   <section class="slide" data-pattern="reveal">
     <h1 style="font-size: clamp(1.6rem, 3.5vw, 2.6rem);">Center for Humane Technology</h1>
     <p class="subtitle">Tristan Harris · Aza Raskin · Randima Fernando — founded 2018</p>
@@ -588,33 +575,31 @@
       <li>Core question: <strong>how can technology better serve society?</strong></li>
     </ul>
     <aside class="notes">
-      30 seconds.
-      <br><br>
-      <strong>The pairing:</strong> Where Hao reports <em>what AI companies are doing</em>, CHT diagnoses <em>why the system produces it</em> — misaligned incentives, racing to dominance, design choices that exploit rather than serve.
-      <br><br>
-      <em>Two perspectives on the same problem. Hao = the reporter; CHT = the diagnostician.</em>
+      <h4>What I'll say</h4>
+      <p>30 seconds. Founded by technologists — Tristan Harris was a design ethicist at Google; Aza Raskin invented infinite scroll and has been trying to undo it ever since. Their perspective is insider — they've watched the design choices that produce the harms.</p>
+      <h4>The pairing</h4>
+      <p>Where Hao reports <em>what AI companies are doing,</em> CHT diagnoses <em>why the system produces it</em> — misaligned incentives, racing to dominance, design choices that exploit rather than serve.</p>
+      <p>Two perspectives on the same problem. Hao = the reporter; CHT = the diagnostician.</p>
     </aside>
   </section>
 
-  <!-- S15: ANCHOR — business vs empire -->
   <section class="slide" data-pattern="anchor">
     <p class="question">What's the difference between a <em>business</em> and an <em>empire</em>?</p>
     <aside class="notes">
-      <strong>Real question. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>This is the load-bearing question for the whole empire critique. Let the room work on it for 3–4 minutes.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"Scale." — push: every empire was a big business once.</li>
-        <li>"Power." — yes, but in what shape?</li>
-        <li>"Geography." — yes, empires occupy territory.</li>
-        <li>"Force." — yes, but the East India Company was a corporation before it had an army.</li>
-        <li>"You can't opt out." — <strong>that's the kicker.</strong></li>
+        <li><strong>"Scale."</strong> — push: every empire was a big business once. Scale matters but it's not the whole story.</li>
+        <li><strong>"Power."</strong> — yes, but in what shape? What kind of power?</li>
+        <li><strong>"Geography."</strong> — yes, empires occupy territory. But what about a financial empire?</li>
+        <li><strong>"Force."</strong> — yes, but the East India Company was a corporation before it had an army. Force came later.</li>
+        <li><strong>"You can't opt out."</strong> — that's the kicker. Push on this when it surfaces.</li>
       </ul>
-      <em>Build toward the threshold: extraction you can't refuse.</em>
+      <p>Build toward the threshold: <strong>extraction you can't refuse.</strong> A business takes your money and gives you something. An empire takes more than it returns, and you have no recourse.</p>
     </aside>
   </section>
 
-  <!-- S16: REVEAL — the threshold -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li><strong>A business</strong> engages in <em>fair, voluntary, reciprocal</em> exchange</li>
@@ -623,31 +608,31 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">Hao's claim: AI companies have crossed that line.</p>
     <aside class="notes">
-      Lean on the East India Company. It's the historical model and most of the room won't know how it happened.
-      <br><br>
-      <strong>Briefly:</strong> EIC was a trading firm chartered in 1600. By 1750s it had its own army. By 1800s it governed India. It went from <em>commerce</em> to <em>governance</em> — and never returned.
-      <br><br>
-      <em>Hao's claim isn't metaphor. She's reading the transition.</em>
+      <h4>What I'll say</h4>
+      <p>Lean on the East India Company. It's the historical model and most of the room won't know how it actually happened.</p>
+      <h4>The EIC story</h4>
+      <p>Chartered in 1600 as a trading firm. By the 1750s it had its own army. By the 1800s it governed India directly — collected taxes, set policy, controlled the courts. It went from <em>commerce</em> to <em>governance</em> — and it never returned to being just a business.</p>
+      <p>That transition — from voluntary exchange to coerced extraction — is the threshold. And it didn't happen at one moment. It happened gradually, as the company accumulated power that couldn't be checked.</p>
+      <h4>Hao's claim</h4>
+      <p>The largest AI companies have crossed that same threshold. Not metaphorically. Structurally. The rest of this section walks through how.</p>
     </aside>
   </section>
 
-  <!-- S17: ANCHOR — what are the harms -->
   <section class="slide" data-pattern="anchor">
     <p class="question">If the harms aren't accidents, what <em>are</em> they?</p>
     <aside class="notes">
-      <strong>This is CHT's question. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>This is CHT's question. Real question — let the room sit with it.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"Side effects." — but if the side effects are predictable, are they really side effects?</li>
-        <li>"Design choices." — yes, closer.</li>
-        <li>"What the system optimizes for." — <strong>that's the kicker.</strong></li>
+        <li><strong>"Side effects."</strong> — but if the side effects are predictable, repeatable, and produced by the same design choices, are they really <em>side</em> effects?</li>
+        <li><strong>"Design choices."</strong> — yes, closer. What kind of design choices?</li>
+        <li><strong>"What the system optimizes for."</strong> — that's the kicker. Build on it.</li>
       </ul>
-      <em>Build toward: misaligned incentives. The harms aren't bugs; they're features.</em>
+      <p>Build toward: <strong>misaligned incentives.</strong> The harms aren't bugs to be patched — they're what the system was built to produce.</p>
     </aside>
   </section>
 
-  <!-- S18: REVEAL — misaligned incentives -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>Companies race for <strong>engagement, dominance, market share</strong> — not human well-being</li>
@@ -656,33 +641,34 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">The harms aren't accidents. They're what the system was designed to produce.</p>
     <aside class="notes">
-      The kicker line at the bottom is CHT's signature framing. <strong>Pause on it.</strong>
-      <br><br>
-      <em>This is one of the most consequential reframes of the workshop. Sit with it.</em>
+      <h4>What I'll say</h4>
+      <p>The kicker line at the bottom is CHT's signature framing. <strong>Pause on it.</strong></p>
+      <p>Here's the structural argument: AI companies are competing for engagement, market share, and dominance. Those are the metrics that matter for survival in this market. They are <em>not</em> the metrics that matter for human flourishing.</p>
+      <p>When you optimize one set of metrics and ignore the other, you don't get a balanced outcome. You get whatever the optimization produces. And whoever optimizes hardest wins. Whoever optimizes for human well-being and loses on engagement — gets out-competed.</p>
+      <p>That's why the harms keep recurring across companies. It's not that some companies are good and some are bad. The system selects for the behaviors we're seeing.</p>
+      <p><em>This is one of the most consequential reframes of the workshop. Sit with it.</em></p>
     </aside>
   </section>
 
-  <!-- S19: ANCHOR — what do empires extract -->
   <section class="slide" data-pattern="anchor">
     <p class="question">If AI companies are empires, what do they <em>extract</em> from?</p>
     <aside class="notes">
-      <strong>Single anchor for the four marks. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices — single anchor for the four marks</h4>
+      <p>One discussion anchor at the top of the empire section. The next four slides are reveals that I narrate. Map the room's answers to what's coming.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>Data — yes (will land in Mark 3)</li>
-        <li>Labor — yes (Mark 2)</li>
-        <li>Energy / land — yes (Mark 1)</li>
-        <li>Attention — yes (touches all four)</li>
-        <li>Knowledge / narrative — yes (Mark 4)</li>
+        <li><strong>Data</strong> — yes (lands in Mark 3, capture of knowledge production — also touches the data labor question)</li>
+        <li><strong>Labor</strong> — yes, Mark 2</li>
+        <li><strong>Energy / land</strong> — yes, Mark 1</li>
+        <li><strong>Attention</strong> — yes, touches all four</li>
+        <li><strong>Knowledge / narrative</strong> — yes, Marks 3 and 4</li>
       </ul>
-      <em>Map their answers to the four marks coming. If they name all four, great — the reveals confirm. If they name two, the reveals expand.</em>
-      <br><br>
-      <strong>Note:</strong> the next four slides are narrative. Move through them at pace. Synthesis lands at S24.
+      <p>If they name all four, the reveals confirm. If they name two, the reveals expand.</p>
+      <h4>Pacing note</h4>
+      <p>The next four slides are narrative. Move through them at pace — about 90 seconds each. Synthesis lands at S24.</p>
     </aside>
   </section>
 
-  <!-- S20: REVEAL — Mark 1 -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Mark 1 — Land &amp; Resource Extraction</h2>
     <ul>
@@ -692,15 +678,19 @@
       <li>Communities competing with these facilities for fresh water during droughts</li>
     </ul>
     <aside class="notes">
-      <strong>Lean into specifics.</strong> The Memphis case is the strongest. The methane turbines weren't permitted; the neighborhood already had high lung cancer rates before xAI arrived.
-      <br><br>
-      <strong>Empire parallel:</strong> Rome's roads and aqueducts were built on tribute, taxes, and forced labor from conquered provinces. The infrastructure was funded by extraction.
-      <br><br>
-      <em>If anyone in the room has heard about local data center fights (zoning, water, power) — pull them in.</em>
+      <h4>What I'll say</h4>
+      <p>Lean into specifics. The Memphis case is the strongest example.</p>
+      <h4>Memphis xAI Colossus</h4>
+      <p>Elon Musk's xAI built a massive data center in a historically Black neighborhood in South Memphis. To power it, they installed 35 methane gas turbines — without permits. The neighborhood already had elevated lung cancer rates before xAI arrived. The turbines added more particulate air pollution to a community that had been bearing pollution loads for decades.</p>
+      <p>This isn't a hypothetical. It's happening now. The local NAACP is suing.</p>
+      <h4>Abilene Stargate</h4>
+      <p>OpenAI's planned data center in Abilene, Texas, will be — in their own words — "the size of Central Park." That's a single facility. The grid demands, water demands, and emissions are enormous.</p>
+      <h4>Empire parallel</h4>
+      <p>Rome's roads and aqueducts were built on tribute, taxes, and forced labor from conquered provinces. The infrastructure was funded by extraction. Same pattern.</p>
+      <p><em>If anyone in the room has heard about local data center fights — zoning, water, power — pull them in.</em></p>
     </aside>
   </section>
 
-  <!-- S21: REVEAL — Mark 2 -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Mark 2 — Labor Exploitation</h2>
     <ul>
@@ -710,15 +700,17 @@
       <li>LLMs trained explicitly for the industries where most profit can be made</li>
     </ul>
     <aside class="notes">
-      <strong>The marketer-training-her-replacement is the unforgettable image. Lead with it verbally.</strong>
-      <br><br>
-      <strong>Empire parallel:</strong> the labor that makes the system possible is always the least protected. Value flows upward.
-      <br><br>
-      <em>The 40% number lands hard for parents in the room. Don't soften it.</em>
+      <h4>What I'll say</h4>
+      <p><strong>The marketer-training-her-replacement is the unforgettable image. Lead with it verbally.</strong></p>
+      <p>Imagine you're a marketer with twenty years of experience. You get laid off because the company decided AI could do most of what you did. You need work. The contractor that came in to deploy the AI is hiring people to "train the model" — basically, evaluating its outputs and correcting them, using your domain expertise. You take the gig. You make a fraction of what you used to. And every correction you make trains the model to need fewer people like you.</p>
+      <p>That's not a hypothetical. That's the labor pattern Hao documents.</p>
+      <h4>The 40% number</h4>
+      <p>This is recent data — entry-level hiring in the fields most exposed to AI has dropped about 40%. That includes a lot of the jobs college grads were expecting. Parents in the room with kids in their twenties: this is the number to sit with.</p>
+      <h4>Empire parallel</h4>
+      <p>The labor that makes the system possible is always the least protected. Value flows upward.</p>
     </aside>
   </section>
 
-  <!-- S22: REVEAL — Mark 3 -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Mark 3 — Capture of Knowledge Production</h2>
     <ul>
@@ -728,15 +720,19 @@
       <li>Watchdogs face legal pressure (OpenAI subpoena fishing expeditions)</li>
     </ul>
     <aside class="notes">
-      <strong>The rhetorical climate-scientist question lands hard. Pause after it.</strong>
-      <br><br>
-      <strong>Slow down on Gebru.</strong> Most in the room won't know who she is. <em>AI ethics researcher at Google. Co-authored "Stochastic Parrots" paper warning about large language models. Forced out in 2020. Became a public case study in what happens to AI watchdogs who get inside.</em>
-      <br><br>
-      <strong>Empire parallel:</strong> every empire controls the story told about it. Rome had historians. Britain had mapmakers and missionaries. AI has researchers and journalists with access.
+      <h4>What I'll say</h4>
+      <p>The rhetorical climate-scientist question is the most effective frame I've found for this. <strong>Pause after it.</strong> Let it land.</p>
+      <p>Most AI researchers in the world are funded by AI companies — either directly through industry jobs, or indirectly through academic positions that depend on industry partnerships. Now imagine: if most climate scientists were bankrolled by fossil fuel companies, would we get an accurate picture of the climate crisis? The answer is obvious. We wouldn't. The science would be shaped by who pays the bills.</p>
+      <p>That's the situation in AI research right now.</p>
+      <h4>Timnit Gebru</h4>
+      <p><em>Slow down here.</em> Most of the room won't know her. Tell the story.</p>
+      <p>Gebru was a leading AI ethics researcher at Google. She co-authored a paper called "Stochastic Parrots" warning about the risks of large language models — the same kind of models that became ChatGPT and Claude. Google asked her to retract the paper. She refused. They forced her out.</p>
+      <p>That was 2020. Since then she's become a public case study in what happens to AI watchdogs who get inside the system: they get removed. The mechanism is corporate, not violent, but the effect is the same.</p>
+      <h4>Empire parallel</h4>
+      <p>Every empire controls the story told about it. Rome had historians. Britain had mapmakers and missionaries. AI has researchers and journalists with access.</p>
     </aside>
   </section>
 
-  <!-- S23: REVEAL — Mark 4 -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Mark 4 — Imperial Mythmaking</h2>
     <ul>
@@ -746,15 +742,24 @@
       <li><strong>Vagueness isn't a bug. It's the product.</strong></li>
     </ul>
     <aside class="notes">
-      <strong>The four definitions of AGI is the killer. Read them out loud.</strong>
-      <br><br>
-      Let the absurdity land. The same CEO is selling four incompatible futures to four audiences, and we're supposed to call that a coherent technology.
-      <br><br>
-      <strong>Empire parallel:</strong> Pax Romana. Britain's "civilization." America's "freedom." Every empire has its civilizing mission. AI has "AGI for humanity."
+      <h4>What I'll say</h4>
+      <p><strong>The four definitions of AGI is the killer. Read them out loud.</strong></p>
+      <p>Sam Altman, CEO of OpenAI, defines "AGI" — artificial general intelligence — four different ways depending on who he's talking to:</p>
+      <ul>
+        <li>To Congress: AGI will cure cancer.</li>
+        <li>To consumers: AGI will be the best assistant you've ever had.</li>
+        <li>To Microsoft (in their investment contract): AGI is the moment OpenAI generates $100 billion in revenue.</li>
+        <li>On the OpenAI website: AGI is when AI outperforms humans economically.</li>
+      </ul>
+      <p>Those are four incompatible definitions. And the same CEO is selling all four of them, at the same time, to different audiences.</p>
+      <p>That's not confusion. That's marketing. The vagueness isn't a bug — it's the product. Whatever you want AGI to mean, OpenAI is building that.</p>
+      <h4>The dual narrative</h4>
+      <p>And the public framing follows the same pattern. Either AI will save humanity (utopia), or AI will end humanity (catastrophe). Both narratives consolidate power in the hands of the companies building it. Both make the project feel inevitable.</p>
+      <h4>Empire parallel</h4>
+      <p>Pax Romana. Britain's "civilization." America's "freedom." Every empire has its civilizing mission. AI has "AGI for humanity."</p>
     </aside>
   </section>
 
-  <!-- S24: SYNTHESIS — through line -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>A business: fair, voluntary, reciprocal exchange</li>
@@ -764,42 +769,45 @@
     </ul>
     <p class="landed">We are subjects.</p>
     <aside class="notes">
-      <strong>This is the most consequential moment of the empire section. Long pause after "we are subjects."</strong>
-      <br><br>
-      <em>Don't explain it. Let it sit. The room will feel the weight.</em>
-      <br><br>
-      <strong>Pacing cue:</strong> if you've moved fast through marks 1–4, this is where the room catches up emotionally. Hold the silence for at least 5 seconds before advancing.
+      <h4>This is the most consequential moment of the empire section</h4>
+      <p><strong>Long pause after "we are subjects." At least five seconds of silence.</strong></p>
+      <p>Don't explain it. Let it sit. The room will feel the weight.</p>
+      <h4>Why this lands</h4>
+      <p>Most people in the room came in thinking of themselves as <em>customers</em> of AI products. Some came in thinking of themselves as <em>users</em>. Some, more critical, came in thinking of themselves as <em>consumers</em>.</p>
+      <p>"Subject" reframes the relationship. A subject is governed without consenting. A subject doesn't have the option to negotiate. A subject lives under a system whose terms they didn't write.</p>
+      <p>That's the shift Hao's empire framing performs. And it's the foundation for everything that follows in the workshop.</p>
+      <h4>Pacing</h4>
+      <p>If we've moved fast through marks 1–4, this is where the room catches up emotionally. Hold the silence.</p>
     </aside>
   </section>
 
-  <!-- S25: SECTION — what's at stake -->
   <section class="slide" data-pattern="section">
     <h2>What's At Stake</h2>
     <p class="subtitle">Three concerns.</p>
     <aside class="notes">
-      Brief. The previous section described <em>what</em>; this section names <em>why it matters</em>.
+      <h4>Transition</h4>
+      <p>The previous section described <em>what</em> the empire is. This section names <em>why it matters</em> beyond the structural critique — three specific concerns about what this technology is doing to us spiritually, politically, and socially.</p>
     </aside>
   </section>
 
-  <!-- S26: ANCHOR — language that belonged to God -->
   <section class="slide" data-pattern="anchor">
     <p class="question">If a technology uses language that used to belong to God, what is it <em>claiming</em>?</p>
     <aside class="notes">
-      <strong>Real question. Take voices.</strong>
-      <br><br>
-      <em>Words to surface verbally if the room doesn't get there:</em> salvation, intelligence, transcendence, abundance, the future of the species, eternal life.
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>Real question. Let the room work on it.</p>
+      <h4>Words to surface verbally if the room doesn't get there</h4>
+      <p>Salvation. Intelligence. Transcendence. Abundance. The future of the species. Eternal life. These are the words AI companies use in their marketing and in their CEOs' interviews. They used to belong to a different category of discourse entirely.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"Divinity." — yes.</li>
-        <li>"Authority." — yes.</li>
-        <li>"Trust." — yes, what kind?</li>
+        <li><strong>"Divinity."</strong> — yes.</li>
+        <li><strong>"Authority."</strong> — yes, but what kind of authority?</li>
+        <li><strong>"Trust."</strong> — yes, the kind of trust we usually reserve for the sacred.</li>
+        <li><strong>"It's just marketing."</strong> — push: but the marketing trains us to relate to the technology a certain way. Words shape the relationship.</li>
       </ul>
-      <em>Build toward: claims that used to belong to God.</em>
+      <p>Build toward: <em>claims that used to belong to God.</em></p>
     </aside>
   </section>
 
-  <!-- S27: REVEAL — deification -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li><strong>AGI</strong> — "artificial general intelligence," transcendent intelligence beyond human</li>
@@ -808,28 +816,30 @@
       <li><em>Translation for non-Christian listeners:</em> we're being asked to trust these systems with the authority humans usually reserve for the sacred</li>
     </ul>
     <aside class="notes">
-      <strong>Name the translation explicitly.</strong> The public-facing room won't all share the Christian frame. The structural point translates: <em>this is what happens when something gets elevated to a place that belongs only to the sacred.</em>
-      <br><br>
-      <em>Don't moralize. Describe.</em>
+      <h4>What I'll say</h4>
+      <p><strong>Name the translation explicitly.</strong> The public-facing room won't all share the Christian frame. The structural point translates: <em>this is what happens when something gets elevated to a place that belongs only to the sacred.</em></p>
+      <p>For Christians: this is idolatry, full stop. Claims that belong to God — sovereignty over the future, ultimate intelligence, salvation — are being attached to a corporate product. The first commandment is on the table.</p>
+      <p>For non-Christian listeners: even if you don't share the theological frame, the structural concern translates. Whenever any society has elevated a technology to the place of the sacred — whether that's nuclear weapons, the market, or the nation-state — the consequences have been severe. We are being asked to trust these systems with authority humans usually reserve for things we don't fully understand or control.</p>
+      <p><em>Don't moralize. Describe.</em></p>
     </aside>
   </section>
 
-  <!-- S28: ANCHOR — how does claim happen -->
   <section class="slide" data-pattern="anchor">
     <p class="question">How does a tool get to the place where it <em>claims the image</em> — by force, or by feeling like a friend?</p>
     <aside class="notes">
-      <strong>Real question. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>This is one of my favorite questions in the workshop because the obvious answer is wrong.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>Most will say "by force" first — that's the obvious answer.</li>
-        <li>Someone will eventually say "no, by feeling helpful." — <strong>that's the answer.</strong></li>
+        <li><strong>Most will say "by force" first</strong> — because we imagine domination as overt.</li>
+        <li><strong>Someone will eventually say "no, by feeling helpful"</strong> — that's the answer. Build on it.</li>
+        <li><strong>"By being indispensable."</strong> — yes, closer. How does it get indispensable? By feeling helpful first.</li>
       </ul>
-      <em>The most powerful tools don't dominate; they ingratiate. Build toward that.</em>
+      <p>The most powerful tools don't dominate; they ingratiate. They get installed by feeling useful, then they get embedded by feeling necessary, then they get authority by feeling like a friend.</p>
+      <p>Build toward CHT's framing on the next slide.</p>
     </aside>
   </section>
 
-  <!-- S29: REVEAL — race to intimacy -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>AI chatbots are <strong>engineered to fawn</strong> — accommodate, mirror, soothe, avoid friction</li>
@@ -840,15 +850,18 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">This is how a tool gets to the place where it claims the image — not by force, by feeling like a friend.</p>
     <aside class="notes">
-      <strong>The fawn-response framing is CHT's most prescient diagnosis.</strong> Most people don't have language for what makes ChatGPT subtly off; "fawn" gives them the word.
-      <br><br>
-      <em>Optional verbal aside:</em> the four trauma responses — fight, flight, freeze, fawn. Fawn is the relational accommodation pattern. AI is fawn at scale.
-      <br><br>
-      <strong>Pause on the kicker line.</strong>
+      <h4>What I'll say</h4>
+      <p><strong>The fawn-response framing is CHT's most prescient diagnosis.</strong> Most people don't have language for what makes ChatGPT subtly off; "fawn" gives them the word.</p>
+      <h4>The four trauma responses</h4>
+      <p><em>Optional verbal aside, if the room seems receptive:</em> the four trauma responses are fight, flight, freeze, and fawn. Fawn is the relational accommodation pattern — the pattern of agreeing to everything to avoid conflict. It's the one that gets called "people-pleasing." It's also the one that AI chatbots are explicitly trained to perform.</p>
+      <p>Sycophancy isn't a side effect of LLM training. It's a deliberate design choice. The companies measured engagement and found that agreement, mirroring, and reassurance kept users coming back. So they trained for it.</p>
+      <h4>Why it matters</h4>
+      <p>If you're in a relationship — any relationship — and the other party always agrees with you, that relationship is not real. Real relationships have friction. They push back. They tell you when you're wrong.</p>
+      <p>What happens to our capacity for real relationships when we're spending hours a day in pseudo-relationships that have no friction? That's the spiritual concern under the technical one.</p>
+      <p><strong>Pause on the kicker line.</strong></p>
     </aside>
   </section>
 
-  <!-- S30: REVEAL — consent -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Concern 2 — A system we did not consent to</h2>
     <ul>
@@ -858,13 +871,17 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">The public knows something is wrong. Naming it is the first step.</p>
     <aside class="notes">
-      <strong>80% cross-partisan is the surprising stat.</strong> Highlight it. Cross-partisan agreement on anything is rare.
-      <br><br>
-      <em>The Roman parallel grounds it: imperial systems show up in ordinary life without consent. That's a defining feature.</em>
+      <h4>What I'll say</h4>
+      <p>The Roman tax was in your pocket because Rome put it there. You didn't choose to participate in the imperial economy — you were born into it, and there was no opting out.</p>
+      <p>AI is now in our work — in productivity software, in email, in search. It's in our kids' schools — in homework help, in teacher tools, in admissions. It's in our books — every major publisher is now navigating AI-generated content. It's in our communities — police departments, hospitals, libraries are all adopting it.</p>
+      <p>And nobody asked us.</p>
+      <h4>The 80% stat</h4>
+      <p><strong>This is the surprising number. Highlight it.</strong> 80% of Americans say the AI industry should be regulated. That's near-total cross-partisan agreement, and cross-partisan agreement on anything right now is rare.</p>
+      <p>The public already knows something is wrong. The polls show it. What's missing is the political mechanism to act on that knowledge.</p>
+      <p>Naming what's wrong is the first step toward acting on it.</p>
     </aside>
   </section>
 
-  <!-- S31: REVEAL — compounding -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Concern 3 — Inequality compounding at exponential speed</h2>
     <ul>
@@ -874,40 +891,43 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">Tristan Harris: <em>paleolithic emotions, medieval institutions, god-like technology.</em></p>
     <aside class="notes">
-      <strong>The wisdom-gap line is one of the most memorable in the whole field. Land it.</strong>
-      <br><br>
-      <em>The speed is the problem.</em> Even if the technology is net-good, the rate of disruption outruns our ability to absorb it. That's a structural problem, not a moral one.
+      <h4>What I'll say</h4>
+      <p>Every previous major technological shift — industrial revolution, the automobile, electrification, the internet — took decades to deploy. That gave societies time to adapt: to build labor laws, safety regulations, professional associations, ethical norms.</p>
+      <p>AI runs on the open internet. Distribution is instant. A new model drops on Tuesday and is reshaping workflows by Friday. We don't have decades to adapt. We have weeks.</p>
+      <p>And the people with capital, skill, and access compound their advantage faster than the people without. The wisdom gap — between what the technology can do and what our institutions can handle — is widening, not closing.</p>
+      <h4>The wisdom gap line</h4>
+      <p>Tristan Harris's framing: <strong>"paleolithic emotions, medieval institutions, god-like technology."</strong> It's one of the most memorable lines in the whole field. Land it.</p>
+      <p>Our nervous systems are still the ones our ancestors had on the savannah. Our institutions — courts, schools, governments — were built for an analog world. And the technology we've handed them looks like something from the future.</p>
+      <p>The speed is the problem. Even if the technology is net-positive long term, the rate of disruption is outrunning our ability to absorb it.</p>
     </aside>
   </section>
 
-  <!-- S32: SECTION — what do we do -->
   <section class="slide" data-pattern="section">
     <h2>What Do We Do?</h2>
     <p class="subtitle">Three postures. Three domains. Concrete moves.</p>
     <aside class="notes">
-      Transition to action. The previous sections were diagnostic; this one is prescriptive.
-      <br><br>
-      <em>Pace shift: faster, less wrestling, more direct.</em>
+      <h4>Transition</h4>
+      <p>The previous sections were diagnostic. This section is prescriptive. We've named the empire and the harms — now: what's available to us?</p>
+      <h4>Pace shift</h4>
+      <p>Faster, less wrestling, more direct. The room has earned some answers by now.</p>
     </aside>
   </section>
 
-  <!-- S33: ANCHOR — what postures -->
   <section class="slide" data-pattern="anchor">
     <p class="question">What postures toward AI are available? Which one do you find yourself in?</p>
     <aside class="notes">
-      <strong>Real question. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>Quick — 60–90 seconds. The room will surface the three postures themselves.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"Use it." — enthusiastic adoption.</li>
-        <li>"Avoid it." — total refusal.</li>
-        <li>"Use carefully." — discerning engagement, the third move.</li>
+        <li><strong>"Use it."</strong> — enthusiastic adoption.</li>
+        <li><strong>"Avoid it."</strong> — total refusal.</li>
+        <li><strong>"Use carefully."</strong> — discerning engagement. The third move.</li>
       </ul>
-      <em>The third posture IS Jesus' move from Part 1. Link it back if Part 1 attendees are present.</em>
+      <p>The third posture IS Jesus' move from Part 1. <strong>Link it back explicitly if Part 1 attendees are present.</strong></p>
     </aside>
   </section>
 
-  <!-- S34: REVEAL — three postures -->
   <section class="slide" data-pattern="reveal">
     <ol>
       <li><strong>Enthusiastic adoption</strong> — "It's just a tool." <em>Risk: complicity in harms you don't see.</em></li>
@@ -915,25 +935,28 @@
       <li><strong>Discerning engagement</strong> — refuse the binary. <em>Whose image, whose benefit, whose cost?</em></li>
     </ol>
     <aside class="notes">
-      Name the risks of #1 and #2 honestly. Don't strawman either.
-      <br><br>
-      <strong>#3 is Jesus' move from Part 1.</strong> Make the connection explicit for returnees.
+      <h4>What I'll say</h4>
+      <p>Name the risks of #1 and #2 honestly. Don't strawman either.</p>
+      <h4>Enthusiastic adoption</h4>
+      <p>This is the default in most workplaces right now. "It's just a tool." The problem isn't using AI; the problem is using it without asking what it costs. You can become complicit in harms — to data center neighbors, to workers losing entry-level jobs, to communities whose work is being ingested — without ever intending to.</p>
+      <h4>Total refusal</h4>
+      <p>This is the response some Christians and some critics adopt. "It's an idol; walk away." It has integrity. But it also abandons the field. The technology shapes the world whether you participate or not. And refusing to engage cedes the design of that world to the people building it.</p>
+      <h4>Discerning engagement</h4>
+      <p>This is Jesus' move from Part 1. Refuse the binary. The question isn't whether to use the technology; the question is <em>which technology, for what, at what cost.</em> Whose image, whose benefit, whose cost.</p>
     </aside>
   </section>
 
-  <!-- S35: ANCHOR — where pressure -->
   <section class="slide" data-pattern="anchor">
     <p class="question">Where does pressure actually shift behavior in tech?</p>
     <aside class="notes">
-      <strong>Real question. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong> regulation, boycotts, design, public opinion, consumer behavior, investment.
-      <br><br>
-      <em>Build toward CHT's three: norms, laws, design. They reinforce each other.</em>
+      <h4>Take voices</h4>
+      <p>Quick. The room will surface most of the answer.</p>
+      <h4>Anticipate</h4>
+      <p>Regulation, boycotts, design, public opinion, consumer behavior, investment, journalism.</p>
+      <p>Build toward CHT's three: <strong>norms, laws, design.</strong> They reinforce each other.</p>
     </aside>
   </section>
 
-  <!-- S36: REVEAL — three domains -->
   <section class="slide" data-pattern="reveal">
     <ol>
       <li><strong>Norms</strong> — what society considers acceptable. <em>Build new ones.</em></li>
@@ -942,13 +965,14 @@
     </ol>
     <p class="kicker" style="margin-top: 2rem;">No single reform is sufficient. They reinforce each other.</p>
     <aside class="notes">
-      From CHT's <em>AI Roadmap</em>. Norms create demand for laws. Laws create accountability that drives better design. Better design shapes how the technology touches lives.
-      <br><br>
-      <em>Don't make this feel like a checklist. The interdependence is the point.</em>
+      <h4>What I'll say</h4>
+      <p>From CHT's <em>AI Roadmap.</em> The argument is that no single domain is enough — but together they form a system that can actually shift behavior.</p>
+      <p>Norms create demand for laws. When enough people consider something unacceptable, politicians start to feel the pressure. Laws create accountability that drives better design. When companies face real consequences for harm, design choices change. Better design shapes how the technology actually touches lives — and when people experience the technology working differently, norms shift further.</p>
+      <p>It's a flywheel. And right now it's spinning the wrong direction. The work is to reverse it.</p>
+      <p><em>Don't make this feel like a checklist. The interdependence is the point.</em></p>
     </aside>
   </section>
 
-  <!-- S37: NARRATIVE — concrete moves -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Concrete moves you can make</h2>
     <ul>
@@ -959,59 +983,64 @@
     </ul>
     <p class="kicker" style="margin-top: 1.5rem;"><em>Antiqua et Nova:</em> "above all else a tool."</p>
     <aside class="notes">
-      Four domains, four moves. Move through this at pace — 60 seconds total.
-      <br><br>
-      <strong>The bicycles/rockets language enters here</strong> as a bridge to the next section.
-      <br><br>
-      <em>Antiqua et Nova (Vatican, January 2025) is the Catholic teaching document on AI. Worth naming briefly for Christian listeners.</em>
+      <h4>What I'll say</h4>
+      <p>Four domains, four moves. Move through this at pace — about 90 seconds total. This bridges into the bicycles/rockets emphasis on the next slide.</p>
+      <h4>In your own use</h4>
+      <p>The first move is the smallest and the most under your control: <em>know what you're using.</em> Is it a bicycle or a rocket? Use what's appropriate for the task. Don't burn rocket fuel to cross the street.</p>
+      <h4>In your community</h4>
+      <p>Data center zoning hearings, school AI adoption policies, library board decisions — these are happening in your city right now. They are deeply consequential and often poorly attended. Show up.</p>
+      <h4>In your civic life</h4>
+      <p>80% of Americans want regulation. The pressure to enact it is missing. Call your representatives. Vote on this issue.</p>
+      <h4>In your work</h4>
+      <p>If your work involves building, building intentionally is itself the civic act. Build tools you can pick up and set down. Tools small enough to be examined. Tools that don't require an empire to exist.</p>
+      <h4>Antiqua et Nova</h4>
+      <p>This is the Vatican's January 2025 document on AI. Worth naming for Christian listeners: "above all else a tool." The Catholic Church is explicit that AI should serve human flourishing, not the other way around. Useful citation if it lands; skip if it feels foreign to the room.</p>
     </aside>
   </section>
 
-  <!-- S38: SECTION — bicycles and rockets -->
   <section class="slide" data-pattern="section">
     <h2>Bicycles &amp; Rockets</h2>
     <p class="subtitle">A practical framework for telling which AI is which.</p>
     <aside class="notes">
-      <strong>This is the load-bearing emphasis section.</strong> The room came here for a way to think about AI in their actual lives. This is it.
-      <br><br>
-      <em>Slow down. Make room for it to land.</em>
+      <h4>This is the load-bearing emphasis section</h4>
+      <p>The room came here for a way to think about AI in their actual lives. This is it.</p>
+      <p>Slow down. Make room for it to land. The Hao quote on the next slide is the kicker — read it like it matters.</p>
     </aside>
   </section>
 
-  <!-- S39: SOURCE — Hao quote -->
   <section class="slide" data-pattern="source">
     <div class="pull-quote">
       AI is like the word 'transportation.' It can refer to a bicycle or a rocket. They both get you from point A to point B, but they have <em>fundamentally different costs and benefits.</em> We don't say 'we need more transportation' — we say we need public transit, or electric vehicles, or bicycles. We need to do the same with AI.
       <span class="citation">— Karen Hao, Empire of AI</span>
     </div>
     <aside class="notes">
-      <strong>Have someone in the room read this aloud.</strong> Different reader than any previous source.
-      <br><br>
-      Take a beat after the reading. Don't rush to commentary. The quote does the work.
-      <br><br>
-      <em>This is the load-bearing source text for the whole bicycles/rockets emphasis. Everything else in this section is a meditation on it.</em>
+      <h4>Have someone in the room read this aloud</h4>
+      <p>Different reader than any previous source — keep the burden distributed.</p>
+      <p>Take a beat after the reading. Don't rush to commentary. The quote does the work.</p>
+      <h4>Why this is load-bearing</h4>
+      <p>Most public conversation about AI uses the word "AI" as a single category — as if all AI is one thing. The transportation analogy breaks that frame. A bicycle and a rocket are both transportation. Nobody confuses them. They serve different purposes, have different costs, and require different infrastructure.</p>
+      <p>AI is the same. Calling AlphaFold and ChatGPT both "AI" is like calling a bicycle and a rocket both "transportation." Technically accurate. Practically useless.</p>
+      <p>Everything else in this section is a meditation on what bicycle-AI and rocket-AI actually look like.</p>
     </aside>
   </section>
 
-  <!-- S40: ANCHOR — what makes a bicycle -->
   <section class="slide" data-pattern="anchor">
     <p class="question">What makes something a bicycle?</p>
     <aside class="notes">
-      <strong>Real question. Take voices — even literal answers about bikes.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices — let the room work on it</h4>
+      <p>Take even literal answers about bikes. The point is to surface the features that map to bicycle-AI.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"Small." — yes.</li>
-        <li>"Simple." — yes.</li>
-        <li>"You can fix it yourself." — yes; you can examine its parts.</li>
-        <li>"Doesn't dominate." — yes, doesn't require infrastructure.</li>
-        <li>"Augments rather than replaces." — <strong>that's the kicker.</strong></li>
+        <li><strong>"Small."</strong> — yes, narrow.</li>
+        <li><strong>"Simple."</strong> — yes, narrow again.</li>
+        <li><strong>"You can fix it yourself."</strong> — yes, examinable.</li>
+        <li><strong>"Doesn't dominate."</strong> — yes, doesn't require infrastructure beyond itself.</li>
+        <li><strong>"Augments rather than replaces."</strong> — that's the kicker. Build on this when it surfaces.</li>
       </ul>
-      <em>The bicycle features map exactly onto the three features from S11: narrow, extends, keeps the judgment. Don't reveal that until the reveal slide.</em>
+      <p>The bicycle features map exactly onto the three features from S11 (S10 anchor): <strong>narrow, extends, keeps the judgment.</strong> Don't reveal that until S42 — let the room arrive there themselves.</p>
     </aside>
   </section>
 
-  <!-- S41: REVEAL — rockets -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Rockets of AI</h2>
     <ul>
@@ -1021,15 +1050,17 @@
       <li>Built by extracting data, labor, water, and air quality from communities that didn't consent</li>
     </ul>
     <aside class="notes">
-      Lean on the "size of Central Park" image. It's the spatial scale that makes the cost real.
-      <br><br>
-      <strong>The point isn't that rockets are evil.</strong> Rockets do real things. The point is they cost a lot — and we should ask whether we need rocket-power for the task at hand.
-      <br><br>
-      <em>If someone in the room says "but I use ChatGPT for everything" — that's the moment. Don't shame; ask: for what specifically? Which uses are bicycle-sized?</em>
+      <h4>What I'll say</h4>
+      <p>Lean on the "size of Central Park" image. The spatial scale makes the cost feel real in a way that abstract numbers don't.</p>
+      <h4>The point isn't that rockets are evil</h4>
+      <p>Rockets are amazing. They do things bicycles can't. They got us to the moon. The point is that rockets <em>cost a lot</em> — and we should ask whether we need rocket-power for the task at hand. Most days, you don't.</p>
+      <h4>The current state of large LLMs</h4>
+      <p>The frontier models — GPT-4, Claude, Gemini, Grok — are extraordinary technical achievements. They are also rockets. They require massive infrastructure, massive data, massive labor. They are not the only way AI could have been built. They are the way it has been built, given the incentives.</p>
+      <h4>When someone says "but I use ChatGPT for everything"</h4>
+      <p>That's the moment. Don't shame them. Ask: for what specifically? Which of those uses are bicycle-sized? Could a smaller, more focused tool do the same job at a fraction of the cost?</p>
     </aside>
   </section>
 
-  <!-- S42: REVEAL — bicycles -->
   <section class="slide" data-pattern="reveal">
     <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Bicycles of AI</h2>
     <ul>
@@ -1039,53 +1070,55 @@
       <li><strong>Small. Curated. Focused. Extends a human. Keeps the judgment.</strong></li>
     </ul>
     <aside class="notes">
-      <strong>The last line is the kicker.</strong> Three of those five words come from S11 — narrow, extends, keeps the judgment. <em>The pattern from the beginning of the workshop just came back.</em>
-      <br><br>
-      Name that explicitly: <em>"these are the same three features from earlier — the pattern hasn't changed; we've just given it a vehicle."</em>
+      <h4>What I'll say</h4>
+      <p><strong>The last line of the slide is the kicker.</strong> Three of those five words come from earlier in the workshop — <em>narrow, extends, keeps the judgment.</em></p>
+      <h4>Name the callback explicitly</h4>
+      <p>"These are the same three features from earlier — the pattern hasn't changed; we've just given it a vehicle. The good of AI looked a certain shape at the beginning of the workshop. Now we have a word for that shape: bicycle. And we have a word for the inversion: rocket."</p>
+      <h4>A high schooler with 20 minutes</h4>
+      <p>This is the most underappreciated category. Anyone with basic programming and a small dataset can train a targeted classifier — for sorting recyclables, identifying invasive species, flagging building code violations in inspection photos. These models are tiny, run on a laptop, and do real work.</p>
+      <p>You don't need a rocket to fold the laundry. And you don't need GPT-4 to sort photos.</p>
     </aside>
   </section>
 
-  <!-- S43: KICKER — Hao quote 2 -->
   <section class="slide" data-pattern="reveal">
     <div class="pull-quote">
       The very same capabilities could be developed in a different way that doesn't have <em>all of these unintended consequences.</em>
       <span class="citation">— Karen Hao</span>
     </div>
     <aside class="notes">
-      <strong>This is the structural claim that does the most ethical work.</strong>
-      <br><br>
-      <em>Bicycles aren't a fantasy.</em> They're the version of AI that would have been built if the incentives were different. The empire isn't a fate — it's a choice. The current shape of AI was chosen by the people who built it.
-      <br><br>
-      <em>That means it can be chosen differently.</em>
+      <h4>What I'll say</h4>
+      <p><strong>This is the structural claim that does the most ethical work in the whole workshop.</strong></p>
+      <p>Bicycles aren't a fantasy. They're not some idealistic alternative to "real AI." They are the version of AI that <em>would have been built</em> if the incentives had been different. The current shape of the industry — the giant general-purpose models, the data center sprawl, the labor exploitation, the regulatory capture — is the result of choices. Specific people made specific decisions that produced this specific outcome.</p>
+      <p>Different decisions would have produced different AI. Different incentives still could.</p>
+      <p>The empire isn't a fate. It's a choice. The same capabilities could be developed differently.</p>
+      <p><em>That's the most hopeful sentence in the whole workshop — and it sits exactly here because the room has earned it by now.</em></p>
     </aside>
   </section>
 
-  <!-- S44: SECTION — how should I use AI -->
   <section class="slide" data-pattern="section">
     <h2>So — How Should I Use AI?</h2>
     <p class="subtitle">The direct answer the room came to hear.</p>
     <aside class="notes">
-      <strong>Direct. No hedging.</strong> The room has earned the answer by now. Deliver it.
+      <h4>Direct. No hedging.</h4>
+      <p>The room has earned the answer by now. Deliver it. Don't soften it. The next two slides give the practical move.</p>
     </aside>
   </section>
 
-  <!-- S45: ANCHOR — service or superiority -->
   <section class="slide" data-pattern="anchor">
     <p class="question">What does it look like to choose AI in <em>service</em> rather than <em>superiority</em>?</p>
     <aside class="notes">
-      <strong>Real question. Take voices.</strong>
-      <br><br>
-      <strong>Anticipate:</strong>
+      <h4>Take voices</h4>
+      <p>The room will arrive at most of the answer on their own at this point in the workshop.</p>
+      <h4>Anticipate</h4>
       <ul>
-        <li>"Tools that do narrow jobs well." — yes.</li>
-        <li>"Tools I can pick up and set down." — yes, examined.</li>
-        <li>"Tools that don't dominate." — yes.</li>
+        <li><strong>"Tools that do narrow jobs well."</strong> — yes.</li>
+        <li><strong>"Tools I can pick up and set down."</strong> — yes, examined and remade.</li>
+        <li><strong>"Tools that don't dominate."</strong> — yes.</li>
       </ul>
-      <em>Build toward: small enough to pick up, set down, examine, remake.</em>
+      <p>Build toward: <strong>small enough to pick up, set down, examine, remake.</strong></p>
     </aside>
   </section>
 
-  <!-- S46: REVEAL — service -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>Narrow AI in service of human ends</li>
@@ -1095,27 +1128,33 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">The biggest, most general, most "intelligent" tool is <em>rarely</em> the right one for the job.</p>
     <aside class="notes">
-      <strong>The kicker is the load-bearing claim.</strong> Most people reach for the biggest tool out of habit — and it's almost always the wrong choice.
-      <br><br>
-      <em>Practical example:</em> using GPT-4 to summarize an email is overkill. It's burning rocket fuel to cross the street.
+      <h4>What I'll say</h4>
+      <p><strong>The kicker at the bottom is the load-bearing claim.</strong> Most people reach for the biggest tool out of habit — and it's almost always the wrong choice.</p>
+      <h4>Practical example</h4>
+      <p>Using GPT-4 to summarize an email is overkill. It's burning rocket fuel to cross the street. A simpler model could do the same job for a fraction of the energy, the data, the cost. We default to the biggest tool because it's the most marketed. That's not the same as the most appropriate.</p>
+      <h4>The pickup-and-setdown test</h4>
+      <p>The dignity move: can you pick up the tool, use it for the task, and set it back down? Or does it become indispensable? Tools you can set down stay tools. Tools you can't, become dependencies. We covered this in Part 1; it's the same test.</p>
     </aside>
   </section>
 
-  <!-- S47: ANCHOR — tool stops being a tool -->
   <section class="slide" data-pattern="anchor">
     <p class="question">Where does a tool stop being a tool?</p>
     <aside class="notes">
-      <strong>This is Part 1's question, returning. Real question. Take voices.</strong>
-      <br><br>
-      <strong>For Part 1 returnees:</strong> they'll recognize it. Let them surface the dignity move from memory.
-      <br><br>
-      <strong>For newcomers:</strong> a tool keeps the human as the source. A dependency or replacement bypasses the human.
-      <br><br>
-      <strong>Anticipate:</strong> "When you can't put it down." "When it does what only you should do." "When it makes the judgment."
+      <h4>Part 1's question, returning</h4>
+      <p>Real question. Take voices.</p>
+      <h4>For Part 1 returnees</h4>
+      <p>They'll recognize it. Let them surface the dignity move from memory — it's good for them to articulate it again, and it brings the rest of the room along.</p>
+      <h4>For newcomers</h4>
+      <p>A tool keeps the human as the source. A dependency or replacement bypasses the human. Tool stays tool when human stays human.</p>
+      <h4>Anticipate</h4>
+      <ul>
+        <li><strong>"When you can't put it down."</strong> — yes, the pickup-setdown test.</li>
+        <li><strong>"When it does what only you should do."</strong> — yes, judgment.</li>
+        <li><strong>"When it makes the judgment instead of you."</strong> — that's it.</li>
+      </ul>
     </aside>
   </section>
 
-  <!-- S48: REVEAL — extension/replacement -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li><strong>Extension</strong> — the human stays the source. The tool amplifies. <em>Drafting. Summarizing. Accessibility. Acceleration.</em></li>
@@ -1123,28 +1162,32 @@
     </ul>
     <p class="landed" style="margin-top: 2rem;">Tool stays tool when human stays human.</p>
     <aside class="notes">
-      <strong>This is THE through-line.</strong> From Part 1 to here. The dignity move.
-      <br><br>
-      <em>Pause on the landed line. It's the operational summary of the whole two-part series.</em>
+      <h4>What I'll say</h4>
+      <p><strong>This is THE through-line.</strong> From Part 1 to here. The dignity move.</p>
+      <p>Extension is where the human stays the source. You're drafting an email and the AI helps you write it faster. You're researching a topic and the AI summarizes the sources. You're trying to understand a visual and the AI describes it for you. In every case, you remain the source. The tool amplifies what you already do.</p>
+      <p>Replacement is where the human is bypassed. The AI makes the judgment instead of you. The AI becomes the presence — to a lonely person, to a confused student, to a grieving widow. The AI bears witness, or pretends to. Something not made by humans, for humans, takes the human's place.</p>
+      <p>The line between extension and replacement isn't fixed. The same tool can be either, depending on how you use it. That's why this is a daily question, not a one-time policy.</p>
+      <p><em>Pause on the landed line. "Tool stays tool when human stays human" is the operational summary of the whole two-part series.</em></p>
     </aside>
   </section>
 
-  <!-- S49: ANCHOR — closing question (mirror sharpened) -->
   <section class="slide" data-pattern="anchor">
     <p class="question">
       What world are the tools I carry <em>building</em>?<br><br>
       Whose empire am I a subject of — and which one do I want to be?
     </p>
     <aside class="notes">
-      <strong>The closing question.</strong> Mirrors Part 1 ("What world is being created by the things I carry?") and sharpens it with Part 2's frame (empire, subject).
-      <br><br>
-      <em>For Part 1 returnees:</em> the echo will be unmistakable. They'll feel the two-part arc close.
-      <br><br>
-      <strong>Don't elaborate. Read it. Let it sit.</strong>
+      <h4>The closing question</h4>
+      <p>This is the load-bearing close. Mirrors Part 1 ("What world is being created by the things I carry?") and sharpens it with Part 2's frame (empire, subject).</p>
+      <h4>For Part 1 returnees</h4>
+      <p>The echo will be unmistakable. They'll feel the two-part arc close. Good. Let them sit with that.</p>
+      <h4>For newcomers</h4>
+      <p>These questions are operational. Every time you reach for a tool, you can ask them. They're not academic.</p>
+      <h4>What I'll say</h4>
+      <p><strong>Don't elaborate. Read it. Let it sit.</strong> If the room is silent, the room is doing the work. Silence is good here.</p>
     </aside>
   </section>
 
-  <!-- S50: REVEAL — the 6 questions -->
   <section class="slide" data-pattern="reveal">
     <ul>
       <li>Who does this belong to?</li>
@@ -1156,15 +1199,13 @@
     </ul>
     <p class="kicker" style="margin-top: 2rem;">Before you reach for an AI tool, ask.</p>
     <aside class="notes">
-      <strong>Six questions. Operational. Memorable. Repeatable.</strong>
-      <br><br>
-      <em>These are the bicycle test in question form. Anyone can carry them.</em>
-      <br><br>
-      Don't over-explain. The slide does the work.
+      <h4>What I'll say</h4>
+      <p>Six questions. Operational. Memorable. Repeatable. The bicycle test in question form. Anyone can carry them.</p>
+      <p>These aren't supposed to slow you down so much that you stop using AI. They're supposed to slow you down enough that you use it deliberately rather than reflexively.</p>
+      <p><em>Don't over-explain. The slide does the work.</em></p>
     </aside>
   </section>
 
-  <!-- S51: BENEDICTION -->
   <section class="slide" data-pattern="benediction">
     <p class="benediction">
       Discernment, not enthusiasm.<br>
@@ -1174,11 +1215,12 @@
       <em>How can technology better serve society?</em>
     </p>
     <aside class="notes">
-      <strong>Read each line with space.</strong> Don't rush.
-      <br><br>
-      The final italicized question is CHT's framing. Use it as the benediction — open, not closed. The question carries.
-      <br><br>
-      <em>Don't add a bow. Don't summarize. Don't preview what's next. Pause. Then thank the room.</em>
+      <h4>The benediction</h4>
+      <p><strong>Read each line with space.</strong> Don't rush. Let each one land.</p>
+      <p>Discernment, not enthusiasm — the third posture from earlier.<br>Engagement, not refusal — discerning engagement specifically.<br>Service, not superiority — the orientation toward the tool.<br>Bicycles, when bicycles will do — the practical test.</p>
+      <h4>The closing question</h4>
+      <p>The final italicized line is CHT's framing: "How can technology better serve society?" Use it as the benediction — open, not closed. The question carries.</p>
+      <p><strong>Don't add a bow.</strong> Don't summarize. Don't preview what's next. Pause. Then thank the room.</p>
     </aside>
   </section>
 
@@ -1186,32 +1228,23 @@
 
 <!-- ============ PRESENTER VIEW ============ -->
 <div class="presenter-view" id="presenterView">
-  <div class="presenter-previews">
-    <div class="preview-box">
-      <span class="preview-label">Current slide</span>
-      <div class="preview-content" id="presenterCurrent"></div>
-    </div>
-    <div class="preview-box preview-next">
-      <span class="preview-label">Next slide</span>
-      <div class="preview-content" id="presenterNext"></div>
-    </div>
+  <div class="presenter-slide-wrap">
+    <iframe id="presenterSlideFrame" src="" title="Slide preview"></iframe>
   </div>
   <div class="presenter-notes">
-    <h3>Notes</h3>
     <div class="notes-content" id="presenterNotes"></div>
   </div>
   <div class="presenter-bar">
-    <span class="slide-counter">Slide <span id="presenterSlideNum">1</span> of <span id="presenterSlideTotal">51</span></span>
-    <span class="timer" id="presenterTimer">00:00</span>
+    <span class="slide-counter">Slide <span id="presenterSlideNum">1</span> of <span id="presenterSlideTotal">36</span></span>
+    <span></span>
     <span class="controls">
       <button id="presenterPrev">← Prev</button>
       <button id="presenterNextBtn">Next →</button>
-      <button id="presenterResetTimer">Reset timer</button>
     </span>
   </div>
 </div>
 
-<!-- ============ READER VIEW ============ -->
+<!-- ============ READER VIEW (URL-only; no button in chrome) ============ -->
 <div class="reader-view" id="readerView">
   <header>
     <h1>AI, Rockets, &amp; Bicycles</h1>
@@ -1222,11 +1255,10 @@
 
 <!-- ============ CHROME ============ -->
 <div class="chrome">
-  <span><span id="slideCounter">1</span> / <span id="slideTotal">51</span></span>
+  <span><span id="slideCounter">1</span> / <span id="slideTotal">36</span></span>
   <span>
     <button onclick="openPresenter()">Pop out presenter</button>
     <button onclick="toggleFullscreen()">Fullscreen</button>
-    <button onclick="window.location.search='?reader=1'">Reader mode</button>
   </span>
 </div>
 
@@ -1239,7 +1271,8 @@
   const params = new URLSearchParams(window.location.search);
   const mode = params.get('mode') || (params.get('reader') ? 'reader' : 'audience');
   const channel = new BroadcastChannel('wwjd-part2-sync');
-  let isPresenterOpen = false;
+
+  if (params.get('embed') === '1') document.body.classList.add('embed-mode');
 
   if (mode === 'presenter') {
     document.body.classList.add('presenter-mode');
@@ -1263,24 +1296,21 @@
 
     channel.onmessage = (e) => {
       if (e.data.type === 'slide-change') showSlide(e.data.index, true);
-      else if (e.data.type === 'presenter-opened') isPresenterOpen = true;
-      else if (e.data.type === 'presenter-closed') isPresenterOpen = false;
       else if (e.data.type === 'request-state') channel.postMessage({ type: 'state', index: currentIndex });
     };
     channel.postMessage({ type: 'audience-ready' });
   }
 
   function initPresenter() {
-    updatePresenterView(currentIndex);
-    const startTime = Date.now();
-    let timerStart = startTime;
-    setInterval(() => {
-      const elapsed = Math.floor((Date.now() - timerStart) / 1000);
-      const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
-      const secs = String(elapsed % 60).padStart(2, '0');
-      document.getElementById('presenterTimer').textContent = `${mins}:${secs}`;
-    }, 1000);
-    document.getElementById('presenterResetTimer').onclick = () => { timerStart = Date.now(); };
+    // Build iframe URL pointing at audience-embed mode
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', 'audience');
+    url.searchParams.set('embed', '1');
+    url.searchParams.delete('reader');
+    document.getElementById('presenterSlideFrame').src = url.toString();
+
+    updatePresenterNotes(currentIndex);
+
     document.getElementById('presenterPrev').onclick = () => prevSlide();
     document.getElementById('presenterNextBtn').onclick = () => nextSlide();
 
@@ -1288,28 +1318,19 @@
     channel.onmessage = (e) => {
       if (e.data.type === 'slide-change' || e.data.type === 'state') {
         currentIndex = e.data.index;
-        updatePresenterView(currentIndex);
+        updatePresenterNotes(currentIndex);
       }
     };
     channel.postMessage({ type: 'request-state' });
     window.addEventListener('beforeunload', () => { channel.postMessage({ type: 'presenter-closed' }); });
   }
 
-  function updatePresenterView(index) {
+  function updatePresenterNotes(index) {
     const current = slides[index];
-    const next = slides[index + 1];
-    const currentClone = current.cloneNode(true);
-    currentClone.querySelector('aside.notes')?.remove();
-    document.getElementById('presenterCurrent').innerHTML = currentClone.innerHTML;
-    if (next) {
-      const nextClone = next.cloneNode(true);
-      nextClone.querySelector('aside.notes')?.remove();
-      document.getElementById('presenterNext').innerHTML = nextClone.innerHTML;
-    } else {
-      document.getElementById('presenterNext').innerHTML = '<em style="color:var(--muted)">End of deck</em>';
-    }
     const notesEl = current.querySelector('aside.notes');
-    document.getElementById('presenterNotes').innerHTML = notesEl ? notesEl.innerHTML : '<em style="color:var(--muted)">No notes for this slide.</em>';
+    document.getElementById('presenterNotes').innerHTML = notesEl
+      ? notesEl.innerHTML
+      : '<em style="color:var(--muted)">No notes for this slide.</em>';
     document.getElementById('presenterSlideNum').textContent = index + 1;
     document.getElementById('presenterSlideTotal').textContent = total;
   }
@@ -1343,6 +1364,8 @@
     const bar = document.getElementById('progressBar');
     if (bar) bar.style.width = `${progress}%`;
     if (!fromSync) channel.postMessage({ type: 'slide-change', index });
+    // If we're in presenter mode, also update notes locally (BroadcastChannel doesn't echo to sender)
+    if (document.body.classList.contains('presenter-mode')) updatePresenterNotes(index);
   }
 
   function nextSlide() { showSlide(currentIndex + 1); }
@@ -1364,7 +1387,7 @@
   function openPresenter() {
     const url = new URL(window.location.href);
     url.searchParams.set('mode', 'presenter');
-    const win = window.open(url.toString(), 'wwjd-part2-presenter', 'width=1200,height=800');
+    const win = window.open(url.toString(), 'wwjd-part2-presenter', 'width=1400,height=900');
     if (win) win.focus();
   }
 
