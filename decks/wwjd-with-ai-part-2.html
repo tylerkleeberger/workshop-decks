@@ -72,8 +72,8 @@
   .presenter-current iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 100%; border: none; background: var(--bg); box-shadow: 0 0 0 1px var(--divider), 0 8px 24px rgba(0,0,0,0.4); }
   .presenter-next { flex: 0 0 auto; width: 100%; display: flex; align-items: center; gap: 0.85rem; opacity: 0.8; }
   .presenter-next .next-label { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .presenter-next-frame-wrap { position: relative; width: 30%; max-width: 240px; aspect-ratio: 16 / 9; flex: 0 0 auto; }
-  .presenter-next-frame-wrap iframe { width: 100%; height: 100%; border: none; background: var(--bg); box-shadow: 0 0 0 1px var(--divider); display: block; }
+  .presenter-next-frame-wrap { position: relative; width: 320px; height: 180px; flex: 0 0 auto; overflow: hidden; box-shadow: 0 0 0 1px var(--divider); }
+  .presenter-next-frame-wrap iframe { width: 1280px; height: 720px; border: none; background: var(--bg); transform: scale(0.25); transform-origin: top left; display: block; }
   .presenter-next-end { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: #0a0e13; color: var(--muted); font-family: var(--sans); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 0 0 0 1px var(--divider); }
   .presenter-next.at-end .presenter-next-end { display: flex; }
 
@@ -535,7 +535,9 @@
         </td></tr>
         <tr><td class="cue">Abilene</td><td class="detail">"size of Central Park" — OpenAI's words</td></tr>
         <tr><td class="cue">Empire</td><td class="detail">Rome's roads/aqueducts on tribute + forced labor</td></tr>
-        <tr><td class="cue">Effect</td><td class="detail">utility bills, grid reliability, air, water, asthma</td></tr>
+        <tr><td class="cue">Effect</td><td class="detail">utility bills, grid reliability, air, water, asthma
+          <div class="more">Water fights hit drought regions hardest — <strong>Chile, Arizona, the Pacific Northwest</strong> — where communities compete with data centers for fresh water.</div>
+        </td></tr>
         <tr><td class="cue">Pull in</td><td class="detail">anyone in room with local DC fights</td></tr>
       </table>
     </aside>
@@ -559,7 +561,8 @@
         </td></tr>
         <tr><td class="cue">Numbers</td><td class="detail">40% entry-level hiring drop — sit with this</td></tr>
         <tr><td class="cue">For parents</td><td class="detail">kids in their 20s — this is the number</td></tr>
-        <tr><td class="cue">Empire</td><td class="detail">labor that makes the system is the least protected</td></tr>
+        <tr><td class="cue">Empire</td><td class="detail">labor that makes the system is the least protected; value flows upward</td></tr>
+        <tr><td class="cue">Effect</td><td class="detail">lost work, dignity, meaning — the on-ramps that let one generation get more secure than the last are breaking</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -582,6 +585,7 @@
           <div class="more"><strong>Timnit Gebru:</strong> co-led Google's AI Ethics team. In late 2020 she co-authored <em>"On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?"</em> — warning about environmental costs, training-data harms, and unintended consequences of large language models. Google asked her to retract or remove Google-affiliated authors. She refused. Google announced her departure as a resignation; she calls it a firing. Has become the canonical case of what happens to AI watchdogs who get inside.</div>
         </td></tr>
         <tr><td class="cue">Empire</td><td class="detail">every empire controls its story — Rome's historians, Britain's mapmakers</td></tr>
+        <tr><td class="cue">Effect</td><td class="detail">the public can't tell what's true — and neither can policymakers</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -612,6 +616,7 @@
         </td></tr>
         <tr><td class="cue">Land</td><td class="detail">"vagueness isn't a bug, it's the product"</td></tr>
         <tr><td class="cue">Empire</td><td class="detail">Pax Romana, Britain's "civilization," America's "freedom"</td></tr>
+        <tr><td class="cue">Effect</td><td class="detail">the conversation gets locked into a frame the empire chose</td></tr>
       </table>
     </aside>
     <aside class="reader">
