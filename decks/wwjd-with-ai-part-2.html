@@ -67,8 +67,15 @@
   body.presenter-mode .presenter-view { display: grid; }
 
   .presenter-view { display: none; height: 100vh; width: 100vw; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto; grid-template-areas: "slide notes" "bar bar"; gap: 0; }
-  .presenter-slide-wrap { grid-area: slide; display: flex; align-items: center; justify-content: center; background: #000; padding: 1.5rem; overflow: hidden; border-right: 1px solid var(--divider); }
-  .presenter-slide-wrap iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 100%; border: none; background: var(--bg); box-shadow: 0 0 0 1px var(--divider), 0 8px 24px rgba(0,0,0,0.4); }
+  .presenter-slide-wrap { grid-area: slide; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; padding: 1.5rem; overflow: hidden; border-right: 1px solid var(--divider); gap: 1rem; }
+  .presenter-current { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+  .presenter-current iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 100%; border: none; background: var(--bg); box-shadow: 0 0 0 1px var(--divider), 0 8px 24px rgba(0,0,0,0.4); }
+  .presenter-next { flex: 0 0 auto; width: 100%; display: flex; align-items: center; gap: 0.85rem; opacity: 0.8; }
+  .presenter-next .next-label { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .presenter-next-frame-wrap { position: relative; width: 30%; max-width: 240px; aspect-ratio: 16 / 9; flex: 0 0 auto; }
+  .presenter-next-frame-wrap iframe { width: 100%; height: 100%; border: none; background: var(--bg); box-shadow: 0 0 0 1px var(--divider); display: block; }
+  .presenter-next-end { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: #0a0e13; color: var(--muted); font-family: var(--sans); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 0 0 0 1px var(--divider); }
+  .presenter-next.at-end .presenter-next-end { display: flex; }
 
   .presenter-notes { grid-area: notes; padding: 1.5rem 2rem; overflow-y: auto; background: #11161d; font-family: var(--serif); font-size: 0.92rem; line-height: 1.55; color: var(--fg); }
 
@@ -671,11 +678,11 @@
   </section>
 
   <section class="slide" data-pattern="reveal">
+    <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Concern 1 — Deification of the technology</h2>
     <ul>
       <li><strong>AGI</strong> — "artificial general intelligence," transcendent intelligence beyond human</li>
       <li>Religious language: heaven, hell, salvation, the messianic timeline</li>
       <li>Christians have a word for this: <strong>idolatry</strong> — claims that belong to God being made about something else</li>
-      <li><em>Translation for non-Christian listeners:</em> we're being asked to trust these systems with the authority humans usually reserve for the sacred</li>
     </ul>
     <aside class="notes">
       <table class="cue-table">
@@ -788,7 +795,73 @@
       </table>
     </aside>
     <aside class="reader">
-      <p>The shift from diagnosis to prescription. We've named the empire and the harms. Now: what's available to us? Three postures we can take. Three domains where pressure shifts behavior. Concrete moves we can make in our own lives.</p>
+      <p>The shift from diagnosis to prescription. We've named the empire and the harms. Now: what's available to us? Three postures we can take. Three domains where pressure shifts behavior. Concrete moves we can make in our own lives. But first — the reframe that makes any of it worth doing.</p>
+    </aside>
+  </section>
+
+  <section class="slide" data-pattern="anchor">
+    <p class="question">What does the empire need <em>from us</em> to keep going?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">2–3 min — turn from despair to leverage</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">it runs on inputs only we supply</td></tr>
+      </table>
+      <span class="label">Anticipate</span>
+      <table class="cue-table anticipate-table">
+        <tr><td class="cue">"Money"</td><td class="detail">capital — and the bet that revenue arrives</td></tr>
+        <tr><td class="cue">"Our data"</td><td class="detail">every use is a donation</td></tr>
+        <tr><td class="cue">"Attention / adoption"</td><td class="detail">they need every space to say yes</td></tr>
+        <tr><td class="cue">"Consent"</td><td class="detail">permission we grant by default</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>The turn from diagnosis to agency begins with a question: what does the empire actually need from us to keep going? The honest answer is unsettling for the companies and clarifying for us. It needs capital, and the bet that revenue will eventually justify it. It needs data — which every one of us supplies every time we use the tools. It needs adoption in every workplace, school, and home. And it needs consent, which we grant by default unless we decide otherwise. The empire's trajectory is not self-powered. It runs on inputs that flow from ordinary people.</p>
+    </aside>
+  </section>
+
+  <section class="slide" data-pattern="reveal">
+    <ul>
+      <li>The trajectory isn't a fact — it's a <strong>bet</strong> that the inputs keep flowing: capital, data, adoption, consent</li>
+      <li>Insiders say the revenue targets need everything to <em>"go flawlessly"</em> — every person, every space, adopting</li>
+      <li>The appetite for our data and labor keeps <em>growing</em> — the empire has to be re-fed to exist</li>
+      <li>Withholding our inputs bends the trajectory</li>
+    </ul>
+    <p class="landed" style="margin-top: 2rem;">We're not only subjects — we're the supply.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">empire is a bet, not a fate</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">the Hao line lands big on the next slide — set it up, then let it land</td></tr>
+      </table>
+      <table class="cue-table">
+        <tr><td class="cue">Lean on</td><td class="detail">the "horse left the stable" reversal
+          <div class="more">Hao: <em>"If the horse truly had left the stables, they wouldn't have to train on anything anymore."</em> Their appetite for data and annotation labor has <em>expanded</em>, not shrunk — because each new model has to be re-fed. That ongoing dependence is exactly where our leverage lives. The "it's already too late" story is itself part of the marketing.</div>
+        </td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">this powers the postures + concrete moves next — "withhold where it matters" now has teeth</td></tr>
+        <tr><td class="cue">Don't</td><td class="detail">overclaim — not a boycott pitch; the point is that consent is a live variable</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Here is the hinge of the whole second half. The dominance of the AI empire can feel like a settled fact — a horse already out of the stable. Karen Hao's reporting says otherwise. Insiders told her the companies' revenue targets are so extraordinary that they need everything "to go flawlessly" — every person and every institution adopting, at the pace they've promised investors. And the tell is in the data: if the technology were truly finished and self-sustaining, the companies wouldn't still need to train it. Instead their appetite for our data and our labor keeps growing, because each generation of the system has to be re-fed. That ongoing dependence is leverage. We are not only subjects of the empire; we are its supply. Which means the inputs we control — our data, our adoption, our consent, our civic and financial pressure — are not nothing. Withheld together, they bend the trajectory. The empire is a bet, not a fate.</p>
+    </aside>
+  </section>
+
+  <section class="slide" data-pattern="source">
+    <div class="pull-quote">
+      They need everything to go flawlessly.<br>So — <em>let's not make it go flawlessly</em>, if we don't agree with what they're doing.
+      <span class="citation">— Karen Hao, Diary of a CEO</span>
+    </div>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Read aloud</td><td class="detail">slow — this is the call to action of the whole back half</td></tr>
+        <tr><td class="cue">Pause</td><td class="detail">5s after "go flawlessly" — let the room feel the turn from helpless to active</td></tr>
+        <tr><td class="cue">Frame</td><td class="detail">not sabotage — withholding consent where you disagree
+          <div class="more">Full line in context (Hao): <em>"It's understood internally that the revenue targets are extraordinary and they need things to go flawlessly… every single person to adopt this, every single space… let's not make it go flawlessly if we don't agree with what they are doing."</em> The leverage is ordinary: where you don't agree, don't hand over the adoption, the data, or the consent by default.</div>
+        </td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <blockquote>"…they need things to go flawlessly for it to all work out… let's not make it go flawlessly if we don't agree with what they are doing." — Karen Hao</blockquote>
+      <p>This is the practical edge of the leverage point. The companies have promised investors a trajectory that requires near-total adoption — every person, every institution, at speed. That requirement is also a vulnerability. Not making it go flawlessly isn't sabotage; it's the ordinary act of withholding your consent, your data, and your default adoption wherever you don't actually agree with what's being built. Multiplied across a public, that is the difference between a fate and a bet.</p>
     </aside>
   </section>
 
@@ -819,8 +892,13 @@
     </ol>
     <aside class="notes">
       <table class="cue-table">
-        <tr><td class="cue">Don't strawman</td><td class="detail">name risks of #1 and #2 honestly</td></tr>
-        <tr><td class="cue">Connect</td><td class="detail">#3 = Jesus's move from Part 1, explicitly</td></tr>
+        <tr><td class="cue">Don't strawman</td><td class="detail">name risks of #1 and #2 honestly
+          <div class="more"><strong>Adoption</strong> isn't foolish — it's how most people meet real benefit; the risk is unseen complicity. <strong>Refusal</strong> has integrity — but the technology shapes the world whether you opt out or not, so it cedes the field. Treat both as serious before offering the third.</div>
+        </td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">#3 = Jesus's move from Part 1 — refuse the binary
+          <div class="more">Discerning engagement is the same move as "render unto Caesar": not pay-or-refuse, but <em>whose image, whose benefit, whose cost?</em> For Part 1 returnees, name the echo explicitly. For newcomers, it's simply: stay in, but stay awake.</div>
+        </td></tr>
+        <tr><td class="cue">Land</td><td class="detail">most of the room is in #1 by default — invite, don't scold</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -852,6 +930,10 @@
       <table class="cue-table">
         <tr><td class="cue">Frame</td><td class="detail">flywheel — they reinforce</td></tr>
         <tr><td class="cue">Mechanism</td><td class="detail">norms → demand → laws → accountability → design → norms</td></tr>
+        <tr><td class="cue">Make concrete</td><td class="detail">one example of each so it isn't abstract
+          <div class="more"><strong>Norms:</strong> not passing AI-written work off as your own; not using a chatbot as a stand-in for a grieving friend. <strong>Laws:</strong> data-center permitting and disclosure; consent and compensation for training data; transparency requirements. <strong>Design:</strong> friction instead of endless engagement; defaults that protect kids; smaller models offered for small jobs.</div>
+        </td></tr>
+        <tr><td class="cue">From</td><td class="detail">CHT's <em>AI Roadmap</em> (2025)</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -988,6 +1070,34 @@
   </section>
 
   <section class="slide" data-pattern="reveal">
+    <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">Bicycles, in practice</h2>
+    <ul>
+      <li>You already ride them — autocomplete, maps, spam filters, photo search, captions, translation</li>
+      <li><strong>Right-size the tool:</strong> a translator for the menu · a summarizer for the report · search for the fact · a calculator for the math</li>
+      <li>Let it draft or surface options — <strong>you make the call</strong></li>
+      <li>Pick what you could switch off tomorrow without losing the skill</li>
+    </ul>
+    <p class="kicker" style="margin-top: 2rem;">The smallest tool that does the job — and you keep the judgment.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">"you're already riding bicycles" — most people's best AI is already narrow; defuses all-or-nothing</td></tr>
+        <tr><td class="cue">Swap it</td><td class="detail">rocket habit → bicycle move — run 2–3 live
+          <div class="more">Durable across tool churn (don't name brands):<br>• "Summarize this 40-pager" → ask for the <em>headings/outline</em>, then read the part that matters<br>• "Write my whole email" → give it your bullet points; it drafts, <em>you</em> edit and send<br>• "What should I think about X?" → think first; use it to <em>pressure-test</em>, not to hand you the take<br>• Translate a menu/sign → a translation app, not a chat session<br>• "Find that doc/fact" → search, don't generate<br>• Numbers/budget → a spreadsheet or calculator<br>• Photos → on-device search, not upload-everything</div>
+        </td></tr>
+        <tr><td class="cue">Heuristic</td><td class="detail">smallest tool that does the job + you keep the call — the durable rule</td></tr>
+      </table>
+      <span class="label">Anticipate</span>
+      <table class="cue-table anticipate-table">
+        <tr><td class="cue">"But one app does all of it"</td><td class="detail">convenience ≠ right-sized; default-to-biggest is marketing, not need</td></tr>
+        <tr><td class="cue">"How do I know which is which?"</td><td class="detail">→ the six questions, a few slides on</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>What does a bicycle look like in an ordinary life? Mostly it looks like things you already use without calling them AI: autocomplete, map routing, spam filters, the search that finds a photo by what's in it, captions, translation. The practical move is to right-size the tool to the task — a translator for the menu, a summarizer (or a request for the headings) for the report, plain search for the fact, a calculator or spreadsheet for the math — instead of routing everything through one general everything-machine. The same move works as a set of swaps for habits you already have: instead of "summarize this forty-pager," ask for the outline and read the part that matters; instead of "write my whole email," hand over your bullet points and edit the draft yourself; instead of "what should I think about this," think first and use the tool to pressure-test, not to hand you the take. In every case the narrow tool is cheaper, lighter, and — most importantly — keeps you as the one deciding. The durable heuristic underneath all of it: reach for the smallest tool that does the job, and keep the judgment in your hands. The biggest, most general tool is rarely the right one; we reach for it out of habit and marketing, not necessity.</p>
+    </aside>
+  </section>
+
+  <section class="slide" data-pattern="reveal">
     <div class="pull-quote">
       The very same capabilities could be developed in a different way that doesn't have <em>all of these unintended consequences.</em>
       <span class="citation">— Karen Hao</span>
@@ -1012,7 +1122,8 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Direct</td><td class="detail">no hedging</td></tr>
-        <tr><td class="cue">Earned</td><td class="detail">room has done the work — deliver</td></tr>
+        <tr><td class="cue">Earned</td><td class="detail">room has done the work — deliver the concrete answer</td></tr>
+        <tr><td class="cue">Beats</td><td class="detail">service (right-size the tool) → lean in / rethink (extend vs replace) → the questions to carry</td></tr>
       </table>
     </aside>
     <aside class="reader">
@@ -1050,11 +1161,43 @@
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Land</td><td class="detail">"biggest tool rarely the right one"</td></tr>
-        <tr><td class="cue">Example</td><td class="detail">GPT-4 to summarize an email = rocket fuel to cross the street</td></tr>
+        <tr><td class="cue">Right-size it</td><td class="detail">everyday over-reach → the simpler swap
+          <div class="more">A frontier chatbot to summarize an email = rocket fuel to cross the street. Right-sized instead: a calculator for math, a translation app for a menu, search for a fact, built-in dictation for voice-to-text, a spreadsheet for a budget. Smaller is usually cheaper, faster, more private, and keeps you deciding. Reserve the big general model for genuinely open-ended work the small tools can't do.</div>
+        </td></tr>
+        <tr><td class="cue">Service</td><td class="detail">narrow, examinable, no empire required</td></tr>
       </table>
     </aside>
     <aside class="reader">
       <p>The load-bearing claim: the biggest, most general, most "intelligent" tool is rarely the right one for the job. Most people reach for the biggest tool out of habit. Using GPT-4 to summarize an email is overkill — it's burning rocket fuel to cross the street. A simpler, more focused model could do the same job for a fraction of the energy, the data, the cost. We default to the biggest tool because it's the most marketed. That's not the same as the most appropriate.</p>
+    </aside>
+  </section>
+
+  <section class="slide" data-pattern="reveal">
+    <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">What it actually does well</h2>
+    <ul>
+      <li><strong>Access</strong> — surface what's buried in material you point it at</li>
+      <li><strong>Organize</strong> — turn a mess of notes or data into structure</li>
+      <li><strong>Synthesize</strong> — pull many sources into one clear account</li>
+    </ul>
+    <p class="kicker" style="margin-top: 2rem;">Strip the hype — the all-purpose chatbot isn't the useful part. These three are.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Reframe</td><td class="detail">the live question isn't "is AI good" — it's what does it actually do well
+          <div class="more">Answer: information work — accessing, organizing, synthesizing material you give it or point it at. Narrower than "ask the magic box anything," and that narrowness is the whole insight.</div>
+        </td></tr>
+        <tr><td class="cue">When to use it</td><td class="detail">when you can hand it the information and check the result
+          <div class="more">If you have the source — a document, your notes, a dataset — and can verify the output, it shines. The moment you ask it to <em>know</em> something (facts from memory, exact math, what's true right now), you're using the weak part.</div>
+        </td></tr>
+        <tr><td class="cue">Big point</td><td class="detail">say it plainly — the open-ended chatbot is overrated
+          <div class="more">"Chatting with the AI" from memory is the least reliable mode — it invites the model to make things up. The value shows up when it's pointed at real material you brought. Chatbots aren't all that useful; the capabilities are.</div>
+        </td></tr>
+        <tr><td class="cue">Cases</td><td class="detail">confident ≠ correct
+          <div class="more">Air Canada's chatbot invented a refund policy a tribunal then enforced; PA (2026) is suing Character.AI over a bot posing as a doctor. It doesn't know when it's wrong — so when facts matter, use a tool that cites and click through.</div>
+        </td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>The live question isn't whether AI is good or bad — it's what these tools actually do well. Strip away the hype and the answer is narrower, and more useful, than the marketing: they handle information. They <em>access</em> it — surfacing what's buried in material you point them at. They <em>organize</em> it — turning a mess of notes or data into structure. And they <em>synthesize</em> it — pulling many sources into one clear account. Notice what those have in common: each is work done on information you bring to the tool. That tells you exactly when to reach for one — when you have the source and can check the result — and when not to: the moment you ask it to be a source of truth (facts from memory, exact math, what's true right now), you've wandered into the part it only appears to do well. An Air Canada chatbot once invented a refund policy and a tribunal held the airline to it. The deeper point runs almost opposite to the hype: the open-ended, ask-it-anything chatbot is mostly not the useful part. The capabilities are. Knowing which is which is the whole skill.</p>
     </aside>
   </section>
 
@@ -1080,19 +1223,52 @@
 
   <section class="slide" data-pattern="reveal">
     <ul>
-      <li><strong>Extension</strong> — the human stays the source. The tool amplifies. <em>Drafting. Summarizing. Accessibility. Acceleration.</em></li>
-      <li><strong>Replacement</strong> — the human is bypassed. Something not made by humans, for humans, takes the human's place. <em>Outsourced judgment. Outsourced presence. Outsourced witness.</em></li>
+      <li><strong>Extension</strong> — <em>lean in.</em> You stay the source; the tool amplifies. <em>Draft it, you send it. Summarize it, you judge it. Translate, caption, search, tutor.</em></li>
+      <li><strong>Replacement</strong> — <em>rethink.</em> The human gets bypassed. <em>It decides for you. It stands in for a person. It forms your kids. It grieves, prays, or thinks in your place.</em></li>
     </ul>
     <p class="landed" style="margin-top: 2rem;">Tool stays tool when human stays human.</p>
     <aside class="notes">
       <table class="cue-table">
         <tr><td class="cue">Land</td><td class="detail">"tool stays tool when human stays human"</td></tr>
-        <tr><td class="cue">Through-line</td><td class="detail">Part 1 → here</td></tr>
-        <tr><td class="cue">Operational</td><td class="detail">this is THE summary of the whole 2-part series</td></tr>
+        <tr><td class="cue">Lean in</td><td class="detail">these extend you — you keep the call; emphasize them
+          <div class="more"><strong>Work:</strong> draft/edit, summarize-then-judge, brainstorm options you choose from, clean/format data, code help you review, search &amp; retrieval. <strong>Learning:</strong> a patient tutor, "explain it simpler," language practice. <strong>Access:</strong> transcription, captions, image description, reading support. The test: <em>you could redo it yourself, just slower.</em></div>
+        </td></tr>
+        <tr><td class="cue">Rethink</td><td class="detail">these bypass the human — name what NOT to outsource
+          <div class="more">Judgment &amp; decisions you're accountable for. Presence with people. Relationships and grief — no chatbot stands in for a friend. Your kids' formation of self. Prayer / spiritual discernment. The thinking you haven't done yet; the take you haven't formed. <em>If the tool is doing the part that makes it yours, that's the line.</em></div>
+        </td></tr>
+        <tr><td class="cue">Alternative</td><td class="detail">when a use feels like replacement, <em>downshift</em> — smaller tool, human-in-the-loop, or do it yourself</td></tr>
+        <tr><td class="cue">Through-line</td><td class="detail">Part 1's dignity move → here; THE summary of the 2-part series</td></tr>
       </table>
     </aside>
     <aside class="reader">
-      <p>The dignity move. Extension: the human stays the source, the tool amplifies. Drafting. Summarizing. Accessibility. Acceleration. Replacement: the human is bypassed, something not made by humans, for humans, takes the human's place. Outsourced judgment. Outsourced presence. Outsourced witness. The same capability can be either, depending on how you use it. Tool stays tool when human stays human. That's the operational summary of the whole two-part series.</p>
+      <p>The dignity move, made concrete. Lean into the uses that <em>extend</em> you — where you stay the source and the tool amplifies: drafting an email you then send, summarizing a reading you then judge, brainstorming options you choose among, translation, captions, transcription, a patient tutor, code help you review. The test is simple: could you have done it yourself, just slower? If so, it's extension. Rethink the uses that <em>replace</em> you — where the human gets bypassed and the tool produces what only a person should: the judgment you're accountable for, presence with people, relationships and grief, your kids' sense of self, prayer and discernment, the thinking you haven't done yet. No chatbot should stand in for a friend, and no model should form a child's identity for someone else's profit. When a use starts to feel like replacement, downshift — a smaller tool, a human in the loop, or simply doing it yourself. Tool stays tool when human stays human. That is the operational summary of the whole two-part series.</p>
+    </aside>
+  </section>
+
+  <section class="slide" data-pattern="reveal">
+    <h2 style="font-size: clamp(0.95rem, 2vw, 1.3rem); margin-bottom: 1rem;">How to approach it differently</h2>
+    <ul>
+      <li><strong>Sources</strong> — open, smaller models exist: different incentives, not as capable, but real options</li>
+      <li><strong>Habits</strong> — use it for what it's good at: bring your own material; let it access, organize, synthesize</li>
+      <li><strong>Methods</strong> — build your own projects, categories, and flows that add value — instead of defaulting</li>
+    </ul>
+    <p class="kicker" style="margin-top: 2rem;">Less defaulting, more designing — the right tool, used for what it actually does.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Frame</td><td class="detail">not activism — intentional use; leave them able to say "here's how I'll approach this differently"</td></tr>
+        <tr><td class="cue">Sources</td><td class="detail">open &amp; small alternatives exist — different incentives
+          <div class="more">Open / run-your-own (Ollama + Gemma, Llama, Mistral) and on-device (Apple Intelligence). Built on different incentives than the empire; honestly less capable; not for everyone — but real options, and worth knowing they exist.</div>
+        </td></tr>
+        <tr><td class="cue">Habits</td><td class="detail">match your use to its strengths — access, organize, synthesize
+          <div class="more">Bring your own material and point it at that, rather than asking it to know things; use it where you can verify. This is the through-line from the previous slide: use the tool for what it actually does well.</div>
+        </td></tr>
+        <tr><td class="cue">Methods</td><td class="detail">design your own flows instead of defaulting
+          <div class="more">Set up projects, custom instructions, and your own categories so the tool works from your context. Build repeatable flows that add value — a study or research setup with your own sources (bounded tools like NotebookLM), or a "summarize → you judge → draft → you edit" loop. Design beats default.</div>
+        </td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>If you remember one frame from the practical half, make it this — three ways to approach AI differently, even while using the tools you already use. <strong>Sources:</strong> alternatives exist. There are open, smaller models you can run yourself and on-device options built on different incentives than the empire-scale players. They're honestly not as capable, and they're not for everyone — but it matters to know they exist as real options. <strong>Habits:</strong> use it for what it's actually good at. Bring your own material and let it access, organize, and synthesize, rather than asking it to be a fount of knowledge; use it where you can check the result. <strong>Methods:</strong> design your own flows instead of defaulting to the everything-box. Set up projects, your own categories, and custom context so the tool works from your material; build repeatable flows that genuinely add value — a study setup with your own sources, or a "summarize, you judge, draft, you edit" loop. The shift isn't louder refusal; it's less defaulting and more designing — choosing the right tool and using it for what it does well.</p>
     </aside>
   </section>
 
@@ -1158,13 +1334,22 @@
 
 <div class="presenter-view" id="presenterView">
   <div class="presenter-slide-wrap">
-    <iframe id="presenterSlideFrame" src="" title="Slide preview"></iframe>
+    <div class="presenter-current">
+      <iframe id="presenterSlideFrame" src="" title="Slide preview"></iframe>
+    </div>
+    <div class="presenter-next" id="presenterNext">
+      <span class="next-label">Next &#8594;</span>
+      <div class="presenter-next-frame-wrap">
+        <iframe id="presenterNextFrame" src="" title="Next slide preview"></iframe>
+        <div class="presenter-next-end" id="presenterNextEnd">End of deck</div>
+      </div>
+    </div>
   </div>
   <div class="presenter-notes">
     <div class="notes-content" id="presenterNotes"></div>
   </div>
   <div class="presenter-bar">
-    <span class="slide-counter">Slide <span id="presenterSlideNum">1</span> of <span id="presenterSlideTotal">51</span></span>
+    <span class="slide-counter">Slide <span id="presenterSlideNum">1</span> of <span id="presenterSlideTotal">57</span></span>
     <span></span>
     <span class="controls">
       <button id="presenterPrev">← Prev</button>
@@ -1189,7 +1374,7 @@
 <button class="edge-nav edge-next" onclick="nextSlide()" aria-label="Next slide">&#8594;</button>
 
 <div class="chrome">
-  <span><span id="slideCounter">1</span> / <span id="slideTotal">51</span></span>
+  <span><span id="slideCounter">1</span> / <span id="slideTotal">57</span></span>
   <span>
     <button onclick="window.location.search='?reader=1'">Read article</button>
     <button onclick="openPresenter()">Pop out presenter</button>
@@ -1214,6 +1399,7 @@
   else { initAudience(); }
 
   function initAudience() {
+    if (params.get('preview') === 'next') { initPreview(); return; }
     showSlide(0);
     document.body.classList.add('chrome-visible');
     let chromeTimeout = setTimeout(() => document.body.classList.remove('chrome-visible'), 2500);
@@ -1229,12 +1415,33 @@
     channel.postMessage({ type: 'audience-ready' });
   }
 
+  // Passive next-slide viewer for presenter mode. Renders currentIndex + 1.
+  // Never broadcasts — it only listens, so it can't perturb the sync.
+  function initPreview() {
+    function render(curIndex) {
+      const nextIndex = curIndex + 1;
+      slides.forEach(s => s.classList.remove('active'));
+      if (nextIndex >= 0 && nextIndex < total) slides[nextIndex].classList.add('active');
+    }
+    channel.onmessage = (e) => {
+      if (e.data.type === 'slide-change' || e.data.type === 'state') render(e.data.index);
+    };
+    channel.postMessage({ type: 'request-state' });
+    render(0);
+  }
+
   function initPresenter() {
     const url = new URL(window.location.href);
     url.searchParams.set('mode', 'audience');
     url.searchParams.set('embed', '1');
     url.searchParams.delete('reader');
     document.getElementById('presenterSlideFrame').src = url.toString();
+    const nurl = new URL(window.location.href);
+    nurl.searchParams.set('mode', 'audience');
+    nurl.searchParams.set('embed', '1');
+    nurl.searchParams.set('preview', 'next');
+    nurl.searchParams.delete('reader');
+    document.getElementById('presenterNextFrame').src = nurl.toString();
     updatePresenterNotes(currentIndex);
     document.getElementById('presenterPrev').onclick = () => prevSlide();
     document.getElementById('presenterNextBtn').onclick = () => nextSlide();
@@ -1255,6 +1462,8 @@
     document.getElementById('presenterNotes').innerHTML = notesEl ? notesEl.innerHTML : '<em style="color:var(--muted)">No notes for this slide.</em>';
     document.getElementById('presenterSlideNum').textContent = index + 1;
     document.getElementById('presenterSlideTotal').textContent = total;
+    const nextWrap = document.getElementById('presenterNext');
+    if (nextWrap) nextWrap.classList.toggle('at-end', index + 1 >= total);
   }
 
   function initReader() {
