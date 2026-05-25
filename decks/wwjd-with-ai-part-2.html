@@ -26,26 +26,26 @@
 
   .slide h1 { font-family: var(--sans); font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 200; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 1.5rem; }
   .slide h1 em { color: var(--accent); font-style: italic; font-weight: 300; }
-  .slide h2 { font-family: var(--sans); font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-weight: 200; line-height: 1.1; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; }
-  .slide .subtitle { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem, 2vw, 1.6rem); color: var(--muted); max-width: 50ch; margin-top: 0.5rem; }
-  .slide .question { font-family: var(--serif); font-size: clamp(2rem, 4.2vw, 3.2rem); font-style: italic; line-height: 1.25; max-width: 24ch; color: var(--fg); }
-  .slide .pull-quote { font-family: var(--serif); font-size: clamp(1.4rem, 2.5vw, 2rem); line-height: 1.5; max-width: 42ch; text-align: left; border-left: 3px solid var(--accent); padding: 1rem 0 1rem 2rem; font-style: italic; }
+  .slide h2 { font-family: var(--sans); font-size: clamp(1.8rem, 3.8vw, 2.9rem); font-weight: 200; line-height: 1.1; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; }
+  .slide .subtitle { font-family: var(--serif); font-style: italic; font-size: clamp(1.2rem, 2.2vw, 1.85rem); color: var(--muted); max-width: 50ch; margin-top: 0.5rem; }
+  .slide .question { font-family: var(--serif); font-size: clamp(2.2rem, 4.6vw, 3.8rem); font-style: italic; line-height: 1.25; max-width: 24ch; color: var(--fg); }
+  .slide .pull-quote { font-family: var(--serif); font-size: clamp(1.6rem, 2.9vw, 2.45rem); line-height: 1.5; max-width: 42ch; text-align: left; border-left: 3px solid var(--accent); padding: 1rem 0 1rem 2rem; font-style: italic; }
   .slide .pull-quote .citation { display: block; margin-top: 1rem; font-style: normal; color: var(--muted); font-size: 0.7em; letter-spacing: 0.05em; }
   .slide ul { list-style: none; text-align: left; max-width: 38ch; width: 100%; }
-  .slide ul li { font-family: var(--sans); font-size: clamp(1.1rem, 2vw, 1.55rem); font-weight: 300; line-height: 1.4; padding: 0.55rem 0; border-bottom: 1px solid var(--divider); }
+  .slide ul li { font-family: var(--sans); font-size: clamp(1.25rem, 2.4vw, 2rem); font-weight: 300; line-height: 1.4; padding: 0.55rem 0; border-bottom: 1px solid var(--divider); }
   .slide ul li:last-child { border-bottom: none; }
   .slide ul li strong { color: var(--accent); font-weight: 500; }
   .slide ul li em { color: var(--muted); font-style: italic; }
   .slide ol { list-style: none; counter-reset: list-counter; text-align: left; max-width: 42ch; }
-  .slide ol li { counter-increment: list-counter; font-family: var(--sans); font-size: clamp(1.1rem, 1.9vw, 1.5rem); font-weight: 300; line-height: 1.45; padding: 0.6rem 0 0.6rem 2.5rem; position: relative; border-bottom: 1px solid var(--divider); }
+  .slide ol li { counter-increment: list-counter; font-family: var(--sans); font-size: clamp(1.25rem, 2.3vw, 1.95rem); font-weight: 300; line-height: 1.45; padding: 0.6rem 0 0.6rem 2.5rem; position: relative; border-bottom: 1px solid var(--divider); }
   .slide ol li:last-child { border-bottom: none; }
   .slide ol li::before { content: counter(list-counter); position: absolute; left: 0; font-family: var(--serif); font-style: italic; color: var(--accent); font-size: 1.2em; }
   .slide ol li strong { color: var(--fg); font-weight: 500; }
   .slide ol li em { color: var(--muted); font-style: italic; }
-  .slide .kicker { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.4vw, 1.9rem); line-height: 1.4; max-width: 36ch; color: var(--accent); }
-  .slide .benediction { font-family: var(--serif); font-size: clamp(1.4rem, 2.5vw, 2rem); line-height: 1.65; max-width: 38ch; text-align: center; }
+  .slide .kicker { font-family: var(--serif); font-style: italic; font-size: clamp(1.5rem, 2.8vw, 2.35rem); line-height: 1.4; max-width: 36ch; color: var(--accent); }
+  .slide .benediction { font-family: var(--serif); font-size: clamp(1.6rem, 2.9vw, 2.45rem); line-height: 1.65; max-width: 38ch; text-align: center; }
   .slide .benediction em { color: var(--accent); }
-  .slide .landed { font-family: var(--sans); font-weight: 300; font-size: clamp(2rem, 4vw, 3rem); color: var(--accent); letter-spacing: -0.01em; margin-top: 2rem; }
+  .slide .landed { font-family: var(--sans); font-weight: 300; font-size: clamp(2.3rem, 4.4vw, 3.6rem); color: var(--accent); letter-spacing: -0.01em; margin-top: 2rem; }
   .slide aside.notes, .slide aside.reader { display: none; }
 
   .chrome { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-size: 0.78rem; color: var(--muted); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 60; }
@@ -1428,6 +1428,7 @@
       slides.forEach(s => s.classList.remove('active'));
       if (nextIndex >= 0 && nextIndex < total) slides[nextIndex].classList.add('active');
     }
+    window.__previewSetCurrent = render;   // parent (presenter) drives this directly — robust against missed channel messages
     channel.onmessage = (e) => {
       if (e.data.type === 'slide-change' || e.data.type === 'state') render(e.data.index);
     };
@@ -1469,6 +1470,9 @@
     document.getElementById('presenterSlideTotal').textContent = total;
     const nextWrap = document.getElementById('presenterNext');
     if (nextWrap) nextWrap.classList.toggle('at-end', index + 1 >= total);
+    // Drive the next-slide preview directly so it can't drift if a channel message is missed
+    const pf = document.getElementById('presenterNextFrame');
+    try { if (pf && pf.contentWindow && pf.contentWindow.__previewSetCurrent) pf.contentWindow.__previewSetCurrent(index); } catch (e) {}
   }
 
   function initReader() {
