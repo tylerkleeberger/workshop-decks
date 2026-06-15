@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where Does the Church Go From Here?</title>
+<style>
+  :root {
+    /* Audience: light, dry "Andrew Wyeth winter-field" palette */
+    --bg: #e8e1cf;
+    --fg: #27231d;
+    --accent: #9c4a2f;
+    --accent-soft: #9c4a2f;
+    --muted: #6f675a;
+    --divider: #cfc6b2;
+    --serif: 'Charter', 'Georgia', 'Times New Roman', serif;
+    --sans: 'Helvetica Neue', 'Helvetica', 'Inter', 'Arial', sans-serif;
+
+    --reader-bg: #ece5d4;
+    --reader-fg: #27231d;
+    --reader-muted: #6f675a;
+    --reader-accent: #9c4a2f;
+    --reader-divider: #d3c9b5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--serif);
+    background: var(--bg);
+    color: var(--fg);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ AUDIENCE MODE (default) ============ */
+
+  .deck {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 7vh 8vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+  }
+
+  /* Inner wrapper keeps content using the WIDTH of a 16:9 frame */
+  .slide > * { max-width: 84vw; }
+
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* TITLE */
+  .slide h1 {
+    font-family: var(--serif);
+    font-size: clamp(3.2rem, 6.5vw, 6rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.06;
+    margin-bottom: 2rem;
+    max-width: 22ch;
+  }
+
+  .slide h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  /* SECTION */
+  .slide h2 {
+    font-family: var(--serif);
+    font-size: clamp(3.2rem, 7.5vw, 6rem);
+    font-weight: 400;
+    line-height: 1.08;
+    color: var(--fg);
+  }
+
+  .slide .section-label {
+    font-family: var(--sans);
+    font-size: clamp(0.95rem, 1.7vw, 1.3rem);
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  .slide .subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 2.6rem);
+    color: var(--muted);
+    max-width: 46ch;
+    line-height: 1.45;
+    margin-top: 1.8rem;
+  }
+
+  /* KICKER (small uppercase topic label above headings / above anchor questions) */
+  .slide .kicker {
+    font-family: var(--sans);
+    font-size: clamp(0.9rem, 1.6vw, 1.25rem);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+    font-weight: 600;
+  }
+
+  /* SLIDE HEADING (big idea on every content slide) */
+  .slide .heading {
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    margin-bottom: 2rem;
+    max-width: 30ch;
+  }
+
+  .slide .heading em { color: var(--accent); font-style: italic; }
+
+  /* ANCHOR */
+  .slide .question {
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 4.8vw, 4.2rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.22;
+    max-width: 28ch;
+    color: var(--fg);
+    border-left: 5px solid var(--accent);
+    padding-left: 2rem;
+    text-align: left;
+  }
+
+  /* REVEAL */
+  .slide .reveal-lead {
+    font-family: var(--sans);
+    font-size: clamp(0.9rem, 1.6vw, 1.25rem);
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--accent);
+    margin-bottom: 2.2rem;
+    font-weight: 600;
+  }
+
+  .slide .lines {
+    list-style: none;
+    max-width: 82vw;
+    width: 100%;
+  }
+
+  .slide .lines li {
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 2.9vw, 2.7rem);
+    font-weight: 400;
+    line-height: 1.32;
+    padding: 0.85rem 0;
+    max-width: 46ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Landing line — large, used in Part 5 builds */
+  .slide .landing {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 5.4vw, 4.6rem);
+    font-weight: 400;
+    line-height: 1.14;
+    color: var(--fg);
+    max-width: 30ch;
+  }
+
+  .slide .landing em { color: var(--accent); font-style: italic; }
+
+  .slide .lines li + li {
+    border-top: 1px solid var(--divider);
+  }
+
+  .slide .lines li em { color: var(--accent); font-style: italic; }
+  .slide .lines li b { color: var(--accent); font-weight: 600; }
+
+  /* SOURCE */
+  .slide .source-text {
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    font-style: italic;
+    line-height: 1.45;
+    max-width: 26ch;
+    text-align: left;
+    border-left: 5px solid var(--accent);
+    padding: 0.5rem 0 0.5rem 2rem;
+  }
+
+  .slide .source-text .citation {
+    display: block;
+    margin-top: 1rem;
+    font-style: normal;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    font-size: 0.55em;
+  }
+
+  /* BENEDICTION */
+  .slide .benediction {
+    font-family: var(--serif);
+    font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+    line-height: 1.4;
+    max-width: 26ch;
+    font-weight: 400;
+  }
+
+  .slide .benediction em { color: var(--accent); font-style: italic; }
+
+  /* Notes & reader never display in audience mode */
+  .slide aside.notes,
+  .slide aside.reader { display: none; }
+
+  /* ============ EDGE NAV ARROWS ============ */
+
+  .edge-nav {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 12vw;
+    max-width: 120px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease, color 0.2s ease;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .edge-prev { left: 0; }
+  .edge-next { right: 0; }
+
+  body.chrome-visible .edge-nav { opacity: 0.5; pointer-events: auto; }
+  .edge-nav:hover { color: var(--accent); opacity: 1; }
+
+  /* ============ CHROME (controls + progress) ============ */
+
+  .chrome {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 95;
+  }
+
+  body.chrome-visible .chrome { opacity: 1; pointer-events: auto; }
+
+  .chrome .counter { font-variant-numeric: tabular-nums; }
+
+  .chrome button {
+    background: transparent;
+    border: 1px solid var(--divider);
+    color: var(--muted);
+    padding: 0.5rem 0.9rem;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+  }
+
+  .chrome button:hover {
+    color: var(--fg);
+    border-color: var(--accent);
+  }
+
+  .progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* ============ PRESENTER MODE ============ */
+
+  body.presenter-mode {
+    overflow: auto;
+    background: #ddd4bf;
+    color: var(--fg);
+  }
+
+  body.presenter-mode .deck,
+  body.presenter-mode .chrome,
+  body.presenter-mode .progress-bar,
+  body.presenter-mode .edge-nav { display: none; }
+  body.presenter-mode .presenter-view { display: grid; }
+
+  .presenter-view {
+    display: none;
+    height: 100vh;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    gap: 0;
+    color: var(--fg);
+  }
+
+  /* LEFT: single current-slide preview, true 16:9, fully visible */
+  .presenter-previews {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    padding: 1.2rem;
+    border-right: 1px solid var(--divider);
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .preview-box {
+    background: var(--bg);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+
+  /* CURRENT: the focus — larger, true 16:9, fits the column without cutting off.
+     Budget ~62% of the column height for current, leaving room for NEXT + gap. */
+  .preview-box.preview-current {
+    max-width: calc((100vh - 4rem) * 0.62 * 16 / 9);
+    aspect-ratio: 16 / 9;
+    max-height: 62%;
+  }
+
+  /* NEXT: a smaller glance-ahead, also true 16:9. */
+  .preview-box.preview-next {
+    max-width: calc((100vh - 4rem) * 0.30 * 16 / 9);
+    aspect-ratio: 16 / 9;
+    max-height: 30%;
+  }
+
+  .preview-box .preview-label {
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    padding: 0.6rem 0.9rem 0.3rem;
+  }
+
+  /* NEXT label uses the accent, matching the "CURRENT SLIDE"-style label family
+     while clearly marking it as the glance-ahead. */
+  .preview-box.preview-current .preview-label,
+  .preview-box.preview-next .preview-label {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+
+  .preview-box .preview-frame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: var(--bg);
+    display: block;
+  }
+
+  .presenter-notes {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 0;
+    padding: 1.8rem 2.6rem;
+    overflow-y: auto;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .presenter-notes h3 {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-weight: 500;
+  }
+
+  .presenter-notes .notes-content { color: var(--fg); }
+
+  /* Cue-table rendering */
+  .cue-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+
+  .cue-table td {
+    vertical-align: top;
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .cue-table td.cue {
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+    padding-right: 1.4rem;
+    padding-top: 0.7rem;
+  }
+
+  .cue-table td.detail {
+    font-family: var(--serif);
+    color: var(--fg);
+  }
+
+  .cue-table td.detail .more {
+    margin-top: 0.4rem;
+    font-size: 0.92em;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .anticipate-table td.cue {
+    color: var(--fg);
+    font-family: var(--serif);
+    text-transform: none;
+    letter-spacing: 0;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    white-space: normal;
+    max-width: 18ch;
+  }
+
+  .notes-content .label {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 1.2rem 0 0.5rem;
+  }
+
+  .notes-content .readaloud {
+    border-left: 3px solid var(--accent);
+    padding: 0.4rem 0 0.4rem 1.1rem;
+    margin: 1rem 0;
+    font-style: italic;
+  }
+
+  .notes-content .readaloud .citation {
+    display: block;
+    margin-top: 0.4rem;
+    font-style: normal;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .notes-content .aside {
+    margin-top: 1rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .presenter-bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid var(--divider);
+    background: #d3c9b3;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    color: var(--muted);
+    gap: 1rem;
+  }
+
+  .presenter-bar .controls { justify-self: end; }
+
+  .presenter-bar .controls button {
+    background: transparent;
+    border: 1px solid var(--divider);
+    color: var(--fg);
+    padding: 0.4rem 0.8rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .presenter-bar .controls button:hover { border-color: var(--accent); }
+
+  /* ============ READER MODE ============ */
+
+  body.reader-mode {
+    overflow: auto;
+    background: var(--reader-bg);
+    color: var(--reader-fg);
+    font-size: 18px;
+  }
+
+  body.reader-mode .deck,
+  body.reader-mode .chrome,
+  body.reader-mode .progress-bar,
+  body.reader-mode .edge-nav { display: none; }
+  body.reader-mode .reader-view { display: block; }
+
+  .reader-view {
+    display: none;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: 5rem 1.6rem 7rem;
+    font-family: var(--serif);
+  }
+
+  .reader-view header {
+    margin-bottom: 4rem;
+    padding-bottom: 2.4rem;
+    border-bottom: 1px solid var(--reader-divider);
+  }
+
+  .reader-view header .kicker {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--reader-accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .reader-view header h1 {
+    font-family: var(--serif);
+    font-size: 2.6rem;
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--reader-fg);
+    margin-bottom: 1rem;
+  }
+
+  .reader-view header p {
+    font-style: italic;
+    color: var(--reader-muted);
+    line-height: 1.6;
+  }
+
+  .reader-section-head {
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--reader-accent);
+    margin: 3.5rem 0 1.5rem;
+  }
+
+  .reader-block {
+    margin-bottom: 2.2rem;
+  }
+
+  .reader-block p {
+    line-height: 1.78;
+    color: var(--reader-fg);
+  }
+
+  .reader-block p + p { margin-top: 1.1rem; }
+
+  .reader-block .prompt {
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--reader-fg);
+    border-left: 3px solid var(--reader-accent);
+    padding-left: 1.2rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .reader-block blockquote {
+    border-left: 3px solid var(--reader-accent);
+    padding-left: 1.2rem;
+    margin-bottom: 1.1rem;
+    font-style: italic;
+    color: var(--reader-fg);
+    line-height: 1.5;
+  }
+
+  .reader-block blockquote .citation {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--reader-muted);
+  }
+
+  .reader-block.benediction-block p {
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--reader-accent);
+  }
+
+  /* ============ RESPONSIVE ============ */
+
+  @media (max-width: 900px) {
+    .presenter-view { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
+    .presenter-previews { grid-column: 1; grid-row: 1; border-right: none; border-bottom: 1px solid var(--divider); }
+    .preview-box.preview-current, .preview-box.preview-next { max-width: 100%; max-height: none; }
+    .presenter-notes { grid-column: 1; grid-row: 2; padding: 1.1rem 1.4rem; font-size: 1rem; }
+    .reader-view { padding: 2.5rem 1.2rem 4rem; }
+    .slide .question { padding-left: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ AUDIENCE VIEW (default) ============ -->
+
+<main class="deck" id="deck">
+
+  <!-- 1 -->
+  <section class="slide active" data-pattern="title">
+    <h1>Where Does the Church Go <em>From Here?</em></h1>
+    <p class="subtitle">Reading the changing cultural, political, and technological landscape — and what it means for where MUMC / The Farmhouse goes next.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Open</td><td class="detail">Frame the whole session: this is a Discipleship Conversation, not a lecture. ~42 min of content sets up ~45 min of guided conversation — the conversation is the point.
+          <div class="more">Time spine to protect: content ≈42 min · conversation ≈45 min · close ≈3 min. If content runs long, cut from the national arc (Part 2) — NEVER from the conversation. WWJD Part 2 overran because anchors ate the clock; move briskly through the first half.</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The title IS the question we're living with — "Where does the church go from here?" — for MUMC / The Farmhouse specifically. Subtitle names the three forces: cultural, political, technological.</td></tr>
+        <tr><td class="cue">Pacing</td><td class="detail">Don't linger here. The content is groundwork; the room is the work.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>This is an honest look at where the church stands — nationally, and right here. Across America the familiar form of church has thinned. But this isn't a session about decline for its own sake. It's about a single rural congregation, rooted in one place, asking a real question: given everything that has changed in our culture, our politics, and our technology, where do we go next? Not back to a remembered peak, but forward into a landscape that is genuinely new. What follows is the ground we walk before we sit down together to discern it.</p>
+    </aside>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">When you picture a thriving church — what do you see?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">Open question to the room. Take 3–4 answers. Don't correct — collect.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The picture the room paints is the thing to examine, not assume. Most describe full pews, kids everywhere, a busy Sunday — the mid-century, everyone-belongs-to-a-church image.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Set up the next slide: that shared picture is one specific remembered moment — honor it, then examine it.</td></tr>
+      </table>
+      <span class="label">Anticipate</span>
+      <table class="cue-table anticipate-table">
+        <tr><td class="cue">"Full pews / a packed parking lot / lots of kids"</td><td class="detail">→ Collect warmly. This is exactly the motif we'll name next as one form, not the only one.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>When you picture a thriving church, what do you see?</em> Ask the question in a room and the answers converge: full pews, a packed parking lot, children everywhere, a humming Sunday morning. We all carry an image of the thriving church, and it is almost always a specific remembered moment — a sanctuary at its fullest, a particular decade, a feeling of momentum. That image is worth honoring; it holds real memory. But it is also worth examining, because what we picture as "thriving" quietly decides what we think we're trying to get back to.</p>
+    </aside>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">One form among many</p>
+    <h3 class="heading">The full-pew church was a season, not the whole story.</h3>
+    <ul class="lines">
+      <li>US church membership held <b>~70%</b> for sixty years — then fell <b>below 50%</b>.</li>
+      <li>That full-pew era was <em>one</em> cultural form of church. Not the only one. Not the first.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Name the motif without criticizing it: we just described the same thing — the mid-century, full-pew, everyone-belongs era. A good memory. Also ONE moment. And it was new once, too.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">It's one of many cultural forms the church has taken — name a few concrete models.
+          <div class="more">Ancient HOUSE CHURCHES (met in homes ~300 yrs); the medieval PARISH / Mass-centered Christendom; the frontier METHODIST CIRCUIT + class meeting (planted places like ours); the GLOBAL-SOUTH / Pentecostal explosion; today's MEGACHURCH & "fresh expressions." The book's frame: church expressions are cultural CONTEXTS, not fixed requirements. The full-pew model is one culture's form, not THE church.</div></td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">Optional power-line: the church isn't declining globally — one Western form is. Worldwide it's the largest it's ever been.
+          <div class="more">Global South ~18% of Christians in 1900 → roughly two-thirds today. (Open question Tyler flagged: keep this on a slide or in notes only.)</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Hold both honestly: that particular peak isn't returning, AND the recent drop is real (membership fell below 50%). Both true. Source: RESEARCH Stream I — Many forms of the church.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>For sixty years, US church membership hovered around seventy percent — then, in 2020, it slipped below half for the first time on record. That mid-century full-pew church felt permanent, but it was only one cultural form of church among many. The faith has worn other shapes: ancient house churches, the medieval parish, the Methodist circuit rider and his class meetings, the explosive Pentecostalism of the global South. Worldwide, Christianity isn't shrinking; one Western expression of it is. The honest posture holds two truths at once — the decline here is real, and the peak we remember was never the whole story, nor is it coming back.</p>
+    </aside>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">Not "how do we get back?" — but how do we carry the same aspirations into a new landscape? And what if a new "new" is already unfolding?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Reveal</td><td class="detail">This is the hinge of Part 1 — it reframes the whole hour. Not "how do we get back?" but "how do we carry the same aspirations into a new landscape?"</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The move is from RESTORATION to VOCATION — from recovering a remembered form to discerning a calling. The aspirations stay (worship, belonging, formation, mission); the landscape changed.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">The provocation in the second half of the question: a new "new" may already be unfolding — our task is to notice and join it, not restore the old.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>So the question shifts. Not <em>how do we get back to what we were?</em> — that's a nostalgia trap, and the landscape it belonged to is gone. The better question is whether we can carry the same deep aspirations — worship, belonging, formation, mission — into a landscape that has genuinely changed. And there's a further provocation: what if a new "new" is already quietly unfolding around us, and our task is to notice and join it rather than restore the old? This reframes everything that follows. It moves us from restoration to vocation — from recovering a form to discerning a calling.</p>
+    </aside>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">A caution from our own story</p>
+    <h3 class="heading">Let's not write our own 2 Corinthians.</h3>
+    <ul class="lines">
+      <li>Paul gave Corinth a beautiful vision. They didn't fully listen — so we got <em>2 Corinthians</em>.</li>
+      <li>This time, let's listen.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Lean on</td><td class="detail">Our own story: years ago a sermon series here walked through 1 Corinthians — Paul casting a beautiful vision of what the church could be.
+          <div class="more">2 Corinthians exists partly BECAUSE they didn't fully listen the first time. That's the whole point of the frame: a luminous vision, half-heard, requiring a second letter.</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Honest admission, not accusation: looking back, we've done a version of that ourselves — caught a vision, named it, didn't fully follow it. Confession + resolve. No blame.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">This frame is deliberately called back twice later — at S33 ("A resolve") and inside the conversation (Turn 3 / S38).</td></tr>
+        <tr><td class="cue">Pacing</td><td class="detail">Keep it brief and humble. Don't dwell.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>There's a caution buried in our own scriptures. Paul handed the Corinthian church a luminous vision of what they could be. They half-listened — and so we have a second letter, written to a community that drifted from the first. Looking back honestly, we've done a version of this ourselves: we've caught a vision, named it, and then not fully followed where it led. This isn't an accusation; it's a confession, and it's a resolve. We'd rather not write our own 2 Corinthians. This time, the aim is to listen better — and to actually follow through.</p>
+    </aside>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What changed, first</p>
+    <h3 class="heading">We stopped joining everything.</h3>
+    <ul class="lines">
+      <li>Church was America's social infrastructure — not just belief. As Americans stopped joining <em>everything</em>, churchgoing fell with it.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Open</td><td class="detail">"What changed?" — Beat 1 is the CIVIC decline. Americans stopped joining everything: clubs, lodges, leagues, AND churches alike. Church was America's social infrastructure, not only belief.</td></tr>
+        <tr><td class="cue">Lean on</td><td class="detail"><em>Bowling Alone</em> — Robert Putnam. The catalog of the civic habits that frayed.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The point that matters (Tyler emphasized the civic beat): this isn't ONLY a faith story — a whole civic habit of belonging thinned out. Churchgoing fell with the tide.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">This is Beat 1 of a two-beat build. Beat 1 (civic) stays visible while the next slide adds Beat 2 (the religious numbers) — read them together: same story, belonging got thinner.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>What changed? First, we stopped joining — everything. For most of the twentieth century, churches were part of America's social infrastructure, not merely places of belief but the connective tissue of community life, alongside the lodges, leagues, and clubs that Robert Putnam catalogued in <em>Bowling Alone</em>. As those civic habits frayed and Americans withdrew from collective life across the board, churchgoing fell with the tide. The decline of the church is, in part, a chapter in a much larger story: a whole culture slowly forgetting how to belong to anything together.</p>
+    </aside>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Then the numbers</p>
+    <h3 class="heading">The decline is real.</h3>
+    <ul class="lines">
+      <li>Membership fell <b>below 50%</b> in 2020 — first time ever (was ~70% in 1999).</li>
+      <li>Christian identity: <b>78%</b> (2007) → <b>62%</b>. "Nones": 16% → ~29%.</li>
+      <li><b>66%</b> of the pre-1946 generation are church members — vs. <b>36%</b> of millennials.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Connect</td><td class="detail">Beat 2 — adds with Beat 1 (civic) still on screen. Read civic + religious together: same story, belonging got thinner.</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">Membership below 50% (to 47%) in 2020 — first time ever; was ~70% in 1999 — GALLUP.
+          <div class="more">Christian identity 78% (2007) → 62% (PEW). "Nones" 16% → ~29% (Pew). Generational: 66% of pre-1946 cohort are members vs. 36% of millennials (Gallup).</div></td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">Presenter only — identity ≠ investment. Claiming a church is not investing in one.
+          <div class="more">Someone says they "go to" a megachurch but attends monthly and does nothing. The ministry world now pushes "visitor → volunteer" precisely because participation/consistency dropped even where identity holds. Civic + religious decline are the same story: belonging got thinner.</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Then the numbers. In 2020, US church membership dropped below fifty percent for the first time ever, down from about seventy percent in 1999. Christian identity fell from 78 percent in 2007 to 62 percent, while the religiously unaffiliated — the "nones" — nearly doubled to around 29 percent. The generational gap is starkest: two-thirds of those born before 1946 belong to a church, against just over a third of millennials. And a quieter truth sits underneath: identity is not investment. Many still claim a church while attending monthly and doing little — belonging itself, not just belief, has thinned.</p>
+    </aside>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What the latest data says</p>
+    <h3 class="heading">Decline, then plateau.</h3>
+    <ul class="lines">
+      <li>The long slide leveled off around 2019. A slight 2025 uptick — but in <em>large</em> churches. Researchers: no revival.</li>
+      <li>Small and rural is still declining.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Mind the word: PLATEAU, not recovery. The long decline leveled off ~2019 (Pew). A slight 2025 uptick (Hartford), but researchers say plainly: no revival.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Where the little growth sits: LARGE churches. Small/rural is still declining. Big churches offer polish, entertainment, low-commitment anonymity — matching the wider culture (less belonging, more consumption). Civic forces earlier; now tech / social-media forces shaping religion too.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Where it's heading — and it's already local: plateau now, gradual decline later. Religion persists, with less social power.
+          <div class="more">Burge: "the calm before the storm." UMC lost ~25% of its churches (2019–23). Our own WEST OHIO CONFERENCE lost roughly a third — 300+ of ~960, across 2022–23 (172 June + 96 Oct 2023 + ~80 in 2022). Small/rural is the MOST exposed — the national uptick isn't our story.</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>The long slide leveled off around 2019 — but mind the word. This is a plateau, not a recovery. A slight uptick in 2025 turned up almost entirely in large churches, and the researchers were blunt: there is no revival here. Small and rural congregations are still declining. The modest growth tracks the wider culture's drift toward consumption over belonging, and the denominational toll is real — the UMC lost roughly a quarter of its churches between 2019 and 2023, and our own West Ohio Conference about a third. Demographers call this the calm before the storm. The uptick is not our story.</p>
+    </aside>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What's actually coming back</p>
+    <h3 class="heading">The form that fits the culture is the one that grows.</h3>
+    <ul class="lines">
+      <li>The traditional form isn't returning. The form that fits the culture is — mostly megachurches.</li>
+      <li>Small business vs. big-box.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">The traditional form isn't returning — the form that fits current cultural tropes is, and it's mostly megachurches. Same pattern as SMALL BUSINESS vs. BIG-BOX / chains: the corner-store model thins while the scaled, branded, convenient one grows. Same pattern, different sector.</td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">A lot of this is church as a MEANS to an end — entertainment, identity, even ideology (choosing a church to confirm who you already are).
+          <div class="more">Handle with care: politics/ideology stays LIGHT and non-partisan — folded into "means," not a separate beat. It's a description of a market, not a partisan point. Don't dwell.</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>What's actually "coming back" isn't the traditional church — it's the form that fits the culture, and mostly that means the megachurch. Think small business versus big-box retail: the consumer form scales, markets, and absorbs, while the corner store struggles to compete on those terms. Much of this growth is church functioning as a means to an end — a source of entertainment, identity, even ideology, where people choose a congregation to confirm who they already are. That's not a partisan point; it's a description of a market. The culturally-matched form survives because it plays the culture's game.</p>
+    </aside>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">The other thing on offer</p>
+    <h3 class="heading">There's another kind of church — and it's real.</h3>
+    <ul class="lines">
+      <li>Purposeful connection in a meaningful, ethical life is still available — and it runs with the whole arc of Christian history.</li>
+      <li>It won't be the most consumed. It won't come in droves. But it's <em>real</em>.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Consumption isn't the only thing on offer. Purposeful connection within a meaningful, ethical existence is still available — and it runs WITH orthodoxy and the whole arc of Christian history, not against it. It won't be the most consumed, won't come in droves — but it's real.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">The line we walk: church as a MEANS to an end vs. people looking for THE END ITSELF — meaning, connection, God.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Discipleship — getting someone to that end — isn't a selling point you advertise. It's an invitation. This SEEDS the Part 5 turn: "you can't download belonging."
+          <div class="more">Cleanup flag (Tyler's, carried from outline): the means/end + invitation wording is still rough — the idea is right; tighten in the room if needed.</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>But the consumer form isn't the only thing on offer. There is still such a thing as purposeful connection inside a meaningful, ethical life — and it runs with the whole arc of Christian history, not against it. This kind of church will never be the most consumed. It won't fill a stadium or trend online; people won't arrive in droves. But it is real, and it answers a different question. The distinction is between church as a means to an end and people who are actually seeking the end itself: meaning, connection, God. Discipleship was never a product to advertise. It's an invitation to extend.</p>
+    </aside>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">How do you see this happening here?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">Discussion-anchor. Ask BEFORE showing any number — let the room name it first. Many sense the decline before they see it (empty chairs, names no longer here, shifted energy).</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Naming the felt reality first honors what people know in their bones and keeps the numbers from doing the room's discerning for it. The local read comes before the local data.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>How do you see this happening here?</em> Before any chart or budget line appears, it's worth letting the room speak. People usually sense the shape of a thing before they can point to the data — they feel the empty chairs, the names no longer present, the energy that has shifted. Naming that felt reality first does two things: it honors what people already know in their bones, and it keeps the numbers from doing the room's discerning for it. The local read comes before the local data.</p>
+    </aside>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Our own numbers</p>
+    <h3 class="heading">The honest data — and the honest feeling.</h3>
+    <ul class="lines">
+      <li>Giving: <b>$115k</b> (2021) → <b>$78k</b> (2025), down 32%.</li>
+      <li>2026 budget: ~$94k in vs ~$115k out — a <b>~$17k gap</b> from savings each year.</li>
+      <li>It can feel like decline — and that feeling is <em>real</em>.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Put the gap plainly, then move. Giving $115k (2021) → $78k (2025), down 32%. 2026 budget runs ~$94k in vs ~$115k out — a ~$17k gap pulled from savings every year.
+          <div class="more">Only a few years of runway; expenses already cut hard. On-slide: the $94k-vs-$115k gap + "down 32%."</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Name the felt thing too: it isn't only money — it can FEEL like decline (energy, vibrancy, who isn't here). That feeling is real and worth naming, even where the numbers are more mixed than the mood.</td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">Current participation (approximate): ~40–50 active participants, 35+ giving units — a vibrancy gauge beside the money.
+          <div class="more">HANDLE WITH CARE — DO NOT mention the house/rental property sale (Tyler's instruction; sensitive live decision, hint only).</div></td></tr>
+        <tr><td class="cue">Pacing</td><td class="detail">Brief. Don't dwell.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And here is the honest data. Giving has fallen from about $115,000 in 2021 to roughly $78,000 in 2025 — down nearly a third. The 2026 budget anticipates around $94,000 coming in against roughly $115,000 going out, a gap of about $17,000 drawn from savings each year. Those are real figures, and they can feel like decline. The feeling deserves to be named rather than managed away: there is a sense of contraction here — in energy, in who is and isn't in the room — and it is true. Naming it plainly, without alarm, is the first act of honesty.</p>
+    </aside>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">The gap is the people</p>
+    <h3 class="heading">The area isn't short on churches. It's short on reach.</h3>
+    <ul class="lines">
+      <li>Roughly <b>150–190 churches</b> within a 20-mile drive. The area is not short on churches.</li>
+      <li>Fulton County is 53% religious — yet nearly half adheres to nothing. <em>That's the gap.</em></li>
+      <li>We've always drawn people from a whole region — by being tuned to <em>this</em> place, not generic.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Plenty of churches, but a real gap. ~150–190 churches within a 20-mile drive (250+ with the Toledo edge). The area is NOT short on churches.
+          <div class="more">Fulton County is 53.5% adhering — only modestly above the US ~48.6%, so the committed are largely already at a church. But that means ~47% of the county — nearly half, ~20,000 people — adheres to NOTHING. Source: US Religion Census 2020. (This corrected an earlier misleading "mostly already churched" read.)</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The gap isn't too few churches — it's the people none of them reach. That's the hinge.</td></tr>
+        <tr><td class="cue">Lean on</td><td class="detail">MUMC/Farmhouse regularly mixes local + regional people yet stays unapologetically rural and tuned to THIS place — offering a church experience the region otherwise lacks.
+          <div class="more">Book: "the universal runs through the particular," "love your zip code." Vision: "foster the health of our place." The choice is between competing for the already-churched vs. connecting with the community differently — the angle most churches here don't offer. (Wording still rough — cleanup flag.)</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>We are rooted here — and that rootedness resonates beyond. There are roughly 150 to 190 churches within a twenty-mile drive; this area is not short on churches. Yet Fulton County is only about 53 percent religious, which means nearly half adheres to nothing at all. That's the gap — not a shortage of congregations, but the people none of them reach. And here is the paradox: this church has always drawn people from across a whole region precisely by being tuned to <em>this</em> place rather than generic. The universal runs through the particular. Loving one zip code well is what gives a small church reach far beyond it.</p>
+    </aside>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">We've been here before</p>
+    <h3 class="heading">We almost closed. The doors stayed open.</h3>
+    <ul class="lines">
+      <li>1853 a class meeting. Fires. A 1960 sanctuary. The building lost to mold in 2005. Down to ~20 by 2012–13 — told to close.</li>
+      <li>It didn't. <em>The doors stayed open.</em></li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Lean on</td><td class="detail">The long story — move fast. This church has died and risen before.
+          <div class="more">9-person class meeting (1853) → two fires (1894 + early 1900s) → a "golden age" sanctuary (1960) → building lost to BLACK MOLD (2005) → down to ~20–30 by 2012–13, formally facing closure / "appointed to close." The book's "desperation as gift" is literally MUMC's story.</div></td></tr>
+        <tr><td class="cue">Throw</td><td class="detail">Ask the room: what has happened, what has grown, in the ~13 years since? (Let them name it — don't list the good things for them.)</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The gift: it almost closed — and it DIDN'T. The gift wasn't a program or a number — it was embracing the difficulty/desperation, a willingness to explore, responsiveness to what God is doing in light of the world. (Fruit since: Farmhouse Sabbath, The Farmhouse, the barn, a regional draw.)</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Participation arc (approximate, no peak figure): near-closure low (~20–30 active, ~25 units, 2013) → grew several-fold → a season of contraction → today ~40–50 active, 35+ units — above the low, even though it can feel like decline.
+          <div class="more">2023 onward = a SEASON, not a verdict. Some moved on; some emphasis shifted back toward the traditional. Not every post-2019 decision was right (some were Tyler's own). No blame. Honest question, not judgment: what from these years is worth carrying forward, better-timed?</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>We've been here before — and we almost didn't survive it. The story runs from an 1853 class meeting through fires, a sanctuary built in 1960, a building lost to mold in 2005, and a low point around 2012–13 when fewer than twenty people remained and the church was told to close. It didn't. The doors stayed open, and what followed was several-fold growth, then a season of contraction, and today a community above that old floor. The gift in all of it was never a program or a number. It was a willingness to embrace difficulty, to explore, to stay responsive to what God was doing. The recent contraction is a season, not a verdict.</p>
+    </aside>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Who we are</p>
+    <h3 class="heading">One church, many layers.</h3>
+    <ul class="lines">
+      <li>Traditional roots · multiple entryways · distinct, with a regional pull · rural and local at a human scale · small yet adaptable.</li>
+      <li>Several ways of being church — <em>still one body</em>.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">A century of history — and the last 13 years — still live here as a unique CONFIGURATION. It can feel like several groups who nonetheless belong as one body. Integration, not division.
+          <div class="more">The pieces that make us us: traditional roots held with care · multiple entryways into participation · distinct, with a regional pull · locally focused (rural/agrarian, human, contextual scale) · small yet contextually adaptable. Multiple expressions of church within one place.</div></td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">IMPLY, DON'T STATE — Tyler's explicit handling call.
+          <div class="more">Do NOT name "groups," the three-groups taxonomy (Traditional / Mixed / Farmhouse-mostly-lost), or who-left — aloud or on a slide. Hold it as understanding only. The room is the people who STAYED. Frame as one layered body, not factions.</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>This is one church with many layers. Traditional roots and multiple entryways; a distinct character with a regional pull; rural and local at a human scale; small yet surprisingly adaptable. These aren't competing factions or rival camps — they're facets of a single, unusual configuration. The church holds several ways of being church at once and remains one body. That integration is itself a kind of gift: it means there is no single front door, no one demographic the whole identity hangs on, but a layered whole that can welcome different people through different ways in while staying recognizably itself.</p>
+    </aside>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What we already are</p>
+    <h3 class="heading">We're not starting from zero.</h3>
+    <ul class="lines">
+      <li>A Sunday gathering. Seasonal services. The monthly Farmhouse Sabbath. CAST. The barn as a community space.</li>
+      <li>Not starting from zero.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Who we are NOW — real, running ministries, not aspirations: a Sunday Morning gathering (worship, music, liturgy); the seasonal services (Advent, Christmas Eve, Lent/Holy Week/Easter); the monthly Farmhouse Sabbath; CAST; and the barn as a community gathering space.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Frame: not starting from zero — the raw material of a distinct, multi-entryway, human-scale church is already here. The conversation builds on it.</td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">Confirm before delivering: flag anything live that's missing here, or listed that's no longer running. (AI-augmented-ops was removed earlier as not real.)</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And we are not starting from zero. The church already has real life in it: a Sunday gathering, seasonal services, the monthly Farmhouse Sabbath, CAST, and the barn that functions as a genuine community space. These are not aspirations on a whiteboard — they exist, they draw people, they already embody a distinct, multi-entryway, human-scale way of being church. Whatever direction the conversation takes, it builds on this. The raw material of the kind of church being described here is already in hand. The task is to recognize it, tend it, and ask what it's pointing toward.</p>
+    </aside>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Where God works</p>
+    <h3 class="heading">God's work starts in the nowhere places.</h3>
+    <ul class="lines">
+      <li>Moses met God at a thornbush in the wilderness.</li>
+      <li>Rural is a kind of wilderness — and it's worth a church's whole life.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Lean on</td><td class="detail">Wilderness & thornbush — Exodus 3. God meets people in the NOWHERE places; each church is a thornbush for the health of its place. Source for this: the book + the Farmhouse vision (RESEARCH).</td></tr>
+        <tr><td class="cue">Read aloud</td><td class="detail">(Optional, unhurried) "The places called nowhere and the people called no one are the setting for God's work."</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Rural is a kind of wilderness — and rural places are still worth the church's whole life. We're validating that. (First of three Part 4.5 beats: wilderness → smallness → belonging.)</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>God's work has a habit of starting in the nowhere places. Moses meets God at a thornbush in the wilderness; the places called nowhere and the people called no one are, again and again, the setting for what God does. Rural is a kind of wilderness — and it's worth a church's whole life. To be small and out of the way is not to be passed over; in the biblical imagination it is precisely the kind of ground where something new tends to begin. The setting that looks like nowhere is often where the call is heard.</p>
+    </aside>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Small isn't failure</p>
+    <h3 class="heading">Small is the form.</h3>
+    <ul class="lines">
+      <li>The earliest churches met in homes of fifteen to thirty.</li>
+      <li>Wesley's class meeting was about twelve: <em>"How is it with your soul?"</em></li>
+      <li>Big enough to be the body, small enough to be the body.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Small isn't failure — it's the FORM. (Second Part 4.5 beat.)</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">The early church met in homes (15–30 people) for ~300 years. Wesley built Methodism on the class meeting of ~12 — "How is it with your soul?"
+          <div class="more">The Wesleyan Howard Snyder: a church should be "big enough to fulfill the body's functions and small enough to really be the body" (he lands ~125–175). Dunbar's ~150 as loose resonance only, NOT proof.</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Across history the intimate scale has been the native one — big enough to be the body, small enough to actually be the body. A small church need not read its size as a verdict on its worth.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Small, here, isn't failure; it's the form. The earliest churches met in homes of fifteen to thirty people. Wesley's class meeting was about twelve, gathered around a single searching question: "How is it with your soul?" Across the long history of the faith, the intimate scale has been the native one — big enough to be the body, small enough to actually be the body. A small church need not read its size as a verdict on its worth. The scale that feels like a limitation is, in fact, the scale at which the church has most often done its deepest work.</p>
+    </aside>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What the culture lacks</p>
+    <h3 class="heading">The culture is starving for belonging.</h3>
+    <ul class="lines">
+      <li>A loneliness epidemic. The loss of the old "third places."</li>
+      <li>The small, rooted church holds exactly what people ache for.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Community is the cultural OPENING (third Part 4.5 beat). The culture is starving for belonging — a loneliness epidemic, the loss of "third places." A small, rooted, human-scale church is exactly what people are aching to find.</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">Surgeon General loneliness advisory (2023); "third places" — Ray Oldenburg (diners, lodges, porches where people once simply gathered).</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">This deliberately SEEDS Part 5: what the culture has lost is exactly what this kind of church still quietly keeps. (Carries into "you can't download belonging" + the AI turn.)</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And the timing is striking. In an age of a declared loneliness epidemic and the steady disappearance of the old "third places" — the diners, lodges, and porches where people once simply gathered — the culture is starving for belonging. The small, rooted church holds precisely what people ache for: a place to be known, faces that recur, a community at human scale. What the wider world has lost, this kind of church still quietly keeps. The thing the culture is most hungry for is the very thing a small congregation is built to offer.</p>
+    </aside>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">"If we just had ______, we'd be fine."</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">Discussion-then-reveal. Let the room fill the blank out loud. Most rooms say "a youth group / young families / more kids."</td></tr>
+        <tr><td class="cue">Pacing</td><td class="detail">Let it sit before the reveal on the next slide. Don't answer it for them.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Frame: the fix we reach for reflexively is often not the one that actually addresses the situation. This is one of two default assumptions we question (the other is the 10:00-service presumption at S30).</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>If we just had ______, we'd be fine.</em> Every struggling church has a version of this sentence, and most fill the blank the same way: a youth group, young families, more kids in the building. It's a reflexive reach — the single fix that would supposedly solve everything. The instinct is understandable and the longing is genuine. But the sentence itself is worth pausing over, because the fix we reach for reflexively is often not the one that actually addresses the situation. Letting the blank hang in the air, unanswered, opens room to question the assumption underneath it.</p>
+    </aside>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">The wrong fix</p>
+    <h3 class="heading">A youth group won't save us.</h3>
+    <ul class="lines">
+      <li><b>66%</b> of churched teens drop out for a while at 18–22. A youth group alone doesn't secure adult faith.</li>
+      <li>For a small church, the stronger bet is re-engaging the <em>mid-life cohort</em> — not only chasing teenagers.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Reveal</td><td class="detail">Gently: 66% of churched teens drop out of church for a stretch at 18–22 (LIFEWAY). A youth group alone doesn't secure adult faith.</td></tr>
+        <tr><td class="cue">Lean on</td><td class="detail">We know this one personally — our own thriving 1990s youth group here. Many in the room lived it.</td></tr>
+        <tr><td class="cue">Handle with care</td><td class="detail">This is TENDER. Not an argument against young people — a gentle reframe.
+          <div class="more">The better-supported bet for a small church with limited energy: re-engage the MID-LIFE / post-young-kids cohort (a season of searching and settling), not only chase teenagers.</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">We keep reaching for the WRONG FIX. One of two default assumptions we question (the other: the 10:00-service presumption, S30).</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>We tend to reach for the wrong fix. The youth-group instinct runs deep, but the data is sobering: about two-thirds of churched teens drop out of church for a stretch between eighteen and twenty-two. A youth group, on its own, doesn't secure adult faith — many of us know this firsthand from our own youth groups decades ago. This isn't an argument against young people; it's a gentle reframe. For a small church with limited energy, the stronger bet may be re-engaging the mid-life cohort — people in a season of searching and settling — rather than staking everything on chasing teenagers.</p>
+    </aside>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">The game we can't win</p>
+    <h3 class="heading">You can't win the content game.</h3>
+    <ul class="lines">
+      <li>A small church can't out-produce megachurches and streaming — and that game can contradict the mission.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">It's not just that we CAN'T win the content/consumer/entertainment game — for a church, that game can CONTRADICT the mission. Production and reach are not our field; competing there pulls against who we are.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Start with what we can't do — then (next two slides) turn to what only we can. The more energy a small church pours into out-producing the spectacle, the further it drifts from what it's actually good at.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Start with what we can't do. Megachurches and streaming platforms win the content game decisively — better production, wider reach, slicker delivery. A small church can't compete on those terms, and chasing that game can quietly contradict its own mission. The more energy a small congregation pours into out-producing the spectacle, the further it drifts from the thing it is actually good at. The first honest move is to stop measuring ourselves on a field that was never ours to win.</p>
+    </aside>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Why bigger isn't more</p>
+    <h3 class="heading">Church shopping just recycles.</h3>
+    <ul class="lines">
+      <li>It moves believers around. It doesn't reach anyone new.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Church shopping is a lie — it only RECYCLES believers (moves them building to building), makes no new ones. Transfer growth touches no one who wasn't already in the system.</td></tr>
+        <tr><td class="cue">Lean on</td><td class="detail">Book: from the belonging perspective, church shopping is inconceivable.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Reframes the reach question: not "how do we attract people choosing between churches?" but the harder, truer one — how do we reach the people NO church is reaching at all? (Sets up "how did Jesus grow a movement?")</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And the growth that the content game produces is mostly an illusion. Church shopping moves believers from one building to another; it recycles the already-churched rather than reaching anyone genuinely new. A congregation can swell on transfer growth and still touch no one who wasn't already in the system. So the question of reach is not "how do we attract people who are choosing between churches?" It's the harder, truer one: how do we reach the people no church is reaching at all?</p>
+    </aside>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">How did Jesus grow a movement?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">Ask it as a real question before revealing. Let the room try. The honest answer cuts against every instinct the content age trains into us.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">The mechanism was startlingly low-tech — and it's the same one still available to the smallest church in the most out-of-the-way place. Not a strategy to invent; one to recover. (Next slide reveals it.)</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>How did Jesus grow a movement?</em> It's worth sitting with the question before reaching for an answer, because the honest answer cuts against every instinct the content age trains into us. He didn't grow it through reach, production, or spectacle. The mechanism was startlingly low-tech — and it's the same mechanism still available to the smallest church in the most out-of-the-way place. The way the movement actually spread is not a strategy we have to invent; it's one we only have to recover.</p>
+    </aside>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">How a movement actually grew</p>
+    <h3 class="heading">Relationships. Proximity. Consistency over time.</h3>
+    <ul class="lines">
+      <li>Not content. Not reach. Not spectacle.</li>
+      <li>The crowds came — and went. <em>Who stayed?</em></li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">How Jesus actually grew a movement: not production or reach — RELATIONSHIPS, PROXIMITY, intention, CONSISTENCY over time, meaning and connection. Almost embarrassingly ordinary.</td></tr>
+        <tr><td class="cue">Lean on</td><td class="detail">The crowds flock to him and then leave the moment the teaching gets hard. They came — and went. The question that remains: who STAYED?</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">John 6 (the crowd leaves; "will you also go away?"). Reference only — don't print it on the slide.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">Sets up the landing line on the next slide: belonging does, consumption doesn't.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>The answer is almost embarrassingly ordinary: relationships, proximity, and consistency over time. Not content, not reach, not spectacle. In the gospels the crowds flock to the miracle and then thin out the moment the teaching gets hard — they came, and they went. The question that remains is the only one that matters: who stayed? Movements aren't built on the people who show up for the show. They're built on the few who keep showing up after it ends.</p>
+    </aside>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What lasts</p>
+    <p class="landing">Belonging does.<br>Consumption doesn't.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Read aloud</td><td class="detail">Two lines, unhurried: "Belonging does. Consumption doesn't." Let the contrast land.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The distinction the whole turn rests on. The crowd that came for the spectacle dissolves when it ends; the people bound to one another and to a place remain. Not a slogan against bigness — a clarification of what endures.
+          <div class="more">Whatever a church builds on consumption it has to keep re-buying with more spectacle. Whatever it builds on belonging, it gets to keep.</div></td></tr>
+        <tr><td class="cue">Pause</td><td class="detail">Don't rush into the next slide. This is a key callback later (Turn 2 / S37).</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And there is the distinction the whole turn rests on. Belonging lasts; consumption doesn't. The crowd that came for the spectacle dissolves when the spectacle ends, but the people bound to one another and to a place remain. This is not a slogan against bigness so much as a clarification of what actually endures. Whatever a church builds on consumption it will have to keep re-buying with more spectacle. Whatever it builds on belonging, it gets to keep.</p>
+    </aside>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">What we already hold</p>
+    <h3 class="heading">We already hold it.</h3>
+    <ul class="lines">
+      <li>Because we're small, rooted, and here — presence, being known, a place.</li>
+      <li><em>Belonging was never for sale.</em></li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Connect</td><td class="detail">The bridge from Part 4.5: BECAUSE we're small, rooted, rural — the wilderness, the human scale — we already hold the one thing that can't be downloaded: presence, being known, a place.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Belonging was never for sale — which is exactly why the small church, unable to buy reach, was never priced out of the thing that matters most. The asset isn't something to build or acquire; it's what a small rooted congregation already IS.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Here is the turn that changes everything. Because this church is small, rooted, and physically here, it already holds the one thing that can't be downloaded: presence, the experience of being known, an actual place. The asset the culture is starving for is not something we have to build, market, or acquire — it's what a small rooted congregation already is. Belonging was never for sale, which is exactly why the small church, unable to buy reach, was never priced out of the thing that matters most.</p>
+    </aside>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">Why this matters more now</p>
+    <h3 class="heading">In an AI age, human space is the asset.</h3>
+    <ul class="lines">
+      <li>As AI absorbs everything downloadable, human spaces become the asset — places to gather, belong, be known. <em>The barn. The table. The room.</em></li>
+      <li><b>73%</b> want AI kept out of faith — yet <b>30%</b> (44% of millennials) already trust AI's spiritual advice as much as a pastor's.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">The AI turn: as AI absorbs everything DOWNLOADABLE (information, content, even counsel), what gets scarce — and valuable — is what it can't make: embodied presence, meaning, being known. A human-centered, lower-production, less-tech church isn't behind the times — it may be exactly what the moment calls for.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Human SPACES become the asset — physical places to gather, belong, be known: the barn, the table, the room. As life moves onscreen, embodied space is what people seek out — the church as the human "third place" the culture is short on.</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">Live tension: 73% of Americans say keep AI out of matters of faith (PEW) — yet 30% (44% of Millennials) already trust AI spiritual advice as much as a pastor's (BARNA 2026).</td></tr>
+        <tr><td class="cue">Aside</td><td class="detail">The hunger is real; the only question is who meets it. Keep politics/ideology IMPLIED — not on a slide; raise live only if the room goes there.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And this matters more now, not less. As AI absorbs nearly everything that can be downloaded — information, content, even counsel — the scarce and precious thing becomes embodied human space: places to gather, to belong, to be known. The barn, the table, the room. A human-centered, lower-production, less-tech church isn't behind the times; it may be exactly what the moment calls for. The tension is live and strange: 73 percent of people want AI kept out of faith, yet 30 percent — and 44 percent of millennials — already trust AI's spiritual advice as much as a pastor's. The hunger is real. The only question is who meets it.</p>
+    </aside>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">What does this place need? And who is looking for something we might have?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">Two outward questions for a distinct, regional church. (1) "What does this place need?" — be the church for the HEALTH of this place (the thornbush), not for its own survival. (2) "Who is looking for something we might have?"</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">Who's looking: the ~40 MILLION dechurched — a majority open to return; when researchers asked what they wanted, "the answer was simple: belonging" (The Great Dechurching).
+          <div class="more">Plus the unreached ~half of the county and those who don't fit the other churches. The "dones" wanted community and got JUDGMENT — Packard, Church Refugees.</div></td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Keep this on the two questions — the regional-pull example already lives at S15 (one church, many layers); don't repeat it here.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Two outward questions follow. First: <em>what does this place need?</em> — to be the church for the health of this particular community, the thornbush in this wilderness. Second: <em>who is looking for something we might have?</em> The dechurched are a vast field — roughly forty million Americans, a majority open to returning, and when researchers asked what they wanted, the answer was simply belonging. Add the unreached half of the county and the many who don't fit the other churches, and the mission comes into focus. The "dones" mostly left wanting community and meeting judgment. A church that offers genuine belonging is offering exactly what they went looking for.</p>
+    </aside>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">Is being the church only the Sunday service?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">Confront the "10:00-service presumption" gently — the assumption that being the church = running the Sunday service. The building, budget, and calendar all orbit one hour on one morning.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The unexamined presumption shrinks a church's sense of its own calling down to one weekly event. Ask it out loud so the field can open. (One of the two default assumptions we question — the other was the youth-group fix, S21.)</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">If being the church is more than that hour, the field of vocation is far wider — next slide.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>Is being the church only the Sunday service?</em> Almost everything about congregational life quietly assumes the answer is yes — the building, the budget, the calendar all orbit a single hour on a single morning. But the question is worth asking out loud, because the unexamined "10:00-service presumption" can shrink a church's sense of its own calling down to one weekly event. If being the church is more than that hour, then the field of vocation is far wider than we usually let ourselves imagine.</p>
+    </aside>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">The fuller field</p>
+    <h3 class="heading">It's the whole life of a place.</h3>
+    <ul class="lines">
+      <li>The land. Our neighbors. The barn. New ways in. Economic and social life.</li>
+      <li><em>Individual · relational · communal · economic · ecological.</em></li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">The fuller field — being the church as the HEALTH of a whole place, not one event. The land and how it's used; the neighbors and how they're loved; the barn and what it makes possible; the new ways in; the whole economic and social life of a place.</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">The Farmhouse "health" framework names the dimensions: INDIVIDUAL · RELATIONAL · COMMUNAL · ECONOMIC · ECOLOGICAL. Plus use of land, economic ethics, social ethics, multiple entryways.
+          <div class="more">Pull the exact health-framework labels from the Vision doc to confirm wording (carried cleanup flag from outline).</div></td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Being the church, on this reading, = tending a place's flourishing across all those dimensions. Not staging an event — fostering a flourishing.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>If church is more than the service, the field opens wide. It's the land and how it's used, the neighbors and how they're loved, the barn and what it makes possible, the new ways in that no liturgy alone provides — the whole economic and social life of a place. The Farmhouse "health" framework names the dimensions: individual, relational, communal, economic, ecological. Being the church, on this fuller reading, means tending the health of an actual place across all of them — not staging an event, but fostering a flourishing.</p>
+    </aside>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">A rare freedom</p>
+    <h3 class="heading">We're at another point of rediscovery.</h3>
+    <ul class="lines">
+      <li>The same intention and exploration that carried us here.</li>
+      <li>We get to ask what most churches can't: <em>what does it mean to be the church, today, in this place?</em></li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Connect</td><td class="detail">We're at another point of REDISCOVERY — it asks for the same intention, exploration, and orientation that carried us this far (callback to Part 4 / the near-closure story).</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">The rare freedom of a small, rooted, distinct church: unburdened by the machinery a large institution must keep running, we get to ask what most congregations can't afford to — "what does it mean to be the church, today, in this place?" The smallness that looks like limitation is what frees us to ask honestly.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>We've been here before, and we're here again — at another point of rediscovery, carried by the same intention and exploration that brought us through near-closure the last time. This is the rare freedom of a small, rooted, distinct church: unburdened by the machinery a large institution must keep running, it gets to ask the question most congregations can't afford to. What does it mean to be the church, today, in this place? The smallness that looks like limitation turns out to be the very thing that frees us to ask the deepest question honestly.</p>
+    </aside>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide" data-pattern="reveal">
+    <p class="kicker">A resolve</p>
+    <h3 class="heading">Let's not write our own 2 Corinthians.</h3>
+    <ul class="lines">
+      <li>We caught a vision once and didn't fully follow it.</li>
+      <li>This time, <em>listen</em>.</li>
+    </ul>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Connect</td><td class="detail">Callback to Part 1 (S5): Paul cast a beautiful vision to Corinth; they didn't fully listen, and we got 2 Corinthians. We've done a version of it ourselves — caught a vision, didn't fully follow it. Confession + commitment, no blame. We don't have to write our own — let's listen this time.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">The hinge into Part 6. The diagnostic that opens the door: "If this church closed its doors tomorrow — who would notice? And what can only this church, in this place, be — ten years from now?" Listen, THEN move.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>And so the resolve returns, mindful of Corinth. Paul handed that church a luminous vision; they half-listened, and a second letter had to be written. We've done a version of it ourselves — caught a vision, named it, and not fully followed where it led. This isn't an accusation; it's a confession and a commitment. We'd rather not write our own 2 Corinthians. This time the discipline is to actually listen — and then to move — which is exactly what the conversation that follows is for.</p>
+    </aside>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" data-pattern="section">
+    <p class="section-label">The turn</p>
+    <h2>Now — us.</h2>
+    <p class="subtitle">This is the point.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Pacing</td><td class="detail">This is the HEART of the session — ~45 min. Everything before was groundwork; now the room is the point. Open freely first, then guide through three turns: understand the problem → find a direction → name one step.</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">ASSIGN SOMEONE TO CAPTURE — the outputs feed the church's real decisions. Tyler guides; the room generates.</td></tr>
+        <tr><td class="cue">Build to</td><td class="detail">The push is DIRECTION, not a list of ministry ideas. When people default to familiar specifics, redirect: "what direction is that pointing at?" Prompts + callback cues live in these notes for each turn (S35–S38).</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>Here the workshop turns. Everything up to this point was groundwork; now the room itself becomes the point. The next forty-five minutes are a guided conversation, not more content — and they move in three deliberate steps. First, do we understand the problem, nationally and here? Second, where do we go — a direction, not a to-do list? Third, what's one honest next step? Someone should be capturing it, because these outputs are meant to feed real decisions. And throughout, the discipline is to push toward direction rather than the comfort of familiar specifics.</p>
+    </aside>
+  </section>
+
+  <!-- 35 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">After all of that — what are you thinking?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Open</td><td class="detail">~7 min. "After all of that — what are you thinking? What resonates, what bothers you, what surprised you?" No agenda yet — let the room react.</td></tr>
+        <tr><td class="cue">Pacing</td><td class="detail">Mostly listening. Let people say the first true thing that rose in them. Listen for threads to pick up in the three turns below — they often become the real material.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Callback ready: the title question — where does the church go from here?</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>After all of that — what are you thinking?</em> Before any structure, the floor opens. This is unscripted space for the room to react to everything it has just heard: what resonates, what bothers, what comes as a surprise. There's no agenda to defend yet and no right answer to reach. The work here is mostly listening — letting people say the first true thing that rose in them, and noticing the threads that recur across the room. Those threads often become the real material of the conversation that follows. Sometimes the most important thing a community can do is simply say out loud what it's feeling.</p>
+    </aside>
+  </section>
+
+  <!-- 36 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="kicker">Step one — diagnosis</p>
+    <p class="question">Do we understand the problem?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">~12 min. "Before we talk about what to do — what do we actually think is going on? With the church at large, and with us, here. Do we share a read on the problem?"</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">Sensing + DIAGNOSIS, not solutions — where the room's intuition meets the data we walked. Don't let it jump to repair.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Callbacks to have ready.
+          <div class="more">National: decline → PLATEAU, not revival; the growth is mostly big/consumer churches (S8–S9). Here: giving −32%, the budget gap, the felt decline (S12); ~47% of the county (~20,000 people) reaches no church (S13).</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>Do we understand the problem?</em> This is the first real turn of the conversation, and it deliberately precedes any solution. Before deciding what to do, a community has to agree on what's actually happening — both with the church at large and with itself, here. Do we share a read? Nationally, the picture is decline settling into plateau, not revival, with what growth there is concentrated in large consumer churches. Locally, it's a third less giving, a structural gap, a felt thinning, and a county where nearly half belongs to no church at all. The task at this stage is honest diagnosis, not premature repair.</p>
+    </aside>
+  </section>
+
+  <!-- 37 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="kicker">Step two — direction</p>
+    <p class="question">Where do we go? — a direction, not a to-do list.</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">~15 min (the longest turn). "Not 'what program should we run' — but what DIRECTION? What are we for, and who are we for, in this place? What kind of church do we want to become?"</td></tr>
+        <tr><td class="cue">Pacing</td><td class="detail">Steer away from specific ministry ideas. When someone jumps to a familiar specific, redirect: "what direction is that pointing at?" A useful test to drop in: if this church closed, who would actually notice?</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Callbacks to weave in.
+          <div class="more">You can't download belonging — belonging does, consumption doesn't (S26); human spaces in an AI age (S28); the two questions — what does this place need / who's looking for what we have (S29); called to be/do beyond the Sunday service (S30–31); wilderness/small/rooted is the gift (Part 4.5); our own layers — traditional, multiple entryways, distinct/regional, rural, adaptable (S15); the diagnostic — if we closed, who'd notice?</div></td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>Where do we go?</em> The second turn is about direction, not tactics — and the distinction matters. The question isn't "what program should we run" but "what and who are we for, in this place, and what kind of church do we want to become?" When someone leaps to a familiar specific, the gentle redirect is to ask what direction that idea is pointing at. The earlier threads all feed in here: that belonging can't be downloaded, that human spaces grow precious in an AI age, that being small, rooted, and rural is the gift rather than the deficit. A useful test: if this church closed, who would actually notice?</p>
+    </aside>
+  </section>
+
+  <!-- 38 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="kicker">Step three — next step</p>
+    <p class="question">What's one honest next step — as a church, and for you?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Throw</td><td class="detail">~8 min. "Given that direction — what's one honest next step, as a church and as individuals? Not the whole plan. The next move." Direction-grounded, not a brainstorm — personal AND corporate.</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">Callback: we've done this before — the gift was intention, exploration, responsiveness (Part 4). And the warning: let's not write our own 2 Corinthians (S5 / S33).</td></tr>
+        <tr><td class="cue">Land</td><td class="detail">About actually MOVING, not just talking. Where discernment becomes motion — the whole point of listening this carefully is so something real follows it.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>What's one honest next step — as a church, and for you?</em> The third and final turn brings the conversation down to earth. Not the whole plan, not a five-year strategy — just the next honest move, given the direction the room has named. And it's personal as well as corporate: one step the church might take, and one step each person might. This is where discernment becomes motion. The church has been here before, and the gift each time was intention, exploration, and responsiveness — followed by actually moving. The whole point of listening this carefully is so that, this time, something real follows the listening.</p>
+    </aside>
+  </section>
+
+  <!-- 39 -->
+  <section class="slide" data-pattern="anchor">
+    <p class="question">What can only this church, in this place, be — and for whom? Ten years from now?</p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Land</td><td class="detail">The question to carry out the door — not to answer tonight, but to live with. It gathers everything: the particularity that gives a small church its reach, the people no one else is reaching, the long horizon that turns a struggling present into a vocation. Most churches can't ask it this honestly; this one can.</td></tr>
+        <tr><td class="cue">Pause</td><td class="detail">Let it sit. Don't resolve it. The decade ahead is decided by who this community decides, slowly and faithfully, to become — here, for someone.</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p><em>What can only this church, in this place, be — and for whom? Ten years from now?</em> This is the question to carry out the door — not to answer tonight, but to live with. It gathers everything: the particularity that gives a small church its reach, the people no one else is reaching, the long horizon that turns a struggling present into a vocation. Most churches can't ask it this honestly. This one can. The decade ahead won't be decided by a program but by who this community decides, slowly and faithfully, to become — here, for someone.</p>
+    </aside>
+  </section>
+
+  <!-- 40 -->
+  <section class="slide" data-pattern="benediction">
+    <p class="benediction">
+      The places called nowhere are where the work begins.<br><br>
+      We don't have to be the biggest church. We have to be <em>this</em> one — here — for someone.<br><br>
+      <em>Use your somebodiness to transform your somewhereness.</em>
+    </p>
+    <aside class="notes">
+      <table class="cue-table">
+        <tr><td class="cue">Read aloud</td><td class="detail">The three lines, unhurried: the places called nowhere are where the work begins · we don't have to be the biggest, we have to be THIS one, here, for someone · "use your somebodiness to transform your somewhereness."</td></tr>
+        <tr><td class="cue">Connect</td><td class="detail">The quiet thread through all of it — the wilderness, the thornbush, the near-closed doors that stayed open. Wilderness to renewal, not by recovering a peak but by becoming what only this congregation in this place can be.</td></tr>
+        <tr><td class="cue">Source</td><td class="detail">The last line is from the book — Fresh Expressions of the Rural Church, Beck & Kleeberger, Ch. 8 (somewhereness/somebodiness).</td></tr>
+        <tr><td class="cue">Pause</td><td class="detail">Don't add a bow. Let the question carry. Then, having listened, go. (Benediction is a draft — may firm later.)</td></tr>
+      </table>
+    </aside>
+    <aside class="reader">
+      <p>The places called nowhere are where the work begins. That has been the quiet thread through all of it — the wilderness, the thornbush, the near-closed doors that stayed open. This church doesn't have to be the biggest. It has to be this one, here, for someone — tuned to its own particular place and its own particular people. The arc runs from wilderness to renewal, not by recovering a remembered peak but by becoming, faithfully, what only this congregation in this place can be. Use your somebodiness to transform your somewhereness. And then, having listened, go.</p>
+    </aside>
+  </section>
+
+</main>
+
+<!-- ============ EDGE NAV ARROWS ============ -->
+
+<button class="edge-nav edge-prev" onclick="prevSlide()" aria-label="Previous slide">&#8592;</button>
+<button class="edge-nav edge-next" onclick="nextSlide()" aria-label="Next slide">&#8594;</button>
+
+<!-- ============ PRESENTER VIEW ============ -->
+
+<div class="presenter-view" id="presenterView">
+  <div class="presenter-previews">
+    <div class="preview-box preview-current">
+      <span class="preview-label">Current slide</span>
+      <iframe class="preview-frame" id="presenterCurrentFrame" title="Current slide preview"></iframe>
+    </div>
+    <div class="preview-box preview-next">
+      <span class="preview-label">Next</span>
+      <iframe class="preview-frame" id="presenterNextFrame" title="Next slide preview"></iframe>
+    </div>
+  </div>
+  <div class="presenter-notes">
+    <h3>Notes</h3>
+    <div class="notes-content" id="presenterNotes"></div>
+  </div>
+  <div class="presenter-bar">
+    <span class="slide-counter">Slide <span id="presenterSlideNum">1</span> of <span id="presenterSlideTotal">40</span></span>
+    <span class="controls">
+      <button id="presenterPrev">&#8592; Prev</button>
+      <button id="presenterNextBtn">Next &#8594;</button>
+    </span>
+  </div>
+</div>
+
+<!-- ============ READER VIEW ============ -->
+
+<div class="reader-view" id="readerView">
+  <header>
+    <p class="kicker">A Workshop Walkthrough</p>
+    <h1>Where Does the Church Go From Here?</h1>
+    <p>Reading the changing cultural, political, and technological landscape — and what it means for where one rural church goes next. This is the reader-mode rendering of the workshop, written for those who couldn't be in the room.</p>
+  </header>
+  <div id="readerSlides"></div>
+</div>
+
+<!-- ============ CHROME ============ -->
+
+<div class="chrome">
+  <span class="counter"><span id="slideCounter">1</span> / <span id="slideTotal">40</span></span>
+  <span>
+    <button onclick="window.location.search='?reader=1'">Read article</button>
+    <button onclick="openPresenter()">Pop out presenter</button>
+    <button onclick="toggleFullscreen()">Fullscreen</button>
+  </span>
+</div>
+
+<div class="progress-bar" id="progressBar" style="width: 0%"></div>
+
+<script>
+  // ============ CONFIG ============
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let currentIndex = 0;
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get('mode') || (params.get('reader') ? 'reader' : 'audience');
+
+  // Inter-window sync via BroadcastChannel
+  const channel = new BroadcastChannel('rural-church-deck-sync');
+  let isPresenterOpen = false;
+
+  // ============ INIT BY MODE ============
+  if (mode === 'presenter') {
+    document.body.classList.add('presenter-mode');
+    initPresenter();
+  } else if (mode === 'reader') {
+    document.body.classList.add('reader-mode');
+    initReader();
+  } else {
+    initAudience();
+  }
+
+  // ============ AUDIENCE MODE ============
+  function initAudience() {
+    showSlide(0);
+
+    // Show chrome briefly on load, fade on idle
+    document.body.classList.add('chrome-visible');
+    let chromeTimeout = setTimeout(() => document.body.classList.remove('chrome-visible'), 2500);
+    document.addEventListener('mousemove', () => {
+      document.body.classList.add('chrome-visible');
+      clearTimeout(chromeTimeout);
+      chromeTimeout = setTimeout(() => document.body.classList.remove('chrome-visible'), 2500);
+    });
+
+    // Listen for sync from presenter window
+    channel.onmessage = (e) => {
+      if (e.data.type === 'slide-change') {
+        showSlide(e.data.index, true);
+      } else if (e.data.type === 'presenter-opened') {
+        isPresenterOpen = true;
+      } else if (e.data.type === 'presenter-closed') {
+        isPresenterOpen = false;
+      } else if (e.data.type === 'request-state') {
+        channel.postMessage({ type: 'state', index: currentIndex });
+      }
+    };
+
+    // Announce ourselves
+    channel.postMessage({ type: 'audience-ready' });
+  }
+
+  // ============ PRESENTER MODE ============
+  function initPresenter() {
+    // Build the current-slide preview + notes
+    updatePresenterView(currentIndex);
+
+    document.getElementById('presenterPrev').onclick = () => prevSlide();
+    document.getElementById('presenterNextBtn').onclick = () => nextSlide();
+
+    // Announce ourselves
+    channel.postMessage({ type: 'presenter-opened' });
+
+    // Listen for audience updates (when Tyler navigates from the audience window)
+    channel.onmessage = (e) => {
+      if (e.data.type === 'slide-change') {
+        currentIndex = e.data.index;
+        updatePresenterView(currentIndex);
+      } else if (e.data.type === 'state') {
+        currentIndex = e.data.index;
+        updatePresenterView(currentIndex);
+      } else if (e.data.type === 'request-state') {
+        channel.postMessage({ type: 'state', index: currentIndex });
+      }
+    };
+
+    // Request current state from audience window (in case one is already open)
+    channel.postMessage({ type: 'request-state' });
+
+    // Notify on close
+    window.addEventListener('beforeunload', () => {
+      channel.postMessage({ type: 'presenter-closed' });
+    });
+  }
+
+  // Build a standalone HTML doc for an iframe slide-preview that reuses the
+  // page's own styles, so the preview looks exactly like the audience slide.
+  function buildPreviewDoc(slide) {
+    const styleEl = document.querySelector('style');
+    const styles = styleEl ? styleEl.innerHTML : '';
+    const clone = slide.cloneNode(true);
+    clone.querySelector('aside.notes')?.remove();
+    clone.querySelector('aside.reader')?.remove();
+    clone.classList.add('active');
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${styles}
+      html,body{height:100%;overflow:hidden;}
+      .deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+      </style></head><body class="preview-body">
+      <main class="deck">${clone.outerHTML}</main></body></html>`;
+  }
+
+  // End-of-deck placeholder for the NEXT frame on the last slide — reuses the
+  // deck's own palette/typography so it reads as part of the same surface.
+  function buildEndOfDeckDoc() {
+    const styleEl = document.querySelector('style');
+    const styles = styleEl ? styleEl.innerHTML : '';
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${styles}
+      html,body{height:100%;overflow:hidden;}
+      .end-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+        text-align:center;background:var(--bg);color:var(--muted);
+        font-family:var(--serif);font-style:italic;
+        font-size:clamp(1rem,2.4vw,1.4rem);padding:1.2rem;}
+      </style></head><body><div class="end-wrap">End of deck</div></body></html>`;
+  }
+
+  function updatePresenterView(index) {
+    const current = slides[index];
+
+    const currentFrame = document.getElementById('presenterCurrentFrame');
+    currentFrame.srcdoc = buildPreviewDoc(current);
+
+    // NEXT preview: slide at index+1, or the end-of-deck placeholder on the last slide.
+    const nextFrame = document.getElementById('presenterNextFrame');
+    if (nextFrame) {
+      const next = slides[index + 1];
+      nextFrame.srcdoc = next ? buildPreviewDoc(next) : buildEndOfDeckDoc();
+    }
+
+    const notesEl = current.querySelector('aside.notes');
+    document.getElementById('presenterNotes').innerHTML = notesEl
+      ? notesEl.innerHTML
+      : '<em style="color:var(--muted)">No notes for this slide.</em>';
+
+    document.getElementById('presenterSlideNum').textContent = index + 1;
+    document.getElementById('presenterSlideTotal').textContent = total;
+  }
+
+  // ============ READER MODE ============
+  // Per-pattern renderer: each data-pattern produces its own reader block.
+  function initReader() {
+    const container = document.getElementById('readerSlides');
+
+    slides.forEach((slide) => {
+      const pattern = slide.getAttribute('data-pattern');
+      const readerEl = slide.querySelector('aside.reader');
+      const readerHTML = readerEl ? readerEl.innerHTML : '';
+
+      const block = document.createElement('div');
+      block.className = 'reader-block';
+
+      if (pattern === 'title') {
+        // Title is already rendered in the article header; render its essay only.
+        block.innerHTML = readerHTML;
+      } else if (pattern === 'section') {
+        const h2 = slide.querySelector('h2');
+        const head = document.createElement('div');
+        head.className = 'reader-section-head';
+        head.textContent = h2 ? h2.textContent : '';
+        container.appendChild(head);
+        block.innerHTML = readerHTML;
+      } else if (pattern === 'anchor') {
+        // Lead with the italic question prompt, then the essay.
+        const q = slide.querySelector('.question');
+        const promptText = q ? q.textContent.trim() : '';
+        block.innerHTML =
+          (promptText ? `<p class="prompt">${promptText}</p>` : '') + readerHTML;
+      } else if (pattern === 'source') {
+        // Render the quote as a blockquote, then the essay.
+        const src = slide.querySelector('.source-text');
+        let quoteHTML = '';
+        if (src) {
+          const clone = src.cloneNode(true);
+          quoteHTML = `<blockquote>${clone.innerHTML}</blockquote>`;
+        }
+        block.innerHTML = quoteHTML + readerHTML;
+      } else if (pattern === 'benediction') {
+        block.classList.add('benediction-block');
+        block.innerHTML = readerHTML;
+      } else {
+        // reveal (and any fallback): essay paragraph only.
+        block.innerHTML = readerHTML;
+      }
+
+      container.appendChild(block);
+    });
+  }
+
+  // ============ NAVIGATION ============
+  function showSlide(index, fromSync = false) {
+    if (index < 0 || index >= total) return;
+    currentIndex = index;
+
+    // Audience rendering (also drives the presenter iframe, which loads audience mode)
+    slides.forEach(s => s.classList.remove('active'));
+    slides[index].classList.add('active');
+
+    const sc = document.getElementById('slideCounter');
+    const st = document.getElementById('slideTotal');
+    if (sc) sc.textContent = index + 1;
+    if (st) st.textContent = total;
+
+    const progress = ((index + 1) / total) * 100;
+    const bar = document.getElementById('progressBar');
+    if (bar) bar.style.width = `${progress}%`;
+
+    // CRITICAL: BroadcastChannel does not echo to the sender. When the presenter
+    // window navigates, update its own preview + notes locally rather than waiting
+    // for a channel echo that never comes.
+    if (mode === 'presenter') {
+      updatePresenterView(index);
+    }
+
+    if (!fromSync) {
+      channel.postMessage({ type: 'slide-change', index });
+    }
+  }
+
+  function nextSlide() { showSlide(currentIndex + 1); }
+  function prevSlide() { showSlide(currentIndex - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+    if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+    if (e.key === 'p' || e.key === 'P') { e.preventDefault(); openPresenter(); }
+    if (/^[1-9]$/.test(e.key)) { e.preventDefault(); showSlide(parseInt(e.key) - 1); }
+  });
+
+  // ============ HELPERS ============
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  }
+
+  function openPresenter() {
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', 'presenter');
+    const win = window.open(url.toString(), 'rural-church-presenter', 'width=1200,height=800');
+    if (win) win.focus();
+  }
+
+  // Touch / swipe support for mobile
+  let touchStartX = null;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) {
+      if (dx < 0) nextSlide(); else prevSlide();
+    }
+    touchStartX = null;
+  });
+</script>
+
+</body>
+</html>
